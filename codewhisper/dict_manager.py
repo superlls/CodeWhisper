@@ -41,7 +41,51 @@ class DictionaryManager:
         return self._get_builtin_dict()
 
     def _get_builtin_dict(self) -> List[Dict]:
-        """内置的基础程序员词典"""
+        """从 JSON 文件读取内置字典"""
+        try:
+            # 优先读取用户自定义字典
+            dict_path = self.dict_path or self._get_default_dict_path()
+
+            if dict_path and os.path.exists(dict_path):
+                with open(dict_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    # 扁平化数据结构：将分类下的规则展开
+                    rules = []
+                    for category_group in data:
+                        category = category_group.get('category', 'other')
+                        for rule in category_group.get('rules', []):
+                            # 转换为正则表达式格式
+                            wrong_text = rule.get('wrong', '')
+
+                            # 检查是否包含中文
+                            if self._contains_chinese(wrong_text):
+                                # 中文：直接使用，不加单词边界
+                                regex_pattern = re.escape(wrong_text)
+                            else:
+                                # 英文：添加单词边界和转义
+                                regex_pattern = r'\b' + re.escape(wrong_text) + r'\b'
+
+                            rules.append({
+                                'wrong': regex_pattern,
+                                'correct': rule.get('correct', ''),
+                                'category': category
+                            })
+                    return rules
+        except Exception as e:
+            print(f"⚠️  读取字典文件失败: {e}，使用内置默认字典")
+
+        # 如果文件不存在或读取失败，返回硬编码的默认字典
+        return self._get_default_dict()
+
+    def _contains_chinese(self, text: str) -> bool:
+        """检查文本是否包含中文"""
+        for char in text:
+            if '\u4e00' <= char <= '\u9fff':
+                return True
+        return False
+
+    def _get_default_dict(self) -> List[Dict]:
+        """硬编码的默认字典（备用）"""
         return [
             # ========== 数据库 ==========
             {"wrong": r"\bmy\s+circle\b", "correct": "MySQL", "category": "database"},
@@ -130,6 +174,15 @@ class DictionaryManager:
             {"wrong": r"\bdebian\b", "correct": "Debian", "category": "other"},
             {"wrong": r"\bcentos\b", "correct": "CentOS", "category": "other"},
         ]
+
+    def _get_default_dict_path(self) -> Optional[str]:
+        """获取默认字典文件路径"""
+        try:
+            root = get_project_root()
+            dict_file = os.path.join(root, 'dictionaries', 'programmer_terms.json')
+            return dict_file if os.path.exists(dict_file) else None
+        except:
+            return None
 
     def fix_text(self, text: str) -> str:
         """

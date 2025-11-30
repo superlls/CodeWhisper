@@ -48,22 +48,33 @@ class CodeWhisper:
         Returns:
             包含转录结果的字典
         """
-        # 创建提示词，帮助模型识别技术术语
-        programmer_prompt = (
-            "MySQL, PostgreSQL, MongoDB, Redis, "
-            "Python, JavaScript, TypeScript, Go, C++, "
-            "React, Vue, Angular, Django, Flask, Express, "
-            "Docker, Kubernetes, GitHub, GitLab, "
-            "API, REST, GraphQL, JSON, XML, YAML, "
-            "HTTP, HTTPS, SSL, TLS, "
-            "Linux, Ubuntu, Debian, CentOS"
-        )
+        # 根据语言选择不同的提示词
+        if language == "zh":
+            # 中文模式：用中文术语提示
+            programmer_prompt = (
+                "MySQL, PostgreSQL, MongoDB, Redis, "
+                "Python, JavaScript, TypeScript, Go, C++, "
+                "React, Vue, Angular, Django, Flask, Express, "
+                "Docker, Kubernetes, GitHub, GitLab, "
+                "API, REST, GraphQL, JSON, XML, YAML"
+            )
+        else:
+            # 英文模式：用完整的英文术语提示
+            programmer_prompt = (
+                "MySQL, PostgreSQL, MongoDB, Redis, "
+                "Python, JavaScript, TypeScript, Go, C++, "
+                "React, Vue, Angular, Django, Flask, Express, "
+                "Docker, Kubernetes, GitHub, GitLab, "
+                "API, REST, GraphQL, JSON, XML, YAML, "
+                "HTTP, HTTPS, SSL, TLS, "
+                "Linux, Ubuntu, Debian, CentOS"
+            )
 
         # 优化语言处理：默认中文模式，专为中国程序员设计
         transcribe_language = language
 
         if verbose:
-            print(f"🎙️  转录中: {audio_file}")
+            print(f"🎙️  转录中: {audio_file} (语言: {language})")
 
         # 调用 Whisper 进行转录
         result = self.model.transcribe(

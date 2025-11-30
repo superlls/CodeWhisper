@@ -1,0 +1,6 @@
+openai-whisper
+numpy
+torch
+tqdm
+more-itertools
+tiktoken

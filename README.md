@@ -1,12 +1,15 @@
 # CodeWhisper 🎤
 
-**为中国程序员打造的语音转文字工具** | Programmer-friendly speech-to-text for Chinese developers
+**为中文社区程序员打造的语音转文字工具** | Programmer-friendly speech-to-text for developers
 
-基于 OpenAI Whisper，优先使用中文语音模型，自动纠正编程术语识别错误。让你在开会、技术分享时快速准确地转录代码和技术术语～
+基于 OpenAI Whisper，优先使用中文语音模型，自动纠正编程术语识别错误。让你在做报告、做总结时快速准确地转录代码和技术术语～
 
-目前项目仍在开发中，已在Mac上已实现一个MVP，方法在quick start大家可以尝试体验一下～
+目前项目仍在开发中，已在CLI和Mac上已实现一个MVP，方法在quick start大家可以尝试体验一下～
 
-欢迎大家提些建议，并共建我们的字典库哦～
+支持的音频格式：MP3, MP4, MPEG, MPGA, M4A, WAV, WEBM
+
+欢迎大家提些建议，并共建我们的字典库（dictionaries/programmer_terms.json）哦～
+
 
 
 ---
@@ -20,15 +23,18 @@
 比如：
 
 - 说"Mentor" →  被识别成 "门特尔" ❌（这个好像是走中文模型就会按照音韵去识别对应的汉字，所以识别成这种的情况就正式需要用到我们的纠正字典库，我认为也正是这个项目的意义所在）
-- 说"MySQL" → 被识别成 "my circle" ❌
+
 - 说"Docker" → 被识别成 "到克尔" ❌
+- 
+- 说"MySQL" → 被识别成 "my circle" ❌
+
+- 另外还有一种情况：读出来和写出来的情况完全不一致无法映射的：获取到的 c sharp  → C# !!
 
 
-**我们的方案**：**始终使用中文模型** + **社区维护的纠错字典库**
+**我们的方案**：**始终使用Whisper中文模型** + **社区维护的纠错字典库**
 
 CodeWhisper 默认用中文模型转录你的语音，然后通过不断完善的术语字典库自动纠正这些高频错误。
 大家遇到的新错误，可以通过 Issue 或 PR 反馈给社区。
-人越多这个项目越完善哈哈哈～
 
 ## 原理  💡
 Step 1: 
@@ -83,11 +89,13 @@ source .venv/bin/activate  # macOS/Linux
 
 pip install -r requirements.txt
 ```
+### CLI使用方式
+
+1.将你的录音文件拖入项目根目录下（与cli.py）同级
+
+2.在控制台执行 python cli.py demo.m4a（替换成你的文件名，支持文件格式：MP3, MP4, MPEG, MPGA, M4A, WAV, WEBM）    
 
 ### Mac使用方式
-
-
-**支持的音频格式**：MP3, MP4, MPEG, MPGA, M4A, WAV, WEBM
 
 
 ```bash
@@ -116,7 +124,7 @@ python app.py
 
 ### 系统要求
 
-- **Python 版本**：3.9+（
+- **Python 版本**：3.9+
 - **网络**：首次运行需要下载 Whisper 模型（100MB-3GB，取决于选择的模型）
 
 ### 常见问题
@@ -178,8 +186,41 @@ A: 可以！
 
 ---
 
+## 中文模式的局限性 ⚠️
 
-## 贡献指南 🤝
+使用中文模式转录时，Whisper 的识别结果**不确定**：
+
+```
+用户说话：我用 MySQL 和 Redis 做数据库
+
+Whisper 中文模式可能识别为：
+✅ MySQL 和 Redis （幸运）
+✅ message core 和 瑞迪斯 （中文音韵）
+✅ my sql 和 re dis （分隔形式）
+❓ 或其他组合...（随机！）
+```
+
+**为什么？** 中文模型会优先识别成中文，英文词汇会被转换成同音的中文或拆分成多个词。
+
+**我们的解决方案：** 在字典中收集**所有可能的变体**，覆盖各种识别形式。
+
+```
+// 例如 MySQL 的各种变体
+"MySQL": {
+  "variants": [
+    {"wrong": "mysql", "type": "lowercase"},
+    {"wrong": "my sql", "type": "split"},
+    {"wrong": "message core", "type": "chinese_phonetic"},
+    {"wrong": "我的秋儿", "type": "chinese_phonetic_variant"}
+  ]
+}
+```
+
+
+
+---
+
+
 
 欢迎提交 Issue 和 PR：
 
@@ -187,6 +228,7 @@ A: 可以！
 - 📝 添加新的术语修正规则
 - 🎯 改进转录准确度
 - 📚 完善文档
+- 📝 bug修复及功能优化
 
 详见 [CONTRIBUTING.md](./CONTRIBUTING.md)
 

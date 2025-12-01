@@ -8,11 +8,11 @@
 
 CodeWhisper 默认使用中文模式，但是中文模式在识别英文专有名词时会有误差。
 
-**你的一条 Issue或PR，也许就能帮助所有中国开发者**
+**你的一条 Issue或PR，也许就能帮助所有中文社区开发者**
 
 如果你发现：
 - 说的是 "MySQL"，被识别成了 "My circle"
-- 说的是 "PostgreSQL"，被识别成了其他的
+- 说的是 "C sharp"，没被识别成C#，而被识别成了其他的
 - 或任何其他识别错误
 
 请：
@@ -22,7 +22,7 @@ CodeWhisper 默认使用中文模式，但是中文模式在识别英文专有�
    描述：当我说 "MySQL" 时，转录结果是 "Message Core"
    ```
 
-2. **或者直接提 PR**：自己修正！（见下面的步骤）
+2. **或者直接提 PR**：（见下面的步骤）
 
 ### 2. 添加修正规则
 
@@ -85,7 +85,7 @@ dictionaries/programmer_terms.json
 
 1. 找到对应的术语位置：
 
-```json
+```
 "language": {
   "terms": {
     "Python": {
@@ -100,7 +100,7 @@ dictionaries/programmer_terms.json
 
 2. 在 `variants` 数组中添加新变体：
 
-```json
+```
 "variants": [
   {"wrong": "python", "type": "lowercase", "reason": "小写形式"},
   {"wrong": "派松", "type": "chinese_phonetic", "reason": "中文音韵识别"}
@@ -113,7 +113,7 @@ dictionaries/programmer_terms.json
 
 1. 在相应分类的 `terms` 对象中添加：
 
-```json
+```
 "Elasticsearch": {
   "correct": "Elasticsearch",
   "description": "搜索和分析引擎",
@@ -181,7 +181,7 @@ pip install -r requirements.txt
 ### 测试你的改动
 
 ```bash
-# 测试字典规则
+# 测试字典规则 将你的录音文件放到根目录下
 python cli.py your_audio.m4a
 
 # 查看统计
@@ -224,91 +224,6 @@ A: 可以！直接在 JSON 中添加新的 `category` 即可。但建议先检�
 
 ---
 
-## 正则表达式小知识
-
-> 💡 **重点**：你在 JSON 中只需要写 **plain text**（错误识别的文本），系统会自动判断是中文还是英文，然后选择合适的处理方式！
-
-### 核心原理
-
-系统根据你输入的 `wrong` 字段是否包含中文字符来自动处理：
-
-- **包含中文** （如 "派松"、"message core"）→ 直接匹配
-- **只有英文** （如 "python"、"api"）→ 自动添加单词边界，避免误匹配
-
-### 为什么要区分？
-
-**例子 1：英文不加边界会怎样？**
-
-```
-规则：修正 "api" → "API"
-
-❌ 如果不加边界：
-输入：  "I have an apiary（蜜蜂养殖场）"
-输出：  "I have an APIary"  ← 错了！不应该改 apiary 里的 api
-
-✅ 如果加边界（系统自动做）：
-输入：  "I have an apiary"
-输出：  "I have an apiary"  ← 正确！只有单独的 api 才会被修正
-```
-
-**例子 2：中文加边界会怎样？**
-
-```
-规则：修正 "派松" → "Python"
-
-❌ 如果加边界：
-输入：  "这是派松代码"
-输出：  "这是派松代码"  ← 错了！中文没有空格，边界可能匹配不上
-
-✅ 如果不加边界（系统自动做）：
-输入：  "这是派松代码"
-输出：  "这是Python代码"  ← 正确！直接匹配就行了
-```
-
-### 新格式示例
-
-在新的字典格式中，你只需写入 `wrong` 字段，系统自动处理：
-
-```json
-"Python": {
-  "correct": "Python",
-  "variants": [
-    {"wrong": "python", "type": "lowercase", "reason": "小写形式"},
-    {"wrong": "派松", "type": "chinese_phonetic", "reason": "中文音韵识别"}
-  ]
-}
-```
-
-系统会自动处理：
-- `"python"` → 添加单词边界 → `r'\bpython\b'`
-- `"派松"` → 不加边界 → `r'派松'`
-
-### 匹配效果对比
-
-```
-规则 1：python → Python
-
-✅ "write python code"      → "write Python code"
-✅ "python is great"        → "Python is great"
-❌ "python"（单独词汇）     → "Python"（正确）
-❌ "python-dev"             → "python-dev"（不改，正确）
-
-
-规则 2：派松 → Python
-
-✅ "使用派松编程"          → "使用Python编程"
-✅ "派松很好用"            → "Python很好用"
-```
-
-### 简化记忆
-
-| 你输入的 `wrong` | 系统转换为 | 原因 |
-|----------------|----------|------|
-| `"python"` | `r'\bpython\b'` | 英文 → 加边界 |
-| `"派松"` | `r'派松'` | 中文 → 不加边界 |
-| `"my sql"` | `r'\bmy sql\b'` | 英文 → 加边界 |
-
-**总结：写你想修正的真实文本，系统自动搞定！**
 
 ---
 

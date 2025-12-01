@@ -1,17 +1,17 @@
 # Contributing to CodeWhisper 🤝
 
-感谢你有兴趣贡献 CodeWhisper！
+感谢你有兴趣贡献 CodeWhisper
 
 ## 我们最需要的贡献
 
-### 1. 报告识别错误（最重要！）⭐⭐⭐
+### 1. 报告识别错误（最重要！）⭐⭐⭐⭐⭐
 
-CodeWhisper 默认使用中文模式，因为我们的工具就是为中国程序员做的。但是中文模式在识别英文专有名词时会有误差。**这是我们进步的动力！**
+CodeWhisper 默认使用中文模式，但是中文模式在识别英文专有名词时会有误差。
 
-**你的一条 Issue，就能帮助所有中国开发者！**
+**你的一条 Issue或PR，也许就能帮助所有中国开发者**
 
 如果你发现：
-- 说的是 "MySQL"，被识别成了 "Message Core"
+- 说的是 "MySQL"，被识别成了 "My circle"
 - 说的是 "PostgreSQL"，被识别成了其他的
 - 或任何其他识别错误
 
@@ -30,41 +30,58 @@ CodeWhisper 默认使用中文模式，因为我们的工具就是为中国程�
 
 **如何做：**
 
-1. 编辑 `codewhisper/dict_manager.py`
-2. 在 `_get_builtin_dict()` 方法的相应分类中添加规则：
+直接编辑 `dictionaries/programmer_terms.json` 文件，在相应分类中添加规则：
 
-```python
-{"wrong": r"\b错误识别\b", "correct": "正确术语", "category": "分类"},
+```json
+{
+  "category": "database",
+  "rules": [
+    {
+      "wrong": "错误识别的文本",
+      "correct": "正确术语",
+      "description": "说明"
+    }
+  ]
+}
 ```
 
 **例子：**
-```python
-# 中文模式识别错误的例子
-{"wrong": r"\bmessage\s+core\b", "correct": "MySQL", "category": "database"},
-{"wrong": r"\bmy\s+s\s+q\s+l\b", "correct": "MySQL", "category": "database"},  # 分开读音
+```json
+{
+  "category": "database",
+  "rules": [
+    {
+      "wrong": "my circle",
+      "correct": "MySQL",
+      "description": "常见误识别"
+    }
+  ]
+}
 ```
 
 **规则说明：**
-- `wrong`: 正则表达式模式（Whisper 实际识别出的错误内容）
+- `wrong`: Whisper 实际识别出的错误内容（不需要写正则表达式，代码会自动处理）
 - `correct`: 正确的术语
-- `category`: 分类（database, framework, language, tools, concept, format, other）
+- `description`: 说明为什么会有这个错误
+- `category`: 分类（database, framework, language, tools, concept, format, other），后续会补充其他
+
 
 **提交 PR：**
 ```bash
 git checkout -b fix-mysql-recognition
-# 编辑 codewhisper/dict_manager.py
-git add codewhisper/dict_manager.py
-git commit -m "Fix: MySQL 被识别成 Message Core，添加修正规则"
+# 编辑 dictionaries/programmer_terms.json
+git add dictionaries/programmer_terms.json
+git commit -m "Fix: MySQL 被识别成 My circle，添加修正规则"
 git push origin fix-mysql-recognition
 ```
 
 ### 3. 改进现有规则
 
-某个规则不够准确？提交改进！
+某个规则效果不好？提交改进！
 
-- 修改正则表达式使其更精准
-- 修改分类
-- 添加注释说明原因
+- 修改 `wrong` 的文本使其更准确
+- 更新 `description` 说明
+- 改进 `correct` 的格式
 
 ---
 
@@ -94,69 +111,112 @@ python cli.py your_audio.m4a
 python cli.py --info
 ```
 
-### 提交 PR 前的检查清单
-
-- [ ] 代码格式整洁
-- [ ] 测试过你的改动
-- [ ] 更新了相关文档（如有必要）
-- [ ] Commit message 清晰
-
 ---
 
-## 术语分类指南
+## 常见问题 Q&A
 
-添加新规则时，请选择正确的分类：
+**Q: 怎样判断一个规则是否正确？**
 
-| 分类 | 例子 |
-|------|------|
-| **database** | MySQL, PostgreSQL, MongoDB, Redis |
-| **framework** | React, Vue, Django, Flask, Express |
-| **language** | Python, JavaScript, TypeScript, Go |
-| **tools** | Docker, Git, Kubernetes, Nginx |
-| **concept** | API, REST, GraphQL, CI/CD |
-| **format** | JSON, XML, YAML, CSV |
-| **other** | HTTP, HTTPS, Linux, Ubuntu |
+A: 你可以用 CLI 测试：
+```bash
+# 把识别错误的文本转录到文件，然后转录
+python cli.py your_audio.m4a
 
----
-
-## 正则表达式小提示
-
-- `\b` 是单词边界（避免匹配子串）
-- `\s*` 匹配空格（处理分词错误）
-- `\s+` 匹配一个或多个空格
-
-**例子：**
-```python
-# ❌ 不好：会误匹配
-{"wrong": r"mysql", "correct": "MySQL"}
-
-# ✅ 好：只匹配完整单词
-{"wrong": r"\bmysql\b", "correct": "MySQL"}
-
-# ✅ 很好：处理分词错误
-{"wrong": r"\bmy\s+sql\b", "correct": "MySQL"}
-
-# ✅ 最好：处理中文模式的音韵拟合
-{"wrong": r"\bmessage\s+core\b", "correct": "MySQL"}
 ```
+
+**Q: 为什么有些错误很难修正？**
+
+A: 某些错误是 Whisper 的固有识别特性，比如：
+- 中文模式会按音韵识别英文单词
+- 不同口音可能导致不同的识别结果
+- 某些词的发音确实相似
+
+这时候可以添加多个变体规则来覆盖不同情况。
+
+**Q: 我想添加一个全新的术语分类，可以吗？**
+
+A: 可以！直接在 JSON 中添加新的 `category` 即可。但建议先检查是否可以归入现有分类。
 
 ---
 
 ## 代码风格
 
-- Python 3.8+
+- Python 3.9+
 - 遵循 PEP 8
-- 添加清晰的注释（特别是复杂的正则表达式）
+- JSON 文件使用 2 个空格缩进
 
 ---
 
-## 问题或疑问？
+## 正则表达式小知识
 
-- 提交 Issue 讨论
-- 在 Pull Request 中描述你的想法
+> 💡 **重点**：你在 JSON 中只需要写 **plain text**，系统会自动判断是中文还是英文，然后选择合适的处理方式！
+
+### 核心原理
+
+系统根据你的规则中是否包含中文字符来自动处理：
+
+- **包含中文** → 直接匹配
+- **只有英文** → 自动添加单词边界，避免误匹配
+
+### 为什么要区分？
+
+**例子：英文不加边界会怎样？**
+
+```
+规则：修正 "api" → "API"
+
+如果不加边界：
+输入：  "I have an apiary（蜜蜂养殖场）"
+输出：  "I have an APIary"  ← 错了！
+        不应该改 apiary 里的 api
+
+如果加边界（系统自动做）：
+输入：  "I have an apiary"
+输出：  "I have an apiary"  ← 正确！
+只有单独的 api 才会被修正
+```
+
+
+### 系统自动处理示例
+
+当你写这些规则时：
+
+```json
+{
+  "category": "database",
+  "rules": [
+    {
+      "wrong": "message core",
+      "correct": "MySQL",
+      "description": "英文 → 自动加边界"
+    },
+    {
+      "wrong": "api",
+      "correct": "API",
+      "description": "英文 → 自动加边界"
+    },
+    {
+      "wrong": "门特尔",
+      "correct": "Mentor",
+      "description": "中文 → 不加边界"
+    }
+  ]
+}
+```
+### 匹配效果对比
+
+```
+修正 "api" → "API"
+
+✅ "call the api"         → "call the API"
+✅ "api documentation"     → "API documentation"
+❌ "apiary"               → "apiary"（不改，正确）
+❌ "APIs"                 → "APIs"（保持原样）
+
+
+
+**你就记住：写你想修正的真实文本，系统自动搞定**
 
 ---
 
 **感谢你的贡献！** 🎉
-
-让我们一起打造最好的中国程序员语音识别工具！

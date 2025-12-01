@@ -8,8 +8,7 @@ CodeWhisper CLI - 程序员专用语音转文字工具
   python cli.py demo.m4a --model tiny              # 使用 tiny 模型（最快）
   python cli.py demo.m4a --segments                # 显示详细分段
   python cli.py --info                             # 显示信息和统计
-
-提示：CodeWhisper 默认使用中文模式，专为中国程序员设计。
+CodeWhisper 默认使用中文模式，专为中国程序员设计。
 发现术语识别错误？欢迎提 Issue 或 PR 帮助完善词典！
 """
 

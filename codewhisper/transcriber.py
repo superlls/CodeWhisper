@@ -93,10 +93,11 @@ class CodeWhisper:
             if verbose:
                 print(f"🔧 修正程序员术语")
 
-            result["text"] = self.dict_manager.fix_text(result["text"])
+            # 第一次调用时清空修正记录，后续调用时累积
+            result["text"] = self.dict_manager.fix_text(result["text"], accumulate=False)
 
             for segment in result["segments"]:
-                segment["text"] = self.dict_manager.fix_text(segment["text"])
+                segment["text"] = self.dict_manager.fix_text(segment["text"], accumulate=True)
 
         return result
 

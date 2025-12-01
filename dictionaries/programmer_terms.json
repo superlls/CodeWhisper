@@ -1,108 +1,479 @@
-[
-  {
-    "category": "database",
-    "rules": [
-      {"wrong": "my circle", "correct": "MySQL", "description": "中文模式误识别变体"},
-      {"wrong": "my sql", "correct": "MySQL", "description": "空格分隔"},
-      {"wrong": "message core", "correct": "MySQL", "description": "中文模式最常见误识别"},
-      {"wrong": "my s q l", "correct": "MySQL", "description": "分开读音"},
-      {"wrong": "sequel", "correct": "SQL", "description": "发音相似"},
-      {"wrong": "post gres", "correct": "PostgreSQL", "description": "分隔形式"},
-      {"wrong": "post gres sql", "correct": "PostgreSQL", "description": "完整分隔"},
-      {"wrong": "mongo db", "correct": "MongoDB", "description": "空格变体"},
-      {"wrong": "redis", "correct": "Redis", "description": "大小写"},
-      {"wrong": "mariadb", "correct": "MariaDB", "description": "分布式数据库"}
-    ]
-  },
-  {
-    "category": "format",
-    "rules": [
-      {"wrong": "j son", "correct": "JSON", "description": "中文识别变体"},
-      {"wrong": "json", "correct": "JSON", "description": "标准形式"},
-      {"wrong": "x ml", "correct": "XML", "description": "中文识别变体"},
-      {"wrong": "yaml", "correct": "YAML", "description": "配置文件格式"},
-      {"wrong": "csv", "correct": "CSV", "description": "数据格式"}
-    ]
-  },
-  {
-    "category": "language",
-    "rules": [
-      {"wrong": "python", "correct": "Python", "description": "编程语言"},
-      {"wrong": "java script", "correct": "JavaScript", "description": "分隔形式"},
-      {"wrong": "j s", "correct": "JS", "description": "缩写"},
-      {"wrong": "type script", "correct": "TypeScript", "description": "分隔形式"},
-      {"wrong": "golang", "correct": "Go", "description": "Go语言"},
-      {"wrong": "rust", "correct": "Rust", "description": "编程语言"},
-      {"wrong": "java", "correct": "Java", "description": "编程语言"},
-      {"wrong": "c++", "correct": "C++", "description": "C Plus Plus"},
-      {"wrong": "c sharp", "correct": "C#", "description": "编程语言"},
-      {"wrong": "php", "correct": "PHP", "description": "服务端语言"},
-      {"wrong": "ruby", "correct": "Ruby", "description": "编程语言"},
-      {"wrong": "kotlin", "correct": "Kotlin", "description": "JVM语言"}
-    ]
-  },
-  {
-    "category": "framework",
-    "rules": [
-      {"wrong": "react", "correct": "React", "description": "前端框架"},
-      {"wrong": "vue", "correct": "Vue", "description": "前端框架"},
-      {"wrong": "angular", "correct": "Angular", "description": "前端框架"},
-      {"wrong": "svelte", "correct": "Svelte", "description": "前端框架"},
-      {"wrong": "node js", "correct": "Node.js", "description": "JavaScript运行时"},
-      {"wrong": "express", "correct": "Express", "description": "Web框架"},
-      {"wrong": "django", "correct": "Django", "description": "Python框架"},
-      {"wrong": "flask", "correct": "Flask", "description": "Python框架"},
-      {"wrong": "fast api", "correct": "FastAPI", "description": "现代Python框架"},
-      {"wrong": "spring", "correct": "Spring", "description": "Java框架"}
-    ]
-  },
-  {
-    "category": "tools",
-    "rules": [
-      {"wrong": "docker", "correct": "Docker", "description": "容器化"},
-      {"wrong": "kubernetes", "correct": "Kubernetes", "description": "容器编排"},
-      {"wrong": "kubectl", "correct": "kubectl", "description": "K8s工具"},
-      {"wrong": "git hub", "correct": "GitHub", "description": "代码托管"},
-      {"wrong": "git lab", "correct": "GitLab", "description": "代码托管"},
-      {"wrong": "git", "correct": "Git", "description": "版本控制"},
-      {"wrong": "nginx", "correct": "Nginx", "description": "Web服务器"},
-      {"wrong": "apache", "correct": "Apache", "description": "Web服务器"},
-      {"wrong": "gradle", "correct": "Gradle", "description": "构建工具"},
-      {"wrong": "maven", "correct": "Maven", "description": "构建工具"},
-      {"wrong": "npm", "correct": "npm", "description": "包管理器"},
-      {"wrong": "yarn", "correct": "Yarn", "description": "包管理器"},
-      {"wrong": "pip", "correct": "pip", "description": "Python包管理器"}
-    ]
-  },
-  {
-    "category": "concept",
-    "rules": [
-      {"wrong": "api", "correct": "API", "description": "应用程序接口"},
-      {"wrong": "rest", "correct": "REST", "description": "架构风格"},
-      {"wrong": "graph ql", "correct": "GraphQL", "description": "查询语言"},
-      {"wrong": "rest ful", "correct": "RESTful", "description": "风格"},
-      {"wrong": "sql", "correct": "SQL", "description": "数据库语言"},
-      {"wrong": "orm", "correct": "ORM", "description": "对象关系映射"},
-      {"wrong": "cicd", "correct": "CI/CD", "description": "持续集成部署"},
-      {"wrong": "ci cd", "correct": "CI/CD", "description": "持续集成部署"},
-      {"wrong": "crud", "correct": "CRUD", "description": "基本操作"},
-      {"wrong": "mvc", "correct": "MVC", "description": "架构模式"},
-      {"wrong": "aws", "correct": "AWS", "description": "云服务商"},
-      {"wrong": "gcp", "correct": "GCP", "description": "云服务商"},
-      {"wrong": "azure", "correct": "Azure", "description": "云服务商"}
-    ]
-  },
-  {
-    "category": "other",
-    "rules": [
-      {"wrong": "http", "correct": "HTTP", "description": "协议"},
-      {"wrong": "https", "correct": "HTTPS", "description": "安全协议"},
-      {"wrong": "ssl", "correct": "SSL", "description": "安全套接层"},
-      {"wrong": "tls", "correct": "TLS", "description": "传输层安全"},
-      {"wrong": "linux", "correct": "Linux", "description": "操作系统"},
-      {"wrong": "ubuntu", "correct": "Ubuntu", "description": "Linux发行版"},
-      {"wrong": "debian", "correct": "Debian", "description": "Linux发行版"},
-      {"wrong": "centos", "correct": "CentOS", "description": "Linux发行版"}
-    ]
+{
+  "version": "2.0",
+  "description": "CodeWhisper 编程术语字典 - 支持多变体识别",
+  "last_updated": "2025-12-01",
+  "categories": {
+    "database": {
+      "name": "数据库",
+      "description": "数据库系统和相关术语",
+      "terms": {
+        "MySQL": {
+          "correct": "MySQL",
+          "description": "关系型数据库",
+          "variants": [
+            {"wrong": "mysql", "type": "lowercase", "reason": "小写形式"},
+            {"wrong": "my sql", "type": "split_english", "reason": "英文分隔"},
+            {"wrong": "message core", "type": "chinese_phonetic", "reason": "中文音韵识别"},
+            {"wrong": "my circle", "type": "chinese_phonetic_variant", "reason": "中文音韵变体"}
+          ]
+        },
+        "PostgreSQL": {
+          "correct": "PostgreSQL",
+          "description": "高级关系型数据库",
+          "variants": [
+            {"wrong": "postgresql", "type": "lowercase", "reason": "小写形式"},
+            {"wrong": "post gres sql", "type": "split_english", "reason": "英文分隔"},
+            {"wrong": "post gres", "type": "split_english_short", "reason": "部分分隔"}
+          ]
+        },
+        "MongoDB": {
+          "correct": "MongoDB",
+          "description": "文档型 NoSQL 数据库",
+          "variants": [
+            {"wrong": "mongodb", "type": "lowercase", "reason": "小写形式"},
+            {"wrong": "mongo db", "type": "split_english", "reason": "英文分隔"}
+          ]
+        },
+        "Redis": {
+          "correct": "Redis",
+          "description": "内存数据结构存储",
+          "variants": [
+            {"wrong": "redis", "type": "lowercase", "reason": "小写形式"},
+            {"wrong": "re dis", "type": "split_english", "reason": "英文分隔"},
+            {"wrong": "瑞迪斯", "type": "chinese_phonetic", "reason": "中文音韵识别"}
+          ]
+        },
+        "MariaDB": {
+          "correct": "MariaDB",
+          "description": "MySQL 的开源分支",
+          "variants": [
+            {"wrong": "mariadb", "type": "lowercase", "reason": "小写形式"},
+            {"wrong": "maria db", "type": "split_english", "reason": "英文分隔"}
+          ]
+        }
+      }
+    },
+    "language": {
+      "name": "编程语言",
+      "description": "编程语言名称",
+      "terms": {
+        "Python": {
+          "correct": "Python",
+          "description": "Python 编程语言",
+          "variants": [
+            {"wrong": "python", "type": "lowercase", "reason": "小写形式"},
+            {"wrong": "派松", "type": "chinese_phonetic", "reason": "中文音韵识别"}
+          ]
+        },
+        "JavaScript": {
+          "correct": "JavaScript",
+          "description": "JavaScript 编程语言",
+          "variants": [
+            {"wrong": "javascript", "type": "lowercase", "reason": "小写形式"},
+            {"wrong": "java script", "type": "split_english", "reason": "英文分隔"}
+          ]
+        },
+        "TypeScript": {
+          "correct": "TypeScript",
+          "description": "TypeScript 编程语言",
+          "variants": [
+            {"wrong": "typescript", "type": "lowercase", "reason": "小写形式"},
+            {"wrong": "type script", "type": "split_english", "reason": "英文分隔"}
+          ]
+        },
+        "Go": {
+          "correct": "Go",
+          "description": "Go 编程语言",
+          "variants": [
+            {"wrong": "go", "type": "lowercase", "reason": "小写形式"},
+            {"wrong": "golang", "type": "full_name", "reason": "全名形式"},
+            {"wrong": "够浪", "type": "chinese_phonetic", "reason": "中文音韵识别"}
+          ]
+        },
+        "Rust": {
+          "correct": "Rust",
+          "description": "Rust 编程语言",
+          "variants": [
+            {"wrong": "rust", "type": "lowercase", "reason": "小写形式"},
+            {"wrong": "茹斯特", "type": "chinese_phonetic", "reason": "中文音韵识别"}
+          ]
+        },
+        "Java": {
+          "correct": "Java",
+          "description": "Java 编程语言",
+          "variants": [
+            {"wrong": "java", "type": "lowercase", "reason": "小写形式"},
+            {"wrong": "爪哇", "type": "chinese_phonetic", "reason": "中文音韵识别"}
+          ]
+        },
+        "C++": {
+          "correct": "C++",
+          "description": "C++ 编程语言",
+          "variants": [
+            {"wrong": "c++", "type": "standard", "reason": "标准形式"},
+            {"wrong": "c plus plus", "type": "spelled_out", "reason": "拼写形式"}
+          ]
+        },
+        "C#": {
+          "correct": "C#",
+          "description": "C# 编程语言",
+          "variants": [
+            {"wrong": "c#", "type": "standard", "reason": "标准形式"},
+            {"wrong": "c sharp", "type": "spelled_out", "reason": "拼写形式"}
+          ]
+        },
+        "PHP": {
+          "correct": "PHP",
+          "description": "PHP 编程语言",
+          "variants": [
+            {"wrong": "php", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "Ruby": {
+          "correct": "Ruby",
+          "description": "Ruby 编程语言",
+          "variants": [
+            {"wrong": "ruby", "type": "lowercase", "reason": "小写形式"},
+            {"wrong": "茹比", "type": "chinese_phonetic", "reason": "中文音韵识别"}
+          ]
+        },
+        "Kotlin": {
+          "correct": "Kotlin",
+          "description": "Kotlin 编程语言",
+          "variants": [
+            {"wrong": "kotlin", "type": "lowercase", "reason": "小写形式"}
+          ]
+        }
+      }
+    },
+    "framework": {
+      "name": "框架和库",
+      "description": "Web 框架、UI 框架等",
+      "terms": {
+        "React": {
+          "correct": "React",
+          "description": "前端 UI 框架",
+          "variants": [
+            {"wrong": "react", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "Vue": {
+          "correct": "Vue",
+          "description": "前端渐进式框架",
+          "variants": [
+            {"wrong": "vue", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "Angular": {
+          "correct": "Angular",
+          "description": "前端框架",
+          "variants": [
+            {"wrong": "angular", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "Svelte": {
+          "correct": "Svelte",
+          "description": "编译型前端框架",
+          "variants": [
+            {"wrong": "svelte", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "Node.js": {
+          "correct": "Node.js",
+          "description": "JavaScript 运行时",
+          "variants": [
+            {"wrong": "node.js", "type": "lowercase", "reason": "小写形式"},
+            {"wrong": "node js", "type": "split_english", "reason": "英文分隔"}
+          ]
+        },
+        "Express": {
+          "correct": "Express",
+          "description": "Node.js Web 框架",
+          "variants": [
+            {"wrong": "express", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "Django": {
+          "correct": "Django",
+          "description": "Python Web 框架",
+          "variants": [
+            {"wrong": "django", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "Flask": {
+          "correct": "Flask",
+          "description": "轻量级 Python 框架",
+          "variants": [
+            {"wrong": "flask", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "FastAPI": {
+          "correct": "FastAPI",
+          "description": "现代 Python Web 框架",
+          "variants": [
+            {"wrong": "fastapi", "type": "lowercase", "reason": "小写形式"},
+            {"wrong": "fast api", "type": "split_english", "reason": "英文分隔"}
+          ]
+        },
+        "Spring": {
+          "correct": "Spring",
+          "description": "Java 企业应用框架",
+          "variants": [
+            {"wrong": "spring", "type": "lowercase", "reason": "小写形式"}
+          ]
+        }
+      }
+    },
+    "tools": {
+      "name": "开发工具",
+      "description": "开发工具、版本控制、包管理等",
+      "terms": {
+        "Docker": {
+          "correct": "Docker",
+          "description": "容器化平台",
+          "variants": [
+            {"wrong": "docker", "type": "lowercase", "reason": "小写形式"},
+            {"wrong": "到克尔", "type": "chinese_phonetic", "reason": "中文音韵识别"}
+          ]
+        },
+        "Kubernetes": {
+          "correct": "Kubernetes",
+          "description": "容器编排平台",
+          "variants": [
+            {"wrong": "kubernetes", "type": "lowercase", "reason": "小写形式"},
+            {"wrong": "k8s", "type": "abbreviation", "reason": "缩写形式"}
+          ]
+        },
+        "Git": {
+          "correct": "Git",
+          "description": "版本控制系统",
+          "variants": [
+            {"wrong": "git", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "GitHub": {
+          "correct": "GitHub",
+          "description": "代码托管平台",
+          "variants": [
+            {"wrong": "github", "type": "lowercase", "reason": "小写形式"},
+            {"wrong": "git hub", "type": "split_english", "reason": "英文分隔"}
+          ]
+        },
+        "GitLab": {
+          "correct": "GitLab",
+          "description": "代码托管平台",
+          "variants": [
+            {"wrong": "gitlab", "type": "lowercase", "reason": "小写形式"},
+            {"wrong": "git lab", "type": "split_english", "reason": "英文分隔"}
+          ]
+        },
+        "Nginx": {
+          "correct": "Nginx",
+          "description": "高性能 Web 服务器",
+          "variants": [
+            {"wrong": "nginx", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "Apache": {
+          "correct": "Apache",
+          "description": "Web 服务器",
+          "variants": [
+            {"wrong": "apache", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "Maven": {
+          "correct": "Maven",
+          "description": "Java 项目管理工具",
+          "variants": [
+            {"wrong": "maven", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "Gradle": {
+          "correct": "Gradle",
+          "description": "项目自动化构建工具",
+          "variants": [
+            {"wrong": "gradle", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "npm": {
+          "correct": "npm",
+          "description": "Node.js 包管理器",
+          "variants": [
+            {"wrong": "npm", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "Yarn": {
+          "correct": "Yarn",
+          "description": "快速可靠的包管理器",
+          "variants": [
+            {"wrong": "yarn", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "pip": {
+          "correct": "pip",
+          "description": "Python 包管理器",
+          "variants": [
+            {"wrong": "pip", "type": "lowercase", "reason": "小写形式"}
+          ]
+        }
+      }
+    },
+    "concept": {
+      "name": "技术概念",
+      "description": "架构、模式、协议等概念",
+      "terms": {
+        "API": {
+          "correct": "API",
+          "description": "应用程序编程接口",
+          "variants": [
+            {"wrong": "api", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "REST": {
+          "correct": "REST",
+          "description": "表现层状态转移架构风格",
+          "variants": [
+            {"wrong": "rest", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "RESTful": {
+          "correct": "RESTful",
+          "description": "遵循 REST 风格的设计",
+          "variants": [
+            {"wrong": "restful", "type": "lowercase", "reason": "小写形式"},
+            {"wrong": "rest ful", "type": "split_english", "reason": "英文分隔"}
+          ]
+        },
+        "GraphQL": {
+          "correct": "GraphQL",
+          "description": "查询语言和运行时",
+          "variants": [
+            {"wrong": "graphql", "type": "lowercase", "reason": "小写形式"},
+            {"wrong": "graph ql", "type": "split_english", "reason": "英文分隔"}
+          ]
+        },
+        "SQL": {
+          "correct": "SQL",
+          "description": "结构化查询语言",
+          "variants": [
+            {"wrong": "sql", "type": "lowercase", "reason": "小写形式"},
+            {"wrong": "sequel", "type": "pronunciation", "reason": "发音相似"}
+          ]
+        },
+        "ORM": {
+          "correct": "ORM",
+          "description": "对象关系映射",
+          "variants": [
+            {"wrong": "orm", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "CRUD": {
+          "correct": "CRUD",
+          "description": "基本数据操作",
+          "variants": [
+            {"wrong": "crud", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "CI/CD": {
+          "correct": "CI/CD",
+          "description": "持续集成/持续部署",
+          "variants": [
+            {"wrong": "cicd", "type": "no_slash", "reason": "无斜杠形式"},
+            {"wrong": "ci cd", "type": "split_english", "reason": "英文分隔"},
+            {"wrong": "ci/cd", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "MVC": {
+          "correct": "MVC",
+          "description": "模型-视图-控制器架构",
+          "variants": [
+            {"wrong": "mvc", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "AWS": {
+          "correct": "AWS",
+          "description": "Amazon Web Services",
+          "variants": [
+            {"wrong": "aws", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "GCP": {
+          "correct": "GCP",
+          "description": "Google Cloud Platform",
+          "variants": [
+            {"wrong": "gcp", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "Azure": {
+          "correct": "Azure",
+          "description": "Microsoft Azure 云平台",
+          "variants": [
+            {"wrong": "azure", "type": "lowercase", "reason": "小写形式"}
+          ]
+        }
+      }
+    },
+    "protocol_os": {
+      "name": "协议和操作系统",
+      "description": "网络协议、操作系统等",
+      "terms": {
+        "HTTP": {
+          "correct": "HTTP",
+          "description": "超文本传输协议",
+          "variants": [
+            {"wrong": "http", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "HTTPS": {
+          "correct": "HTTPS",
+          "description": "安全的超文本传输协议",
+          "variants": [
+            {"wrong": "https", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "SSL": {
+          "correct": "SSL",
+          "description": "安全套接层",
+          "variants": [
+            {"wrong": "ssl", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "TLS": {
+          "correct": "TLS",
+          "description": "传输层安全",
+          "variants": [
+            {"wrong": "tls", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "Linux": {
+          "correct": "Linux",
+          "description": "开源操作系统",
+          "variants": [
+            {"wrong": "linux", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "Ubuntu": {
+          "correct": "Ubuntu",
+          "description": "基于 Debian 的 Linux 发行版",
+          "variants": [
+            {"wrong": "ubuntu", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "Debian": {
+          "correct": "Debian",
+          "description": "Linux 发行版",
+          "variants": [
+            {"wrong": "debian", "type": "lowercase", "reason": "小写形式"}
+          ]
+        },
+        "CentOS": {
+          "correct": "CentOS",
+          "description": "Linux 发行版",
+          "variants": [
+            {"wrong": "centos", "type": "lowercase", "reason": "小写形式"}
+          ]
+        }
+      }
+    }
   }
-]
+}

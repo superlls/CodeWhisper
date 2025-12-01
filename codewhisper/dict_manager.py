@@ -27,6 +27,7 @@ class DictionaryManager:
             "total_rules": len(self.replacements),
             "replacements_made": 0
         }
+        self.corrections = []  # 记录每次修正的详情
 
     def _load_dict(self) -> List[Dict]:
         """加载字典，优先使用自定义路径，否则使用默认路径"""
@@ -58,27 +59,48 @@ class DictionaryManager:
         return default_path if os.path.exists(default_path) else None
 
     def _parse_dict(self, data: List[Dict]) -> List[Dict]:
-        """解析字典数据，将分类下的规则展开并转换为正则表达式格式"""
+        """解析字典数据，支持新旧格式"""
         rules = []
-        for category_group in data:
-            category = category_group.get('category', 'other')
-            for rule in category_group.get('rules', []):
-                wrong_text = rule.get('wrong', '')
-                correct_text = rule.get('correct', '')
 
-                # 检查是否包含中文
-                if self._contains_chinese(wrong_text):
-                    # 中文：直接使用，不加单词边界
-                    regex_pattern = re.escape(wrong_text)
-                else:
-                    # 英文：添加单词边界和转义
-                    regex_pattern = r'\b' + re.escape(wrong_text) + r'\b'
+        # 检测字典格式：新格式有 version 字段，旧格式是数组
+        if isinstance(data, dict) and "version" in data:
+            # 新格式：按类别->术语->变体结构
+            for category_name, category_data in data.get("categories", {}).items():
+                for term_name, term_data in category_data.get("terms", {}).items():
+                    for variant in term_data.get("variants", []):
+                        wrong_text = variant.get("wrong", "")
+                        correct_text = term_data.get("correct", "")
 
-                rules.append({
-                    'wrong': regex_pattern,
-                    'correct': correct_text,
-                    'category': category
-                })
+                        # 检查是否包含中文
+                        if self._contains_chinese(wrong_text):
+                            regex_pattern = re.escape(wrong_text)
+                        else:
+                            regex_pattern = r'\b' + re.escape(wrong_text) + r'\b'
+
+                        rules.append({
+                            'wrong': regex_pattern,
+                            'correct': correct_text,
+                            'category': category_name,
+                            'variant_type': variant.get("type", "unknown")
+                        })
+        else:
+            # 旧格式：数组结构
+            for category_group in data:
+                category = category_group.get('category', 'other')
+                for rule in category_group.get('rules', []):
+                    wrong_text = rule.get('wrong', '')
+                    correct_text = rule.get('correct', '')
+
+                    if self._contains_chinese(wrong_text):
+                        regex_pattern = re.escape(wrong_text)
+                    else:
+                        regex_pattern = r'\b' + re.escape(wrong_text) + r'\b'
+
+                    rules.append({
+                        'wrong': regex_pattern,
+                        'correct': correct_text,
+                        'category': category
+                    })
         return rules
 
     def _contains_chinese(self, text: str) -> bool:
@@ -88,26 +110,37 @@ class DictionaryManager:
                 return True
         return False
 
-    def fix_text(self, text: str) -> str:
+    def fix_text(self, text: str, accumulate: bool = True) -> str:
         """
         修正文本中的程序员术语
 
         Args:
             text: 输入文本
+            accumulate: 是否累积修正记录（True 则追加，False 则覆盖）
 
         Returns:
             修正后的文本
         """
-        original_text = text
+        if not accumulate:
+            self.corrections = []  # 清空上次的修正记录
+
         replacement_count = 0
 
         for item in self.replacements:
             pattern = item["wrong"]
             replacement = item["correct"]
+            category = item.get("category", "unknown")
 
             # 使用正则表达式进行替换，case-insensitive
             matches = re.findall(pattern, text, flags=re.IGNORECASE)
             if matches:
+                # 记录每个匹配的词
+                for match in matches:
+                    self.corrections.append({
+                        "wrong": match,
+                        "correct": replacement,
+                        "category": category
+                    })
                 replacement_count += len(matches)
 
             text = re.sub(pattern, replacement, text, flags=re.IGNORECASE)
@@ -158,6 +191,10 @@ class DictionaryManager:
     def get_stats(self) -> Dict:
         """获取统计信息"""
         return self.stats
+
+    def get_corrections(self) -> List[Dict]:
+        """获取最近一次修正的详细列表"""
+        return self.corrections
 
     def list_categories(self):
         """列出所有分类"""

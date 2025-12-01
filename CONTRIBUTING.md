@@ -30,58 +30,135 @@ CodeWhisper 默认使用中文模式，但是中文模式在识别英文专有�
 
 **如何做：**
 
-直接编辑 `dictionaries/programmer_terms.json` 文件，在相应分类中添加规则：
+编辑 `dictionaries/programmer_terms.json` 文件。新格式采用**分类 → 术语 → 变体**的三层结构，更清晰易维护：
 
 ```json
 {
-  "category": "database",
-  "rules": [
-    {
-      "wrong": "错误识别的文本",
-      "correct": "正确术语",
-      "description": "说明"
+  "categories": {
+    "database": {
+      "name": "数据库",
+      "terms": {
+        "MySQL": {
+          "correct": "MySQL",
+          "description": "关系型数据库",
+          "variants": [
+            {"wrong": "mysql", "type": "lowercase", "reason": "小写形式"},
+            {"wrong": "message core", "type": "chinese_phonetic", "reason": "中文音韵识别"},
+            {"wrong": "my sql", "type": "split_english", "reason": "英文分隔"}
+          ]
+        }
+      }
     }
+  }
+}
+```
+
+### 字典结构说明
+
+```
+dictionaries/programmer_terms.json
+│
+├─ version: "2.0"               # 字典版本
+├─ categories                   # 分类层
+│  ├─ database (数据库)
+│  ├─ language (编程语言)
+│  ├─ framework (框架和库)
+│  ├─ tools (开发工具)
+│  ├─ concept (技术概念)
+│  └─ protocol_os (协议和操作系统)
+│     │
+│     └─ terms: {}              # 术语层
+│        ├─ MySQL
+│        ├─ PostgreSQL
+│        └─ Redis
+│           │
+│           └─ variants: []     # 变体层
+│              ├─ mysql (小写)
+│              ├─ my sql (分隔)
+│              ├─ message core (中文音韵)
+│              └─ my circle (中文音韵变体)
+```
+
+### 添加新变体的步骤
+
+**场景**：发现用户说 "Python" 被识别成 "派松"，想添加这个变体
+
+1. 找到对应的术语位置：
+
+```json
+"language": {
+  "terms": {
+    "Python": {
+      "correct": "Python",
+      "variants": [
+        {"wrong": "python", "type": "lowercase"}
+      ]
+    }
+  }
+}
+```
+
+2. 在 `variants` 数组中添加新变体：
+
+```json
+"variants": [
+  {"wrong": "python", "type": "lowercase", "reason": "小写形式"},
+  {"wrong": "派松", "type": "chinese_phonetic", "reason": "中文音韵识别"}
+]
+```
+
+### 添加新术语的步骤
+
+**场景**：想为 "database" 分类添加 "Elasticsearch"
+
+1. 在相应分类的 `terms` 对象中添加：
+
+```json
+"Elasticsearch": {
+  "correct": "Elasticsearch",
+  "description": "搜索和分析引擎",
+  "variants": [
+    {"wrong": "elasticsearch", "type": "lowercase", "reason": "小写形式"},
+    {"wrong": "elastic search", "type": "split_english", "reason": "英文分隔"}
   ]
 }
 ```
 
-**例子：**
-```json
-{
-  "category": "database",
-  "rules": [
-    {
-      "wrong": "my circle",
-      "correct": "MySQL",
-      "description": "常见误识别"
-    }
-  ]
-}
-```
+### 变体类型说明
 
-**规则说明：**
-- `wrong`: Whisper 实际识别出的错误内容（不需要写正则表达式，代码会自动处理）
-- `correct`: 正确的术语
-- `description`: 说明为什么会有这个错误
-- `category`: 分类（database, framework, language, tools, concept, format, other），后续会补充其他
+| 类型 | 说明 | 例子 |
+|------|------|------|
+| `lowercase` | 小写形式 | python → Python |
+| `split_english` | 英文分隔（空格） | java script → JavaScript |
+| `split_english_short` | 部分分隔 | post gres → PostgreSQL |
+| `chinese_phonetic` | 中文音韵识别 | 派松 → Python |
+| `chinese_phonetic_variant` | 中文音韵变体 | 我的秋儿 → MySQL |
+| `chinese_translation` | 中文翻译 | 烧瓶 → Flask |
+| `chinese_similar` | 中文同音词 | 快递 → Express |
+| `pronunciation` | 发音相似 | sequel → SQL |
+| `full_name` | 全名形式 | golang → Go |
+| `abbreviation` | 缩写形式 | k8s → Kubernetes |
+| `spelled_out` | 拼写形式 | c plus plus → C++ |
+| `similar_english` | 相似英文 | view → Vue |
+| `mixed` | 混合形式 | java 脚本 → JavaScript |
 
+### 提交 PR：
 
-**提交 PR：**
 ```bash
-git checkout -b fix-mysql-recognition
+git checkout -b add-elasticsearch-support
 # 编辑 dictionaries/programmer_terms.json
 git add dictionaries/programmer_terms.json
-git commit -m "Fix: MySQL 被识别成 My circle，添加修正规则"
-git push origin fix-mysql-recognition
+git commit -m "Feat: 添加 Elasticsearch 术语及其变体"
+git push origin add-elasticsearch-support
 ```
 
 ### 3. 改进现有规则
 
-某个规则效果不好？提交改进！
+某个变体效果不好？提交改进！
 
 - 修改 `wrong` 的文本使其更准确
-- 更新 `description` 说明
-- 改进 `correct` 的格式
+- 更新 `reason` 说明为什么有这个识别
+- 添加遗漏的变体形式
 
 ---
 
@@ -149,73 +226,89 @@ A: 可以！直接在 JSON 中添加新的 `category` 即可。但建议先检�
 
 ## 正则表达式小知识
 
-> 💡 **重点**：你在 JSON 中只需要写 **plain text**，系统会自动判断是中文还是英文，然后选择合适的处理方式！
+> 💡 **重点**：你在 JSON 中只需要写 **plain text**（错误识别的文本），系统会自动判断是中文还是英文，然后选择合适的处理方式！
 
 ### 核心原理
 
-系统根据你的规则中是否包含中文字符来自动处理：
+系统根据你输入的 `wrong` 字段是否包含中文字符来自动处理：
 
-- **包含中文** → 直接匹配
-- **只有英文** → 自动添加单词边界，避免误匹配
+- **包含中文** （如 "派松"、"message core"）→ 直接匹配
+- **只有英文** （如 "python"、"api"）→ 自动添加单词边界，避免误匹配
 
 ### 为什么要区分？
 
-**例子：英文不加边界会怎样？**
+**例子 1：英文不加边界会怎样？**
 
 ```
 规则：修正 "api" → "API"
 
-如果不加边界：
+❌ 如果不加边界：
 输入：  "I have an apiary（蜜蜂养殖场）"
-输出：  "I have an APIary"  ← 错了！
-        不应该改 apiary 里的 api
+输出：  "I have an APIary"  ← 错了！不应该改 apiary 里的 api
 
-如果加边界（系统自动做）：
+✅ 如果加边界（系统自动做）：
 输入：  "I have an apiary"
-输出：  "I have an apiary"  ← 正确！
-只有单独的 api 才会被修正
+输出：  "I have an apiary"  ← 正确！只有单独的 api 才会被修正
 ```
 
+**例子 2：中文加边界会怎样？**
 
-### 系统自动处理示例
+```
+规则：修正 "派松" → "Python"
 
-当你写这些规则时：
+❌ 如果加边界：
+输入：  "这是派松代码"
+输出：  "这是派松代码"  ← 错了！中文没有空格，边界可能匹配不上
+
+✅ 如果不加边界（系统自动做）：
+输入：  "这是派松代码"
+输出：  "这是Python代码"  ← 正确！直接匹配就行了
+```
+
+### 新格式示例
+
+在新的字典格式中，你只需写入 `wrong` 字段，系统自动处理：
 
 ```json
-{
-  "category": "database",
-  "rules": [
-    {
-      "wrong": "message core",
-      "correct": "MySQL",
-      "description": "英文 → 自动加边界"
-    },
-    {
-      "wrong": "api",
-      "correct": "API",
-      "description": "英文 → 自动加边界"
-    },
-    {
-      "wrong": "门特尔",
-      "correct": "Mentor",
-      "description": "中文 → 不加边界"
-    }
+"Python": {
+  "correct": "Python",
+  "variants": [
+    {"wrong": "python", "type": "lowercase", "reason": "小写形式"},
+    {"wrong": "派松", "type": "chinese_phonetic", "reason": "中文音韵识别"}
   ]
 }
 ```
+
+系统会自动处理：
+- `"python"` → 添加单词边界 → `r'\bpython\b'`
+- `"派松"` → 不加边界 → `r'派松'`
+
 ### 匹配效果对比
 
 ```
-修正 "api" → "API"
+规则 1：python → Python
 
-✅ "call the api"         → "call the API"
-✅ "api documentation"     → "API documentation"
-❌ "apiary"               → "apiary"（不改，正确）
-❌ "APIs"                 → "APIs"（保持原样）
+✅ "write python code"      → "write Python code"
+✅ "python is great"        → "Python is great"
+❌ "python"（单独词汇）     → "Python"（正确）
+❌ "python-dev"             → "python-dev"（不改，正确）
 
 
+规则 2：派松 → Python
 
-**你就记住：写你想修正的真实文本，系统自动搞定**
+✅ "使用派松编程"          → "使用Python编程"
+✅ "派松很好用"            → "Python很好用"
+```
+
+### 简化记忆
+
+| 你输入的 `wrong` | 系统转换为 | 原因 |
+|----------------|----------|------|
+| `"python"` | `r'\bpython\b'` | 英文 → 加边界 |
+| `"派松"` | `r'派松'` | 中文 → 不加边界 |
+| `"my sql"` | `r'\bmy sql\b'` | 英文 → 加边界 |
+
+**总结：写你想修正的真实文本，系统自动搞定！**
 
 ---
 

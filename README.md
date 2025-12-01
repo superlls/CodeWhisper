@@ -97,16 +97,18 @@ Whisper 中文模式可能识别为：
 ### 安装
 
 ```bash
-git clone https://github.com/superlls/codewhisper.git
-cd codewhisper
+git clone https://github.com/superlls/CodeWhisper.git
+cd CodeWhisper
 
-python -m venv . venv
+python -m venv .venv
 source .venv/bin/activate  # macOS/Linux
 # 或
-. venv\Scripts\activate  # Windows
+.venv\Scripts\activate  # Windows
 
 pip install -r requirements.txt
 ```
+
+⚠️ **重要提示**：确保项目文件夹命名为 `CodeWhisper`（不是 `whisper`），避免与 OpenAI Whisper 库包名冲突导致导入错误。
 ### CLI使用方式
 
 1.将你的录音文件拖入项目根目录下（与cli.py）同级

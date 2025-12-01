@@ -80,8 +80,7 @@ class DictionaryManager:
                         rules.append({
                             'wrong': regex_pattern,
                             'correct': correct_text,
-                            'category': category_name,
-                            'variant_type': variant.get("type", "unknown")
+                            'category': category_name
                         })
         else:
             # 旧格式：数组结构

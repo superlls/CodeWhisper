@@ -5,6 +5,14 @@
     "work_terms": {
     "name": "职场术语",
     "terms": {
+      "提测": {
+        "correct": "提测",
+        "description": "提交测试环节",
+        "variants": [
+          {"wrong": "体测", "description": "同音误识别"},
+          {"wrong": "提侧", "description": "同音误识别"}
+        ]
+      },
       "排期": {
         "correct": "排期",
         "description": "根据需求和开发工作量安排完成时间，在此期间需要按计划推进。若无法按时完成，需要提前向上级或 PM 报风险；若超过截止时间则视为逾期。",
@@ -17,10 +25,9 @@
         "correct": "逾期",
         "description": "任务未在排期截止时间前完成的情况，通常需要说明原因并在后续排期中补充处理。",
         "variants": [
-          {"wrong": "预期", "description": "中文音韵误识别，最常见"},
-          {"wrong": "于期", "description": "同音字且模型常输出"},
-          {"wrong": "鱼期", "description": "中文发音接近"},
-          {"wrong": "余期", "description": "中文近音字"}
+          {"wrong": "预期", "description": "常见中文音韵误识别"},
+          {"wrong": "于期", "description": "常见中文音韵误识别"},
+          {"wrong": "余期", "description": "常见中文音韵误识别"}
         ]
       },
       "提PR": {
@@ -46,14 +53,6 @@
         "variants": [
           {"wrong": "leader", "description": "小写形式"},
           {"wrong": "利德儿", "description": "中文音韵误识别"}
-        ]
-      },
-      "提测": {
-        "correct": "提测",
-        "description": "提交测试环节",
-        "variants": [
-          {"wrong": "体测", "description": "同音误识别"},
-          {"wrong": "提侧", "description": "同音误识别"}
         ]
       },
       "联调": {

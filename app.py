@@ -3,7 +3,7 @@
 CodeWhisper MenuBar - 程序员专用语音转文字工具（Mac的菜单栏版本）
 """
 
-from gui.menu_bar_app import main
+from MacGUI.menu_bar_app import main
 
 
 if __name__ == "__main__":

@@ -280,6 +280,7 @@ A: 可以！
 - 🎯 改进转录准确度
 - 📚 完善文档
 - 📝 bug修复及功能优化
+- 🎯 反馈建议：1656839861un@gmail.com
 
 详见 [CONTRIBUTING.md](./CONTRIBUTING.md)
 

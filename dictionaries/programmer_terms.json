@@ -53,7 +53,8 @@
         "description": "提交测试环节",
         "variants": [
           {"wrong": "体测", "description": "同音误识别"},
-          {"wrong": "提侧", "description": "同音误识别"}
+          {"wrong": "提侧", "description": "同音误识别"},
+          {"wrong": "T测", "description": "同音误识别"}
         ]
       },
       "联调": {
@@ -61,7 +62,8 @@
         "description": "与前端或其他部门对接开发，进行上下游接口调用",
         "variants": [
           {"wrong": "连调", "description": "同音误识别"},
-          {"wrong": "联条", "description": "音韵误识别"}
+          {"wrong": "联条", "description": "音韵误识别"},
+          {"wrong": "连条", "description": "音韵误识别"}
         ]
       },
     "review": {
@@ -75,8 +77,8 @@
       "correct": "灰度",
       "description": "灰度发布",
       "variants": [
-        {"wrong": "灰度", "description": "扩展形式"},
-        {"wrong": "回度", "description": "中文音韵误识别"}
+        {"wrong": "回度", "description": "中文音韵误识别"},
+         {"wrong": "挥度", "description": "中文音韵误识别"}
       ]
     },
     "验收": {
@@ -300,7 +302,8 @@
           "description": "Java后端开发框架",
           "variants": [
             {"wrong": "Spring Boat", "description": "单词独立识别"},
-            {"wrong": "Spring Bot", "description": "单词错误识别"}
+            {"wrong": "Spring Bot", "description": "单词错误识别"},
+            {"wrong": "SpringBot", "description": "音韵误识别"}
           ]
         },
         "Apollo": {
@@ -424,7 +427,8 @@
           "description": "分布式事件流平台，常用作消息队列",
           "variants": [
             {"wrong": "kafka", "description": "小写形式"},
-            {"wrong": "卡夫卡", "description": "中文音韵识别"}
+            {"wrong": "卡夫卡", "description": "中文音韵识别"},
+            {"wrong": "卡复卡", "description": "中文音韵识别"}
           ]
         },
         "Zookeeper": {
@@ -439,7 +443,9 @@
           "correct": "CAT",
           "description": "阿里开源的实时应用性能监控平台",
           "variants": [
-            {"wrong": "cat", "description": "小写形式"}
+            {"wrong": "cat", "description": "小写形式"},
+            {"wrong": "Kat","description": "错误识别单词"},
+            {"wrong": "kat","description": "错误识别单词"}
           ]
         },
         "Arthas": {
@@ -545,6 +551,15 @@
           "variants": [
             {"wrong": "azure", "description": "小写形式"}
           ]
+        },
+        "日志": {
+          "correct": "日志",
+          "description": "记录程序运行过程中的过程",
+          "variants": [
+            {"wrong": "日值", "description": "中文错误识别"},
+            {"wrong": "日治", "description": "中文错误识别"},
+            {"wrong": "日止", "description": "中文错误识别"}
+          ]
         }
       }
     },
@@ -634,8 +649,7 @@
           "correct": "DNS",
           "description": "域名系统，将域名解析为 IP 地址",
           "variants": [
-            {"wrong": "dns", "description": "小写形式"},
-            {"wrong": "D N S", "description": "英文分隔识别"}
+            {"wrong": "dns", "description": "小写形式"}
           ]
         },
         "FTP": {

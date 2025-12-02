@@ -153,17 +153,6 @@ https://ffmpeg.org/download.html
 brew install ffmpeg
 ```
 
-**Linux:**
-```bash
-# Debian/Ubuntu
-sudo apt update && sudo apt install ffmpeg
-
-# RedHat/CentOS/Fedora
-sudo yum install ffmpeg
-
-# Arch Linux
-sudo pacman -S ffmpeg
-```
 
 ⚠️ **如未安装 FFmpeg**，运行 CLI 时会提示安装，避免出现 `WinError 2` 或类似错误。
 

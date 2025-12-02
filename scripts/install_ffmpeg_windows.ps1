@@ -84,7 +84,8 @@ try {
 }
 catch {
     Write-Host "`n❌ FFmpeg 安装失败: $_`n" -ForegroundColor Red
-    Write-Host "请手动安装 FFmpeg，访问: https://ffmpeg.org/download.html`n" -ForegroundColor Yellow
+    Write-Host "请手动安装 FFmpeg，访问: https://ffmpeg.org/download.html" -ForegroundColor Yellow
+    Write-Host ""
     exit 1
 }
 

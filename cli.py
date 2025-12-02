@@ -15,6 +15,7 @@ from pathlib import Path
 
 from codewhisper.transcriber import CodeWhisper
 from codewhisper.utils import print_result
+from codewhisper.ffmpeg_utils import FFmpegChecker
 
 
 def main():
@@ -40,6 +41,11 @@ def main():
     parser.add_argument("--dict", help="自定义字典文件路径")#后续支持用户添加自定义个性化字典todo
 
     args = parser.parse_args()
+
+    # 检查 FFmpeg（仅在需要转录音频时检查）
+    if args.audio_file or (not args.info and not args.audio_file and len(sys.argv) > 1):
+        # 用户想要转录音频，检查 FFmpeg
+        FFmpegChecker.check_and_exit_if_missing()
 
     # 显示信息模式
     if args.info:

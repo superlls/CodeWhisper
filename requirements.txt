@@ -7,3 +7,4 @@ tiktoken
 rumps
 sounddevice
 soundfile
+hanziconv

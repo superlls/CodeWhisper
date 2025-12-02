@@ -1,8 +1,93 @@
 {
-  "version": "2.0",
-  "description": "CodeWhisper 编程术语字典 - 支持多变体识别",
-  "last_updated": "2025-12-01",
+  "version": "0.1.0",
+  "description": "CodeWhisper 编程术语字典 - 纠正各种工作中的编程术语变体",
   "categories": {
+    "work_terms": {
+    "name": "职场术语",
+    "terms": {
+      "排期": {
+        "correct": "排期",
+        "description": "根据需求和开发工作量安排完成时间，在此期间需要按计划推进。若无法按时完成，需要提前向上级或 PM 报风险；若超过截止时间则视为逾期。",
+        "variants": [
+          {"wrong": "排气", "description": "中文音韵误识别"},
+          {"wrong": "拍期", "description": "发音近似"}
+        ]
+      },
+      "逾期": {
+        "correct": "逾期",
+        "description": "任务未在排期截止时间前完成的情况，通常需要说明原因并在后续排期中补充处理。",
+        "variants": [
+          {"wrong": "预期", "description": "中文音韵误识别，最常见"},
+          {"wrong": "于期", "description": "同音字且模型常输出"},
+          {"wrong": "鱼期", "description": "中文发音接近"},
+          {"wrong": "余期", "description": "中文近音字"}
+        ]
+      },
+      "提PR": {
+        "correct": "提PR",
+        "description": "提交 Pull Request",
+        "variants": [
+          {"wrong": "提pr", "description": "小写形式"},
+          {"wrong": "TPR", "description": "术语缩写大小写错误识别"}
+        ]
+      },
+      "Mentor": {
+        "correct": "Mentor",
+        "description": "指实习期间的带实习生的导师",
+        "variants": [
+          {"wrong": "门特尔", "description": "中文错误识别"},
+          {"wrong": "门特儿", "description": "中文错误识别"},
+          {"wrong": "mentor", "description": "小写"}
+        ]
+      },
+      "Leader": {
+        "correct": "Leader",
+        "description": "团队负责人，业务负责人，周会早会主持人",
+        "variants": [
+          {"wrong": "leader", "description": "小写形式"},
+          {"wrong": "利德儿", "description": "中文音韵误识别"}
+        ]
+      },
+      "提测": {
+        "correct": "提测",
+        "description": "提交测试环节",
+        "variants": [
+          {"wrong": "体测", "description": "同音误识别"},
+          {"wrong": "提侧", "description": "同音误识别"}
+        ]
+      },
+      "联调": {
+        "correct": "联调",
+        "description": "与前端或其他部门对接开发，进行上下游接口调用",
+        "variants": [
+          {"wrong": "连调", "description": "同音误识别"},
+          {"wrong": "联条", "description": "音韵误识别"}
+        ]
+      },
+    "review": {
+      "correct": "CodeReview",
+      "description": "代码评审",
+      "variants": [
+        {"wrong": "code review", "description": "小写形式"}
+      ]
+    },
+    "灰度": {
+      "correct": "灰度",
+      "description": "灰度发布",
+      "variants": [
+        {"wrong": "灰度", "description": "扩展形式"},
+        {"wrong": "回度", "description": "中文音韵误识别"}
+      ]
+    },
+    "验收": {
+      "correct": "验收",
+      "description": "产品或需求最终确认",
+      "variants": [
+        {"wrong": "厌收", "description": "音韵误识别"}
+      ]
+    }
+  }
+},
     "database": {
       "name": "数据库",
       "terms": {
@@ -221,9 +306,6 @@
           "correct": "SpringBoot",
           "description": "Java后端开发框架",
           "variants": [
-            {"wrong": "springboot", "description": "小写形式"},
-            {"wrong": "spring boot", "description": "英文分隔"},
-            {"wrong": "Spring Boot", "description": "标准分隔"},
             {"wrong": "Spring Boat", "description": "单词独立识别"}
           ]
         }

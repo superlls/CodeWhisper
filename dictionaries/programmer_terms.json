@@ -607,6 +607,50 @@
           "variants": [
             {"wrong": "centos", "description": "小写形式"}
           ]
+        },
+        "Fedora": {
+          "correct": "Fedora",
+          "description": "社区驱动的 Linux 发行版，由 Red Hat 赞助",
+          "variants": [
+            {"wrong": "fedora", "description": "小写形式"}
+          ]
+        },
+        "RedHat": {
+          "correct": "RedHat",
+          "description": "Red Hat Enterprise Linux，企业级商业 Linux 发行版",
+          "variants": [
+            {"wrong": "redhat", "description": "小写形式"},
+            {"wrong": "RHEL", "description": "发行版相关缩写"}
+          ]
+        },
+        "ARP": {
+          "correct": "ARP",
+          "description": "地址解析协议，用于根据 IP 地址解析 MAC 地址",
+          "variants": [
+            {"wrong": "arp", "description": "小写形式"}
+          ]
+        },
+        "DNS": {
+          "correct": "DNS",
+          "description": "域名系统，将域名解析为 IP 地址",
+          "variants": [
+            {"wrong": "dns", "description": "小写形式"},
+            {"wrong": "D N S", "description": "英文分隔识别"}
+          ]
+        },
+        "FTP": {
+          "correct": "FTP",
+          "description": "文件传输协议",
+          "variants": [
+            {"wrong": "ftp", "description": "小写形式"}
+          ]
+        },
+        "SMTP": {
+          "correct": "SMTP",
+          "description": "简单邮件传输协议",
+          "variants": [
+            {"wrong": "smtp", "description": "小写形式"}
+          ]
         }
       }
     }

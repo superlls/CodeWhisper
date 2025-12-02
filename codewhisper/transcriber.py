@@ -5,6 +5,7 @@
 import whisper
 from typing import Dict, Optional
 from .dict_manager import DictionaryManager
+from .utils import convert_to_simplified_chinese
 
 
 class CodeWhisper:
@@ -87,6 +88,14 @@ class CodeWhisper:
 
         if verbose:
             print(f"✓ 转录完成")
+
+        # 将繁体转换为简体
+        if verbose:
+            print(f"🔄 转换繁体为简体")
+
+        result["text"] = convert_to_simplified_chinese(result["text"])
+        for segment in result["segments"]:
+            segment["text"] = convert_to_simplified_chinese(segment["text"])
 
         # 修正程序员术语
         if fix_programmer_terms:

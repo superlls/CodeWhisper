@@ -299,7 +299,8 @@
           "correct": "SpringBoot",
           "description": "Java后端开发框架",
           "variants": [
-            {"wrong": "Spring Boat", "description": "单词独立识别"}
+            {"wrong": "Spring Boat", "description": "单词独立识别"},
+            {"wrong": "Spring Bot", "description": "单词错误识别"}
           ]
         },
         "Apollo": {

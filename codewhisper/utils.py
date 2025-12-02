@@ -1,4 +1,3 @@
-
 """
 工具函数
 """
@@ -6,6 +5,34 @@
 import os
 from pathlib import Path
 from typing import Optional
+
+try:
+    from hanziconv import HanziConv
+    HANZICONV_AVAILABLE = True
+except ImportError:
+    HANZICONV_AVAILABLE = False
+
+
+def convert_to_simplified_chinese(text: str) -> str:
+    """
+    将繁体中文转换为简体中文
+
+    Args:
+        text: 输入文本
+
+    Returns:
+        转换后的简体中文文本
+    """
+    if not text:
+        return text
+
+    if HANZICONV_AVAILABLE:
+        return HanziConv.toSimplified(text)
+    else:
+        # 如果 hanziconv 不可用，返回原文本并打印警告
+        print("⚠️  hanziconv 库未安装，无法进行繁体转简体转换")
+        print("📦 请运行: pip install hanziconv")
+        return text
 
 
 def get_project_root() -> Path:

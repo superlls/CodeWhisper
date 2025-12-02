@@ -105,6 +105,11 @@ source .venv/bin/activate  # macOS/Linux
 # 或
 .venv\Scripts\activate  # Windows
 
+# ⚠️ Windows 用户注意：安装依赖前，请在 requirements.txt 中注释掉以下两行（在行前加 #）：
+#   - rumps          # macOS 专用菜单栏应用库
+#   - pyobjc-framework-cocoa  # macOS Objective-C 框架（如有）
+# 然后再执行下面的 pip install 命令
+
 pip install -r requirements.txt
 ```
 
@@ -148,17 +153,6 @@ https://ffmpeg.org/download.html
 brew install ffmpeg
 ```
 
-**Linux:**
-```bash
-# Debian/Ubuntu
-sudo apt update && sudo apt install ffmpeg
-
-# RedHat/CentOS/Fedora
-sudo yum install ffmpeg
-
-# Arch Linux
-sudo pacman -S ffmpeg
-```
 
 ⚠️ **如未安装 FFmpeg**，运行 CLI 时会提示安装，避免出现 `WinError 2` 或类似错误。
 

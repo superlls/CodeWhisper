@@ -44,7 +44,7 @@ def main():
 
     # 检查 FFmpeg（仅在需要转录音频时检查）
     if args.audio_file or (not args.info and not args.audio_file and len(sys.argv) > 1):
-        # 用户想要转录音频，检查 FFmpeg是否配置
+        # 用户想要转录音频，检查 FFmpeg
         FFmpegChecker.check_and_exit_if_missing()
 
     # 显示信息模式

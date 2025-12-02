@@ -113,25 +113,15 @@
           "correct": "MongoDB",
           "description": "文档型 NoSQL 数据库",
           "variants": [
-            {"wrong": "mongodb", "description": "小写形式"},
-            {"wrong": "mongo db", "description": "英文分隔"}
+            {"wrong": "mongodb", "description": "小写形式"}
           ]
         },
         "Redis": {
           "correct": "Redis",
-          "description": "内存数据结构存储",
+          "description": "内存数据结构存储，缓存、分布式锁常用",
           "variants": [
             {"wrong": "redis", "description": "小写形式"},
-            {"wrong": "re dis", "description": "英文分隔"},
             {"wrong": "瑞迪斯", "description": "中文音韵识别"}
-          ]
-        },
-        "MariaDB": {
-          "correct": "MariaDB",
-          "description": "MySQL 的开源分支",
-          "variants": [
-            {"wrong": "mariadb", "description": "小写形式"},
-            {"wrong": "maria db", "description": "英文分隔"}
           ]
         }
       }
@@ -144,7 +134,7 @@
           "description": "Python 编程语言",
           "variants": [
             {"wrong": "python", "description": "小写形式"},
-            {"wrong": "派松", "description": "中文音韵识别"}
+            {"wrong": "派森", "description": "中文音韵识别"}
           ]
         },
         "JavaScript": {
@@ -176,8 +166,7 @@
           "correct": "Rust",
           "description": "Rust 编程语言",
           "variants": [
-            {"wrong": "rust", "description": "小写形式"},
-            {"wrong": "茹斯特", "description": "中文音韵识别"}
+            {"wrong": "rust", "description": "小写形式"}
           ]
         },
         "Java": {
@@ -185,21 +174,25 @@
           "description": "Java 编程语言",
           "variants": [
             {"wrong": "java", "description": "小写形式"},
-            {"wrong": "爪哇", "description": "中文音韵识别"}
+            {"wrong": "爪哇", "description": "中文音韵识别"},
+            {"wrong": "加瓦", "description": "中文音韵识别"},
+            {"wrong": "佳娃", "description": "中文音韵识别"}
           ]
         },
         "C++": {
           "correct": "C++",
           "description": "C++ 编程语言",
           "variants": [
-            {"wrong": "c plus plus", "description": "拼写形式"}
+            {"wrong": "C加加", "description": "中英混合"},
+            {"wrong": "c加加", "description": "小写中英混合"}
           ]
         },
         "C#": {
           "correct": "C#",
           "description": "C# 编程语言",
           "variants": [
-            {"wrong": "c sharp", "description": "拼写形式"}
+            {"wrong": "c sharp", "description": "拼写形式"},
+            {"wrong": "C sharp", "description": "拼写形式"}
           ]
         },
         "PHP": {
@@ -213,15 +206,15 @@
           "correct": "Ruby",
           "description": "Ruby 编程语言",
           "variants": [
-            {"wrong": "ruby", "description": "小写形式"},
-            {"wrong": "茹比", "description": "中文音韵识别"}
+            {"wrong": "ruby", "description": "小写形式"}
           ]
         },
         "Kotlin": {
           "correct": "Kotlin",
           "description": "Kotlin 编程语言",
           "variants": [
-            {"wrong": "kotlin", "description": "小写形式"}
+            {"wrong": "kotlin", "description": "小写形式"},
+            {"wrong": "寇特琳", "description": "按中文音韵错误识别"}
           ]
         }
       }
@@ -261,7 +254,7 @@
           "correct": "Node.js",
           "description": "JavaScript 运行时",
           "variants": [
-            {"wrong": "node.js", "description": "小写形式"},
+            {"wrong": "nodejs", "description": "小写形式"},
             {"wrong": "node js", "description": "英文分隔"}
           ]
         },
@@ -307,6 +300,14 @@
           "variants": [
             {"wrong": "Spring Boat", "description": "单词独立识别"}
           ]
+        },
+        "Apollo": {
+          "correct": "Apollo",
+          "description": "携程开源的配置中心",
+          "variants": [
+            {"wrong": "apollo", "description": "小写"},
+            {"wrong": "阿波罗", "description": "中文规范化"}
+          ]
         }
       }
     },
@@ -326,7 +327,8 @@
           "description": "容器编排平台",
           "variants": [
             {"wrong": "kubernetes", "description": "小写形式"},
-            {"wrong": "k8s", "description": "缩写形式"}
+            {"wrong": "k8s", "description": "缩写形式"},
+            {"wrong": "K8S", "description": "缩写形式"}
           ]
         },
         "Git": {
@@ -356,21 +358,24 @@
           "correct": "Nginx",
           "description": "高性能 Web 服务器",
           "variants": [
-            {"wrong": "nginx", "description": "小写形式"}
+            {"wrong": "nginx", "description": "小写形式"},
+            {"wrong": "N ginx", "description": "小写形式"}
           ]
         },
         "Apache": {
           "correct": "Apache",
           "description": "Web 服务器",
           "variants": [
-            {"wrong": "apache", "description": "小写形式"}
+            {"wrong": "apache", "description": "小写形式"},
+            {"wrong": "阿帕奇", "description": "规范转义"}
           ]
         },
         "Maven": {
           "correct": "Maven",
           "description": "Java 项目管理工具",
           "variants": [
-            {"wrong": "maven", "description": "小写形式"}
+            {"wrong": "maven", "description": "小写形式"},
+            {"wrong": "没问", "description": "中文转录错误"}
           ]
         },
         "Gradle": {
@@ -384,7 +389,7 @@
           "correct": "npm",
           "description": "Node.js 包管理器",
           "variants": [
-            {"wrong": "npm", "description": "小写形式"}
+            {"wrong": "NPM", "description": "大小写转义"}
           ]
         },
         "Yarn": {
@@ -399,6 +404,48 @@
           "description": "Python 包管理器",
           "variants": [
             {"wrong": "pip", "description": "小写形式"}
+          ]
+        },
+        "IDEA": {
+          "correct": "IDEA",
+          "description": "JetBrains 编写Java的IDE",
+          "variants": [
+            {"wrong": "idea", "description": "小写形式"},
+            {"wrong": "爱迪尔", "description": "中文"},
+            {"wrong": "艾迪尔", "description": "中文"},
+            {"wrong": "艾迪儿", "description": "中文"},
+            {"wrong": "爱迪儿", "description": "中文"}
+          ]
+        },
+        "Kafka": {
+          "correct": "Kafka",
+          "description": "分布式事件流平台，常用作消息队列",
+          "variants": [
+            {"wrong": "kafka", "description": "小写形式"},
+            {"wrong": "卡夫卡", "description": "中文音韵识别"}
+          ]
+        },
+        "Zookeeper": {
+          "correct": "Zookeeper",
+          "description": "分布式协调服务，常用于分布式系统配置管理和服务注册发现",
+          "variants": [
+            {"wrong": "zookeeper", "description": "小写形式"},
+            {"wrong": "zoo keeper", "description": "英文分隔"}
+          ]
+        },
+        "CAT": {
+          "correct": "CAT",
+          "description": "阿里开源的实时应用性能监控平台",
+          "variants": [
+            {"wrong": "cat", "description": "小写形式"}
+          ]
+        },
+        "Arthas": {
+          "correct": "Arthas",
+          "description": "阿里开源的 Java 诊断工具，用于线上问题诊断和排查",
+          "variants": [
+            {"wrong": "arthas", "description": "小写形式"},
+            {"wrong": "阿尔萨斯", "description": "中文音韵识别"}
           ]
         }
       }
@@ -440,6 +487,7 @@
           "correct": "SQL",
           "description": "结构化查询语言",
           "variants": [
+            {"wrong": "circle", "description": "发音相似"},
             {"wrong": "sql", "description": "小写形式"},
             {"wrong": "sequel", "description": "发音相似"}
           ]
@@ -463,6 +511,7 @@
           "description": "持续集成/持续部署",
           "variants": [
             {"wrong": "cicd", "description": "无斜杠形式"},
+            {"wrong": "CICD", "description": "规范化表示"},
             {"wrong": "ci cd", "description": "英文分隔"},
             {"wrong": "ci/cd", "description": "小写形式"}
           ]
@@ -539,7 +588,8 @@
           "correct": "Ubuntu",
           "description": "基于 Debian 的 Linux 发行版",
           "variants": [
-            {"wrong": "ubuntu", "description": "小写形式"}
+            {"wrong": "ubuntu", "description": "小写形式"},
+            {"wrong": "乌邦图", "description": "中文规范化"}
           ]
         },
         "Debian": {

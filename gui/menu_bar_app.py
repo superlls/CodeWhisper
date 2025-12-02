@@ -36,7 +36,7 @@ class CodeWhisperApp(rumps.App):
 
         try:
             print("📦 加载 CodeWhisper 模型...")
-            self.whisper = CodeWhisper(model_name="small") #模型选择
+            self.whisper = CodeWhisper(model_name="medium") #模型选择
             print("✓ 模型加载完成")
         except Exception as e:
             print(f"❌ 模型加载失败: {e}")

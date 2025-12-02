@@ -607,6 +607,51 @@
           "variants": [
             {"wrong": "centos", "description": "小写形式"}
           ]
+        },
+        "Review": {
+          "correct": "Review",
+          "description": "指代码走查、需求评审或文档审核等工作流程",
+          "variants": [
+            {"wrong": "review", "description": "小写形式"},
+            {"wrong": "瑞维尤", "description": "中文音译误识别"},
+            {"wrong": "Reivw", "description": "字母位置错误"}
+          ]
+        },
+        "Refactor": {
+          "correct": "Refactor",
+          "description": "代码重构，改善代码结构但不改变功能",
+          "variants": [
+            {"wrong": "refactor", "description": "小写形式"},
+            {"wrong": "Refecter", "description": "拼写误识别"},
+            {"wrong": "瑞法克特", "description": "中文音译误识别"}
+          ]
+        },
+        "上线": {
+          "correct": "上线",
+          "description": "代码或服务部署至生产环境",
+          "variants": [
+            {"wrong": "上限", "description": "同音误识别"},
+            {"wrong": "赏线", "description": "音韵误识别"},
+            {"wrong": "上仙", "description": "语音识别干扰"}
+          ]
+        },
+        "回归测试": {
+          "correct": "回归测试",
+          "description": "修改后重新验证已有功能是否被影响",
+          "variants": [
+            {"wrong": "回归测式", "description": "字形误识别"},
+            {"wrong": "灰龟测试", "description": "语音误识别"},
+            {"wrong": "回归测斯", "description": "同音替换错误"}
+          ]
+        },
+        "排期": {
+          "correct": "排期",
+          "description": "项目计划排布、任务周期制定",
+          "variants": [
+            {"wrong": "牌期", "description": "同音误识别"},
+            {"wrong": "排气", "description": "语音误识别"},
+            {"wrong": "派期", "description": "音韵误识别"}
+          ]
         }
       }
     }

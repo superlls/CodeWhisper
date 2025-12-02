@@ -3,9 +3,9 @@
 CodeWhisper CLI - 程序员专用语音转文字工具
 
 使用示例:
-  python cli.py demo.m4a                    # 基础转录（中文，默认）！！在控制台执行此命令
+  python cli.py demo.m4a（你的音频文件，支持MP3, MP4, MPEG, MPGA, M4A, WAV, WEBM ）      #基础转录（中文，默认）请在控制台执行此命令～
   python cli.py demo.m4a --language en      # 英文转录
-  python cli.py demo.m4a --model small      # 使用 small 模型 （或者你可以选择其他模型）
+  python cli.py demo.m4a --model base      # 使用 base 模型 （或者你可以选择其他模型）
   python cli.py --info                      # 显示统计信息
 """
 
@@ -19,32 +19,32 @@ from codewhisper.utils import print_result
 
 def main():
     parser = argparse.ArgumentParser(
-        description="CodeWhisper - 为中国程序员打造的语音转文字工具",
+        description="CodeWhisper - 为中文社区开发者打造的语音转文字工具",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""示例:
-  python cli.py audio.m4a              # 转录（中文，默认）
+  python cli.py audio.m4a（你的音频文件）  # 转录（默认走OpenAI开源的Whisper中文模型）（音频文件格式支持MP3, MP4, MPEG, MPGA, M4A, WAV, WEBM ）
   python cli.py audio.m4a --language en # 英文转录
-  python cli.py audio.m4a --model small # 使用 small 模型
+  python cli.py audio.m4a --model base # 使用 base 模型 或者你也可以改成其他
   python cli.py --info                 # 显示统计信息
 
-提示：CodeWhisper 专为中国程序员设计。发现识别错误？欢迎提 PR！"""
+ CodeWhisper 为中文社区开发者设计，发现新的错误映射？欢迎提 PR！"""
     )
 
     parser.add_argument("audio_file", nargs="?", help="音频文件路径")
-    parser.add_argument("--model", default="base", help="模型: tiny/base/small/medium/large (默认: base)")
-    parser.add_argument("--language", default="zh", help="语言代码: zh/en/... (默认: zh)")
+    parser.add_argument("--model", default="base", help="可选模型：tiny/base/small/medium/large")
+    parser.add_argument("--language", default="zh", help="语言代码: zh/en/... (默认走zh中文识别)")
     parser.add_argument("--no-fix", action="store_true", help="不修正编程术语")
     parser.add_argument("--verbose", action="store_true", help="显示修正详情")
     parser.add_argument("--segments", action="store_true", help="显示详细分段")
     parser.add_argument("--info", action="store_true", help="显示统计信息")
-    parser.add_argument("--dict", help="自定义字典文件路径")
+    parser.add_argument("--dict", help="自定义字典文件路径")#后续支持用户添加自定义个性化字典todo
 
     args = parser.parse_args()
 
     # 显示信息模式
     if args.info:
         try:
-            cw = CodeWhisper(model_name="base", dict_path=args.dict)
+            cw = CodeWhisper(model_name="base", dict_path=args.dict) #默认CLI使用base模型，后续支持用户使用命令添加自定义个性化字典todo
             categories = cw.get_dict_categories()
 
             print("\n" + "=" * 50)

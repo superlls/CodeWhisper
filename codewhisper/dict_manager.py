@@ -62,44 +62,23 @@ class DictionaryManager:
         """解析字典数据，支持新旧格式"""
         rules = []
 
-        # 检测字典格式：新格式有 version 字段，旧格式是数组
-        if isinstance(data, dict) and "version" in data:
-            # 新格式：按类别->术语->变体结构
-            for category_name, category_data in data.get("categories", {}).items():
-                for term_name, term_data in category_data.get("terms", {}).items():
-                    for variant in term_data.get("variants", []):
-                        wrong_text = variant.get("wrong", "")
-                        correct_text = term_data.get("correct", "")
+        # 按字典的类别->术语->变体结构获取字典数据
+        for category_name, category_data in data.get("categories", {}).items():
+            for term_name, term_data in category_data.get("terms", {}).items():
+                for variant in term_data.get("variants", []):
+                    wrong_text = variant.get("wrong", "")
+                    correct_text = term_data.get("correct", "")
 
-                        # 检查是否包含中文
-                        if self._contains_chinese(wrong_text):
-                            regex_pattern = re.escape(wrong_text)
-                        else:
-                            regex_pattern = r'\b' + re.escape(wrong_text) + r'\b'
-
-                        rules.append({
-                            'wrong': regex_pattern,
-                            'correct': correct_text,
-                            'category': category_name
-                        })
-        else:
-            # 旧格式：数组结构
-            for category_group in data:
-                category = category_group.get('category', 'other')
-                for rule in category_group.get('rules', []):
-                    wrong_text = rule.get('wrong', '')
-                    correct_text = rule.get('correct', '')
-
-                    if self._contains_chinese(wrong_text):
-                        regex_pattern = re.escape(wrong_text)
-                    else:
-                        regex_pattern = r'\b' + re.escape(wrong_text) + r'\b'
+                    # 对所有错误形式直接escape，不添加边界
+                    # 原因：包含空格的词（如"Spring Boat"）用\b会失败
+                    regex_pattern = re.escape(wrong_text)
 
                     rules.append({
                         'wrong': regex_pattern,
                         'correct': correct_text,
-                        'category': category
+                        'category': category_name
                     })
+
         return rules
 
     def _contains_chinese(self, text: str) -> bool:

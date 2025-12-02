@@ -108,6 +108,62 @@ source .venv/bin/activate  # macOS/Linux
 pip install -r requirements.txt
 ```
 
+### ⚠️ 系统依赖 - FFmpeg
+
+CodeWhisper 依赖 **FFmpeg** 来解析音频文件（MP3, MP4, M4A, WAV 等）。
+
+**检查 FFmpeg 是否已安装：**
+
+```bash
+ffmpeg -version
+```
+
+**如果未安装，请选择以下方式之一：**
+
+#### 🚀 方式 1：自动安装（推荐，所有平台）
+
+```bash
+python scripts/setup_environment.py
+```
+
+这个脚本会自动检测你的系统，并安装相应的 FFmpeg。
+
+#### 方式 2：手动安装
+
+**Windows:**
+```bash
+# 使用 Chocolatey（推荐）
+choco install ffmpeg
+
+# 或使用 Windows Package Manager
+winget install ffmpeg
+
+# 或访问官网手动下载
+https://ffmpeg.org/download.html
+```
+
+**macOS:**
+```bash
+# 使用 Homebrew（推荐）
+brew install ffmpeg
+```
+
+**Linux:**
+```bash
+# Debian/Ubuntu
+sudo apt update && sudo apt install ffmpeg
+
+# RedHat/CentOS/Fedora
+sudo yum install ffmpeg
+
+# Arch Linux
+sudo pacman -S ffmpeg
+```
+
+⚠️ **如未安装 FFmpeg**，运行 CLI 时会提示安装，避免出现 `WinError 2` 或类似错误。
+
+---
+
 ⚠️ **重要提示**：确保项目文件夹命名为 `CodeWhisper`（不是 `whisper`），避免与 OpenAI Whisper 库包名冲突导致导入错误。
 ### CLI使用方式
 
@@ -173,8 +229,28 @@ pip install -r requirements.txt
 # 2. 检查 Python 版本
 python --version  # 应该是 3.9+
 
-
+# 3. 检查 FFmpeg 是否安装
+ffmpeg -version
 ```
+
+**Q: 运行 CLI 遇到 WinError 2 或 ffmpeg not found？**
+
+A: 这说明 FFmpeg 未安装或未添加到 PATH。解决方案：
+
+1. **自动安装（推荐）**：
+   ```bash
+   python scripts/setup_environment.py
+   ```
+
+2. **手动安装**：
+   - Windows: `choco install ffmpeg` 或 `winget install ffmpeg`
+   - macOS: `brew install ffmpeg`
+   - Linux: `sudo apt install ffmpeg` (Debian/Ubuntu)
+
+3. **验证安装**：
+   ```bash
+   ffmpeg -version
+   ```
 
 **Q: 模型下载太慢？**
 

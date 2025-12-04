@@ -54,7 +54,8 @@
         "variants": [
           {"wrong": "体测", "description": "同音误识别"},
           {"wrong": "提侧", "description": "同音误识别"},
-          {"wrong": "T测", "description": "同音误识别"}
+          {"wrong": "T测", "description": "同音误识别"},
+          {"wrong": "题册", "description": "同音误识别"}
         ]
       },
       "联调": {
@@ -66,40 +67,54 @@
           {"wrong": "连条", "description": "音韵误识别"}
         ]
       },
-    "review": {
-      "correct": "CodeReview",
-      "description": "代码评审",
-      "variants": [
-        {"wrong": "code review", "description": "小写形式"}
-      ]
-    },
-    "灰度": {
-      "correct": "灰度",
-      "description": "灰度发布",
-      "variants": [
-        {"wrong": "回度", "description": "中文音韵误识别"},
-         {"wrong": "挥度", "description": "中文音韵误识别"}
-      ]
-    },
-    "验收": {
-      "correct": "验收",
-      "description": "产品或需求最终确认",
-      "variants": [
-        {"wrong": "厌收", "description": "音韵误识别"}
-      ]
-    },
-    "权限": {
-      "correct": "权限",
-      "description": "举例：过工单，过sql审核的权限",
-      "variants": [
-        {"wrong": "全线", "description": "识别错误"}
-      ]
+      "review": {
+        "correct": "CodeReview",
+        "description": "代码评审",
+        "variants": [
+          {"wrong": "code review", "description": "小写形式"}
+        ]
+      },
+      "灰度": {
+        "correct": "灰度",
+        "description": "灰度发布",
+        "variants": [
+          {"wrong": "回度", "description": "中文音韵误识别"},
+           {"wrong": "挥度", "description": "中文音韵误识别"}
+        ]
+        },
+      "验收": {
+        "correct": "验收",
+        "description": "产品或需求最终确认",
+        "variants": [
+          {"wrong": "厌收", "description": "音韵误识别"}
+        ]
+      },
+      "权限": {
+        "correct": "权限",
+        "description": "举例：过工单，过sql审核的权限",
+        "variants": [
+          {"wrong": "全线", "description": "识别错误"}
+        ]
+      },
+      "工单": {
+        "correct": "工单",
+        "description": "工单是团队在开发、测试、上线等流程中，用于追踪任务、变更、问题、审批等事项的标准化记录单。通常包含任务描述、负责人、优先级、状态、相关审核流程（如 SQL 审核、代码审核、发布审批）、以及执行结果。",
+        "variants": [
+          {"wrong": "公单", "description": "工单"}
+        ]
+      }
     }
-    }
-},
+  },
     "database": {
       "name": "数据库",
       "terms": {
+        "数据库": {
+          "correct": "数据库",
+          "description": "存数据的信息库",
+          "variants": [
+            {"wrong": "书记库", "description": "识别错误"}
+          ]
+        },
         "MySQL": {
           "correct": "MySQL",
           "description": "关系型数据库",
@@ -324,7 +339,9 @@
           "variants": [
             {"wrong": "Spring Boat", "description": "单词独立识别"},
             {"wrong": "Spring Bot", "description": "单词错误识别"},
-            {"wrong": "SpringBot", "description": "音韵误识别"}
+            {"wrong": "SpringBot", "description": "音韵误识别"},
+            {"wrong": "Springboard", "description": "音韵误识别"}
+
           ]
         },
         "Apollo": {
@@ -341,7 +358,8 @@
           "variants": [
             {"wrong": "caffeine", "description": "小写"},
             {"wrong": "开封音", "description": "中文音韵"},
-            {"wrong": "开复音", "description": "中文音韵"}
+            {"wrong": "开复音", "description": "中文音韵"},
+            {"wrong": "Kafin", "description": "英文错误识别"}
           ]
         }
       }
@@ -484,7 +502,8 @@
           "description": "阿里开源的 Java 诊断工具，用于线上问题诊断和排查",
           "variants": [
             {"wrong": "arthas", "description": "小写形式"},
-            {"wrong": "阿尔萨斯", "description": "中文音韵识别"}
+            {"wrong": "阿尔萨斯", "description": "中文音韵识别"},
+            {"wrong": "识别错误", "description": "中文错误识别"}
           ]
         }
       }

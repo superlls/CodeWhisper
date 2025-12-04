@@ -97,16 +97,13 @@ class CodeWhisper:
         for segment in result["segments"]:
             segment["text"] = convert_to_simplified_chinese(segment["text"])
 
-        # 修正程序员术语
+        # 替换术语
         if fix_programmer_terms:
             if verbose:
-                print(f"🔧 修正程序员术语")
+                print(f"🔧 修正为开发者术语")
 
-            # 第一次调用时清空修正记录，后续调用时累积
+            # 只修正主文本一次，避免重复修正
             result["text"] = self.dict_manager.fix_text(result["text"], accumulate=False)
-
-            for segment in result["segments"]:
-                segment["text"] = self.dict_manager.fix_text(segment["text"], accumulate=True)
 
         return result
 

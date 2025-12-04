@@ -122,6 +122,9 @@ class CodeWhisperApp(rumps.App):
             self._copy_to_clipboard(transcribed_text)
             self.title = "✅"
 
+            # 打印字典修正统计信息
+            self._print_dict_stats()
+
         except Exception as e:
             print(f"❌ 转录错误: {e}")
             import traceback
@@ -151,6 +154,26 @@ class CodeWhisperApp(rumps.App):
             print(f"📋 已复制到剪切板: {text[:50]}...")
         except Exception as e:
             print(f"❌ 复制到剪切板失败: {e}")
+
+    def _print_dict_stats(self):
+        """打印字典修正的统计信息"""
+        try:
+            stats = self.whisper.get_dict_stats()
+            corrections = self.whisper.dict_manager.get_corrections()
+
+            print(f"\n📊 字典修正统计信息:")
+            print(f"  📚 总规则数: {stats['total_rules']}")
+            print(f"  🔧 修正次数: {stats['replacements_made']}")
+
+            if corrections:
+                print(f"\n✏️ 修正详情:")
+                for i, correction in enumerate(corrections, 1):
+                    print(f"  {i}. {correction['wrong']} → {correction['correct']} ({correction['category']})")
+            else:
+                print(f"  (无修正)")
+
+        except Exception as e:
+            print(f"❌ 打印统计信息失败: {e}")
 
     def stop_recording(self, sender):
         """停止录音"""

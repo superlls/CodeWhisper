@@ -126,6 +126,20 @@
             {"wrong": "redis", "description": "小写形式"},
             {"wrong": "瑞迪斯", "description": "中文音韵识别"}
           ]
+        },
+        "DB": {
+          "correct": "DB",
+          "description": "DataBase数据库简称",
+          "variants": [
+            {"wrong": "db", "description": "小写形式"}
+          ]
+        },
+        "DBA": {
+          "correct": "DBA",
+          "description": "Database Administrator数据库管理员",
+          "variants": [
+            {"wrong": "dba", "description": "小写形式"}
+          ]
         }
       }
     },
@@ -313,8 +327,18 @@
             {"wrong": "apollo", "description": "小写"},
             {"wrong": "阿波罗", "description": "中文规范化"}
           ]
+        },
+        "Caffeine": {
+          "correct": "Caffeine",
+          "description": "高性能的本地内存缓存，Spring支持。",
+          "variants": [
+            {"wrong": "caffeine", "description": "小写"},
+            {"wrong": "开封音", "description": "中文音韵"},
+            {"wrong": "开复音", "description": "中文音韵"}
+          ]
         }
       }
+
     },
     "tools": {
       "name": "开发工具",

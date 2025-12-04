@@ -87,8 +87,15 @@
       "variants": [
         {"wrong": "厌收", "description": "音韵误识别"}
       ]
+    },
+    "权限": {
+      "correct": "权限",
+      "description": "举例：过工单，过sql审核的权限",
+      "variants": [
+        {"wrong": "全线", "description": "识别错误"}
+      ]
     }
-  }
+    }
 },
     "database": {
       "name": "数据库",

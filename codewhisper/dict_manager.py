@@ -19,7 +19,7 @@ class DictionaryManager:
         初始化字典管理器
 
         Args:
-            dict_path: 字典文件路径，如果为None则使用默认字典
+            dict_path: 字典文件路径，如果为None则使用默认字典，支持后期其他行业如律师、医生专用术语改造
         """
         self.dict_path = dict_path
         self.replacements = self._load_dict()
@@ -59,7 +59,7 @@ class DictionaryManager:
         return default_path if os.path.exists(default_path) else None
 
     def _parse_dict(self, data: List[Dict]) -> List[Dict]:
-        """解析字典数据，支持新旧格式"""
+        """解析字典数据"""
         rules = []
 
         # 按字典的类别->术语->变体结构获取字典数据
@@ -69,8 +69,10 @@ class DictionaryManager:
                     wrong_text = variant.get("wrong", "")
                     correct_text = term_data.get("correct", "")
 
-                    # 对所有错误形式直接escape，不添加边界
-                    # 原因：包含空格的词（如"Spring Boat"）用\b会失败
+                    # 使用整体文本替换：对错误写法仅做 escape，不加 \b 边界。
+                    # 好处：能稳定匹配语音转文字中格式不固定的内容（如 "Spring Boat"）。
+                    # 局限：短词可能被误替换为词中子串，例如 "cat" 会匹配到 "Tomcat"，造成识别为“TomCat”
+                    # 若需避免此类情况，可对短词启用严格边界匹配，待后续优化todo
                     regex_pattern = re.escape(wrong_text)
 
                     rules.append({
@@ -81,24 +83,20 @@ class DictionaryManager:
 
         return rules
 
-    def _contains_chinese(self, text: str) -> bool:
-        """检查文本是否包含中文"""
-        for char in text:
-            if '\u4e00' <= char <= '\u9fff':
-                return True
-        return False
-
     def fix_text(self, text: str, accumulate: bool = True) -> str:
         """
-        修正文本中的程序员术语
+        修正文本中的开发者术语，CodeWhisper术语纠正的核心算法
 
         Args:
-            text: 输入文本
-            accumulate: 是否累积修正记录（True 则追加，False 则覆盖）
+            text: 经录音后待纠正的文本
+            accumulate: 是否累积修正记录。
+                True  → 将本次修正追加到已有记录之后，用于连续多次调用时保留完整的修正历史。
+                False → 调用前清空历史记录，仅保留本次修正结果，适合单次处理或独立批次分析。
 
         Returns:
             修正后的文本
         """
+        # 如果手动设置追加记录为false，则清空之前的历史记录
         if not accumulate:
             self.corrections = []  # 清空上次的修正记录
 
@@ -107,21 +105,26 @@ class DictionaryManager:
         for item in self.replacements:
             pattern = item["wrong"]
             replacement = item["correct"]
-            category = item.get("category", "unknown")
+            category = item.get("category", "unknown") # unknown兜底，防止没有这个类
 
             # 使用正则表达式进行替换，case-insensitive
             matches = re.findall(pattern, text, flags=re.IGNORECASE)
             if matches:
-                # 记录每个匹配的词
-                for match in matches:
-                    self.corrections.append({
-                        "wrong": match,
-                        "correct": replacement,
-                        "category": category
-                    })
-                replacement_count += len(matches)
+                # 替换前的文本
+                text_before = text
+                text = re.sub(pattern, replacement, text, flags=re.IGNORECASE)
 
-            text = re.sub(pattern, replacement, text, flags=re.IGNORECASE)
+                # 只有文本实际改变了，才记录和打印
+                if text_before != text:
+                    # 记录每个匹配的词
+                    for match in matches:
+                        self.corrections.append({
+                            "wrong": match,
+                            "correct": replacement,
+                            "category": category
+                        })
+                    print(f"    🔧 替换: '{matches[0]}' → '{replacement}' ({category})")
+                    replacement_count += len(matches)
 
         self.stats["replacements_made"] += replacement_count
         return text

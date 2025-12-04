@@ -53,7 +53,8 @@
         "description": "提交测试环节",
         "variants": [
           {"wrong": "体测", "description": "同音误识别"},
-          {"wrong": "提侧", "description": "同音误识别"}
+          {"wrong": "提侧", "description": "同音误识别"},
+          {"wrong": "T测", "description": "同音误识别"}
         ]
       },
       "联调": {
@@ -61,7 +62,8 @@
         "description": "与前端或其他部门对接开发，进行上下游接口调用",
         "variants": [
           {"wrong": "连调", "description": "同音误识别"},
-          {"wrong": "联条", "description": "音韵误识别"}
+          {"wrong": "联条", "description": "音韵误识别"},
+          {"wrong": "连条", "description": "音韵误识别"}
         ]
       },
     "review": {
@@ -75,8 +77,8 @@
       "correct": "灰度",
       "description": "灰度发布",
       "variants": [
-        {"wrong": "灰度", "description": "扩展形式"},
-        {"wrong": "回度", "description": "中文音韵误识别"}
+        {"wrong": "回度", "description": "中文音韵误识别"},
+         {"wrong": "挥度", "description": "中文音韵误识别"}
       ]
     },
     "验收": {
@@ -85,8 +87,15 @@
       "variants": [
         {"wrong": "厌收", "description": "音韵误识别"}
       ]
+    },
+    "权限": {
+      "correct": "权限",
+      "description": "举例：过工单，过sql审核的权限",
+      "variants": [
+        {"wrong": "全线", "description": "识别错误"}
+      ]
     }
-  }
+    }
 },
     "database": {
       "name": "数据库",
@@ -123,6 +132,20 @@
           "variants": [
             {"wrong": "redis", "description": "小写形式"},
             {"wrong": "瑞迪斯", "description": "中文音韵识别"}
+          ]
+        },
+        "DB": {
+          "correct": "DB",
+          "description": "DataBase数据库简称",
+          "variants": [
+            {"wrong": "db", "description": "小写形式"}
+          ]
+        },
+        "DBA": {
+          "correct": "DBA",
+          "description": "Database Administrator数据库管理员",
+          "variants": [
+            {"wrong": "dba", "description": "小写形式"}
           ]
         }
       }
@@ -300,7 +323,8 @@
           "description": "Java后端开发框架",
           "variants": [
             {"wrong": "Spring Boat", "description": "单词独立识别"},
-            {"wrong": "Spring Bot", "description": "单词错误识别"}
+            {"wrong": "Spring Bot", "description": "单词错误识别"},
+            {"wrong": "SpringBot", "description": "音韵误识别"}
           ]
         },
         "Apollo": {
@@ -310,8 +334,18 @@
             {"wrong": "apollo", "description": "小写"},
             {"wrong": "阿波罗", "description": "中文规范化"}
           ]
+        },
+        "Caffeine": {
+          "correct": "Caffeine",
+          "description": "高性能的本地内存缓存，Spring支持。",
+          "variants": [
+            {"wrong": "caffeine", "description": "小写"},
+            {"wrong": "开封音", "description": "中文音韵"},
+            {"wrong": "开复音", "description": "中文音韵"}
+          ]
         }
       }
+
     },
     "tools": {
       "name": "开发工具",
@@ -424,7 +458,8 @@
           "description": "分布式事件流平台，常用作消息队列",
           "variants": [
             {"wrong": "kafka", "description": "小写形式"},
-            {"wrong": "卡夫卡", "description": "中文音韵识别"}
+            {"wrong": "卡夫卡", "description": "中文音韵识别"},
+            {"wrong": "卡复卡", "description": "中文音韵识别"}
           ]
         },
         "Zookeeper": {
@@ -439,7 +474,9 @@
           "correct": "CAT",
           "description": "阿里开源的实时应用性能监控平台",
           "variants": [
-            {"wrong": "cat", "description": "小写形式"}
+            {"wrong": "cat", "description": "小写形式"},
+            {"wrong": "Kat","description": "错误识别单词"},
+            {"wrong": "kat","description": "错误识别单词"}
           ]
         },
         "Arthas": {
@@ -545,6 +582,15 @@
           "variants": [
             {"wrong": "azure", "description": "小写形式"}
           ]
+        },
+        "日志": {
+          "correct": "日志",
+          "description": "记录程序运行过程中的过程",
+          "variants": [
+            {"wrong": "日值", "description": "中文错误识别"},
+            {"wrong": "日治", "description": "中文错误识别"},
+            {"wrong": "日止", "description": "中文错误识别"}
+          ]
         }
       }
     },
@@ -634,8 +680,7 @@
           "correct": "DNS",
           "description": "域名系统，将域名解析为 IP 地址",
           "variants": [
-            {"wrong": "dns", "description": "小写形式"},
-            {"wrong": "D N S", "description": "英文分隔识别"}
+            {"wrong": "dns", "description": "小写形式"}
           ]
         },
         "FTP": {

@@ -1,25 +1,24 @@
 """
-字典管理器 - 管理程序员术语字典和文本修正
+字典管理器 - 管理中文社区开发者术语字典和文本修正
 """
 
 import json
 import os
 import re
-from pathlib import Path
 from typing import Dict, List, Optional
 
 from .utils import get_project_root
 
 
 class DictionaryManager:
-    """管理程序员术语字典"""
+    """管理术语字典"""
 
     def __init__(self, dict_path: Optional[str] = None):
         """
         初始化字典管理器
 
         Args:
-            dict_path: 字典文件路径，如果为None则使用默认字典，支持后期其他行业如律师、医生专用术语改造
+            dict_path: 字典文件路径，如果为None则使用默认字典，支持后期其他行业如律师、医生专用术语改造 todo
         """
         self.dict_path = dict_path
         self.replacements = self._load_dict()
@@ -49,7 +48,7 @@ class DictionaryManager:
 
     def _get_dict_file_path(self) -> Optional[str]:
         """获取字典文件路径"""
-        # 如果指定了自定义路径，使用自定义路径
+        # 如果指定了自定义路径，使用自定义路径，支持后续用户拓展自定义字典
         if self.dict_path:
             return self.dict_path
 
@@ -69,11 +68,16 @@ class DictionaryManager:
                     wrong_text = variant.get("wrong", "")
                     correct_text = term_data.get("correct", "")
 
-                    # 使用整体文本替换：对错误写法仅做 escape，不加 \b 边界。
-                    # 好处：能稳定匹配语音转文字中格式不固定的内容（如 "Spring Boat"）。
-                    # 局限：短词可能被误替换为词中子串，例如 "cat" 会匹配到 "Tomcat"，造成识别为“TomCat”
-                    # 若需避免此类情况，可对短词启用严格边界匹配，待后续优化todo
-                    regex_pattern = re.escape(wrong_text)
+                    # 构建正则表达式：短词（≤3字符）添加单词边界 \b，防止子串误匹配
+                    # 例如：避免 "Cat" 被误纠正为 "TomCat"，
+                    # 长词不用边界，保留原有的灵活性，能匹配格式不固定的内容（如 "Spring Boat"）
+                    escaped_text = re.escape(wrong_text)
+
+                    # 判断是否为短词（仅包含字母/数字，长度≤3）
+                    if re.match(r'^[a-zA-Z0-9]+$', wrong_text) and len(wrong_text) <= 3:
+                        regex_pattern = r'\b' + escaped_text + r'\b'
+                    else:
+                        regex_pattern = escaped_text
 
                     rules.append({
                         'wrong': regex_pattern,
@@ -123,51 +127,11 @@ class DictionaryManager:
                             "correct": replacement,
                             "category": category
                         })
-                    print(f"    🔧 替换: '{matches[0]}' → '{replacement}' ({category})")
+                    print(f" 🔧替换: '{matches[0]}' → '{replacement}' ({category})")
                     replacement_count += len(matches)
 
         self.stats["replacements_made"] += replacement_count
         return text
-
-    def add_replacement(self, wrong: str, correct: str, category: str = "custom"):
-        """添加新的替换规则"""
-        self.replacements.append({
-            "wrong": wrong,
-            "correct": correct,
-            "category": category
-        })
-        self.stats["total_rules"] = len(self.replacements)
-
-    def save_dict(self, output_path: str):
-        """保存字典到文件"""
-        output_file = Path(output_path)
-        output_file.parent.mkdir(parents=True, exist_ok=True)
-
-        # 按分类重新组织数据
-        categories = {}
-        for rule in self.replacements:
-            category = rule.get('category', 'other')
-            if category not in categories:
-                categories[category] = []
-            categories[category].append({
-                'wrong': rule['wrong'],
-                'correct': rule['correct'],
-                'description': rule.get('description', '')
-            })
-
-        # 按分类构建输出格式
-        output_data = [
-            {
-                'category': cat,
-                'rules': rules
-            }
-            for cat, rules in sorted(categories.items())
-        ]
-
-        with open(output_file, 'w', encoding='utf-8') as f:
-            json.dump(output_data, f, indent=2, ensure_ascii=False)
-
-        print(f"✓ 字典已保存: {output_path}")
 
     def get_stats(self) -> Dict:
         """获取统计信息"""
@@ -186,3 +150,25 @@ class DictionaryManager:
                 categories[cat] = 0
             categories[cat] += 1
         return categories
+
+    def build_prompt_terms(self) -> str:
+        """
+        从字典动态生成 Whisper 提示词
+
+        提取字典中所有术语（correct 字段），生成逗号分隔的提示词字符串。
+        这样可以让 Whisper 在转录时优先识别编程术语，无需手动维护术语列表。
+
+        Returns:
+            逗号分隔的术语字符串，如 "Python, JavaScript, MySQL, Docker, ..."
+        """
+        terms = set()
+
+        for rule in self.replacements:
+            correct_term = rule.get('correct', '')
+            if correct_term and correct_term not in terms:
+                terms.add(correct_term)
+
+        # 返回逗号分隔的术语列表
+        # 排序后可以保证稳定性，限制数量避免 prompt 过长
+        prompt_terms = ", ".join(sorted(terms))
+        return prompt_terms

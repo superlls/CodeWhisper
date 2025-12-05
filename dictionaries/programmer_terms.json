@@ -207,10 +207,6 @@
           "description": "企业在秋季进行的校园招聘活动，通常在8-10月进行",
           "variants": [
             {
-              "wrong": "秋月",
-              "description": "同音误识别"
-            },
-            {
               "wrong": "求招",
               "description": "同音误识别"
             }
@@ -220,10 +216,6 @@
           "correct": "春招",
           "description": "企业在春季进行的校园招聘活动，通常在2-4月进行",
           "variants": [
-            {
-              "wrong": "春组",
-              "description": "同音误识别"
-            },
             {
               "wrong": "纯招",
               "description": "同音误识别"
@@ -297,10 +289,6 @@
             {
               "wrong": "笔施",
               "description": "同音误识别"
-            },
-            {
-              "wrong": "鼻试",
-              "description": "同音误识别"
             }
           ]
         },
@@ -318,10 +306,6 @@
           "correct": "大厂",
           "description": "指知名的大型互联网公司",
           "variants": [
-            {
-              "wrong": "大唱",
-              "description": "同音误识别"
-            },
             {
               "wrong": "大场",
               "description": "同音误识别"
@@ -1208,10 +1192,6 @@
             {
               "wrong": "Mac OS",
               "description": "英文分隔"
-            },
-            {
-              "wrong": "苹果系统",
-              "description": "中文描述"
             }
           ]
         },

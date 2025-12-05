@@ -112,7 +112,7 @@ class CodeWhisperApp(rumps.App):
                 temp_audio_file,
                 language="zh",#走中文模型
                 fix_programmer_terms=True,
-                verbose=True  # 改成 True 看看 Whisper 的详细输出
+                verbose=True
             )
 
             transcribed_text = result["text"]

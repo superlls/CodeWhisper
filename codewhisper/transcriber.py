@@ -11,13 +11,12 @@ from .utils import convert_to_simplified_chinese
 class CodeWhisper:
     """主转录引擎"""
 
-    def __init__(self, model_name: str = "base", dict_path: Optional[str] = None):
+    def __init__(self, model_name: str = "medium", dict_path: Optional[str] = None):
         """
-        初始化 CodeWhisper
-
+         CodeWhisper 初始化，同时预加载字典的特定术语并将其构建为提示词喂给Whisper进行预热；模型默认medium
         Args:
-            model_name: Whisper 模型大小 (tiny, base, small, medium, large)
-            dict_path: 自定义字典路径
+            model_name: Whisper 模型 (tiny, base, small, medium, large)
+            dict_path: 自定义字典路径，支持后续拓展todo
         """
         print(f"📦 加载 Whisper 模型: {model_name}")
         self.model = whisper.load_model(model_name)
@@ -26,12 +25,15 @@ class CodeWhisper:
         print(f"📚 加载字典管理器")
         self.dict_manager = DictionaryManager(dict_path)
 
+        # 在初始化时生成提示词，避免每次转录时重复遍历字典
+        self.programmer_prompt = self.dict_manager.build_prompt_terms()
+
         print(f"✓ CodeWhisper 初始化完成\n")
 
     def transcribe(
         self,
         audio_file: str,
-        language: Optional[str] = "en",
+        language: Optional[str] = "zh",
         fix_programmer_terms: bool = True,
         verbose: bool = True,
         temperature: float = 0.0,
@@ -41,48 +43,26 @@ class CodeWhisper:
 
         Args:
             audio_file: 音频文件路径
-            language: 语言代码 (en, zh, etc). For mixed Chinese-English, 'en' mode works best
-            fix_programmer_terms: 是否修正程序员术语
-            verbose: 是否打印详细信息
-            temperature: 采样温度
+            language: 语言代码 (默认zh中文模型)
+            fix_programmer_terms: 是否修正程序员术语 默认为True
+            verbose: 是否打印详细信息 默认为True (打印输出状态、提示词加载、繁简转换、术语修正等步骤)
+            temperature: 控制模型的“随机性”，范围通常为 0–1。默认为0，数值越高，输出越有随机性（不推荐用于语音转录）
+
 
         Returns:
             包含转录结果的字典
         """
-        # 根据语言选择不同的提示词
-        if language == "zh":
-            # 中文模式：用中文术语提示
-            programmer_prompt = (
-                "MySQL, PostgreSQL, MongoDB, Redis, "
-                "Python, JavaScript, TypeScript, Go, C++, "
-                "React, Vue, Angular, Django, Flask, Express, "
-                "Docker, Kubernetes, GitHub, GitLab, "
-                "API, REST, GraphQL, JSON, XML, YAML"
-            )
-        else:
-            # 英文模式：用完整的英文术语提示
-            programmer_prompt = (
-                "MySQL, PostgreSQL, MongoDB, Redis, "
-                "Python, JavaScript, TypeScript, Go, C++, "
-                "React, Vue, Angular, Django, Flask, Express, "
-                "Docker, Kubernetes, GitHub, GitLab, "
-                "API, REST, GraphQL, JSON, XML, YAML, "
-                "HTTP, HTTPS, SSL, TLS, "
-                "Linux, Ubuntu, Debian, CentOS"
-            )
-
-        # 优化语言处理：默认中文模式，专为中国程序员设计
-        transcribe_language = language
-
         if verbose:
             print(f"🎙️  转录中: {audio_file} (语言: {language})")
 
-        # 调用 Whisper 进行转录
+        # 调用 Whisper 进行转录（使用初始化时缓存的提示词）
+        # 注意：这里 verbose=False 是指 OpenAI 的Whisper 自身的调试日志（解码进度等）
+        # 而用户的 verbose 参数控制的是 CodeWhisper 的进度日志（上面的 if verbose）
         result = self.model.transcribe(
             audio_file,
-            language=transcribe_language,
-            initial_prompt=programmer_prompt,
-            verbose=False,
+            language=language,
+            initial_prompt=self.programmer_prompt,
+            verbose=False,  # Whisper 内部日志关闭，由 CodeWhisper 的 verbose 控制外部日志
             temperature=temperature
         )
 

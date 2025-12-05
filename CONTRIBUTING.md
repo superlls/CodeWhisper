@@ -83,12 +83,17 @@ dictionaries/programmer_terms.json
 │  │     ├─ Mentor
 │  │     └─ ... (其他职场术语)
 │  │
-│  ├─ database (数据库)
+│  ├─ student_terms (大学生术语)
 │  ├─ language (编程语言)
-│  ├─ framework (框架和库)
 │  ├─ tools (开发工具)
 │  ├─ concept (技术概念)
-│  └─ protocol_os (协议和操作系统)
+│  ├─ frontend (前端开发)
+│  ├─ backend (后端开发)
+│  ├─ database (数据库)
+│  ├─ devops (DevOps工具)
+│  ├─ operations (运维)
+│  ├─ hardware (硬件与嵌入式)
+│  └─ protocol (通信协议)
 ```
 
 #### 第四步：添加新变体
@@ -127,7 +132,32 @@ dictionaries/programmer_terms.json
 - `wrong`: 识别错误的文本
 - `description`: 简单描述这是什么类型的错误
 
-#### 第五步（可选）：如果你发现字典里没有你想找的这个词，直接添加新术语吧
+#### 第五步：选择正确的分类
+
+在添加新术语前，请先确定它应该属于哪个分类：
+
+| 分类 | 适用场景 | 例子 |
+|------|---------|------|
+| **职场术语** | 工作相关的中文或中英混合术语 | 排期、逾期、提PR、联调、灰度、验收、工单 |
+| **大学生术语** | 招聘、实习、面试相关 | 秋招、春招、校招、offer、CV、笔试、刷题 |
+| **编程语言** | 编程语言名称 | Python、Java、Go、JavaScript、TypeScript |
+| **开发工具** | IDE、编辑器、开发工具 | IDEA、VSCode、PyCharm、WebStorm、Vim |
+| **技术概念** | 通用的技术原理和设计模式 | API、REST、GraphQL、SQL、ORM、CRUD、MVC |
+| **前端开发** | 前端框架、库和工具 | React、Vue、Angular、Webpack |
+| **后端开发** | 后端框架、库、消息队列等 | Spring、Kafka、Zookeeper、CAT、Arthas |
+| **数据库** | 数据库系统和管理员 | MySQL、PostgreSQL、MongoDB、Redis、DBA |
+| **DevOps工具** | CI/CD、容器、包管理工具 | Docker、Kubernetes、Git、GitHub、Maven、npm |
+| **运维** | Web服务器、日志、监控 | Nginx、Apache |
+| **硬件与嵌入式** | 操作系统、微控制器、开发板 | macOS、Windows、Linux、STM32、Arduino |
+| **通信协议** | 网络通信相关协议 | HTTP、HTTPS、DNS、FTP、SMTP |
+
+**选择技巧**：
+- 如果是**编程语言本身**（Python、Java）→ 编程语言分类
+- 如果是**用该语言开发的工具**（PyCharm 是 Python IDE）→ 开发工具分类
+- 如果是**架构思想或技术原理**（API、REST）→ 技术概念分类
+- 如果不确定，可以在 PR 时问问维护者！
+
+#### 第六步（可选）：如果你发现字典里没有你想找的这个词，直接添加新术语吧
 
 **场景**：想为 "work_terms" 分类添加一个新术语 "甩锅"（推卸责任）
 
@@ -149,7 +179,7 @@ dictionaries/programmer_terms.json
 - `description`: 术语的简短说明（1-2句话）
 - `variants`: 数组，包含所有可能被错误识别的形式
 
-#### 第六步：提交 PR
+#### 第七步：提交 PR
 
 编辑完成后，提交你的改动：
 

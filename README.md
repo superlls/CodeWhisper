@@ -45,13 +45,21 @@
   - 和领导汇报不想打字？语音输入，排版微调
 
 - 📚 **社区维护的术语字典**：欢迎大家共同建设～
-    - 职场特定术语：提PR,提测,排期...(这三个市面上的语音转文字几乎就没对过...特别是中英混合而且英文还是缩写的...对应的错误转录则是TPR,体测，排气) 
-    - 数据库：MySQL, MongoDB, Redis... 
-    - 框架：React, Vue, Spring, Flask...
-    - 编程语言：Python, Java, C++...
-    - 工具：Docker, Git, Nginx... 
-    - 概念：API, REST, 提PR, CI/CD...
-    - 以及还有其他其他其他...
+
+  | 分类 | 包含术语 |
+  |------|---------|
+  | 职场术语 | 提PR、提测、排期、逾期、联调、灰度、验收... |
+  | 大学生术语 | 秋招、春招、校招、社招、offer、CV、笔试、面试... |
+  | 编程语言 | Python、Java、Go、JavaScript、TypeScript、Rust、C++... |
+  | 开发工具 | IDEA、VSCode、WebStorm、PyCharm、Goland、Vim、Emacs... |
+  | 技术概念 | API、REST、GraphQL、SQL、ORM、CRUD、MVC、CI/CD... |
+  | 前端开发 | React、Vue、Angular...（持续补充） |
+  | 后端开发 | Spring、SpringBoot、Kafka、Zookeeper、CAT、Arthas... |
+  | 数据库 | MySQL、PostgreSQL、MongoDB、Redis、DB、DBA... |
+  | DevOps工具 | Docker、Kubernetes、Git、GitHub、GitLab、Maven、npm、Yarn... |
+  | 运维 | Nginx、Apache...（日志监控相关）|
+  | 硬件与嵌入式 | macOS、Windows、Linux、STM32、51单片机、Arduino、树莓派、ARM... |
+  | 通信协议 | HTTP、HTTPS、SSL、TLS、DNS、FTP、SMTP、ARP... |
 
 - 🚀 **快速转录**：支持多种模型大小
   - `tiny`：最快

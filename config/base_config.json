@@ -1,0 +1,9 @@
+{
+  "prompt_prefix": "计算机行业从业者：",
+  "user_dict_path": "config/user_dict.json",
+  "base_dict_path": "config/base_dict.json",
+  "max_user_terms": 20,
+  "prompt_total_terms": 10,
+  "prompt_base_terms": 5,
+  "user_term_min_freq": 3
+}

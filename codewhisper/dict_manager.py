@@ -5,7 +5,7 @@
 import json
 import os
 import re
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Set
 
 from .utils import get_project_root
 
@@ -172,3 +172,46 @@ class DictionaryManager:
         # 排序后可以保证稳定性，限制数量避免 prompt 过长
         prompt_terms = ", ".join(sorted(terms))
         return prompt_terms
+
+    def detect_terms_in_text(self, text: str) -> Set[str]:
+        """
+        检测文本中出现的术语（用于学习用户习惯）
+
+        Args:
+            text: 转录后的文本
+
+        Returns:
+            检测到的术语集合（correct 形式）
+        """
+        detected_terms = set()
+
+        for rule in self.replacements:
+            correct_term = rule.get('correct', '')
+            if not correct_term:
+                continue
+
+            # 检查文本中是否包含该术语（大小写不敏感）
+            # 使用简单的包含检查，避免复杂的正则
+            if correct_term.lower() in text.lower():
+                detected_terms.add(correct_term)
+
+        return detected_terms
+
+    def get_detected_terms_from_corrections(self) -> Set[str]:
+        """
+        从最近的修正记录中获取被修正的术语
+
+        这个方法用于获取用户在本次转录中实际使用的术语。
+        当某个术语被修正（wrong → correct），说明用户提到了它。
+
+        Returns:
+            被修正的术语集合（correct 形式）
+        """
+        detected_terms = set()
+
+        for correction in self.corrections:
+            correct_term = correction.get('correct', '')
+            if correct_term:
+                detected_terms.add(correct_term)
+
+        return detected_terms

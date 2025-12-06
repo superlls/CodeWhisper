@@ -40,26 +40,6 @@ def get_project_root() -> Path:
     return Path(__file__).parent.parent
 
 
-def get_dict_path(dict_name: str = "programmer_dict.json") -> Path:
-    """获取字典文件路径"""
-    return get_project_root() / "dictionaries" / dict_name
-
-
-def ensure_dict_exists(dict_path: Optional[str] = None) -> Path:
-    """确保字典文件存在，如果不存在则创建"""
-    if dict_path:
-        path = Path(dict_path)
-    else:
-        path = get_dict_path()
-
-    if not path.exists():
-        path.parent.mkdir(parents=True, exist_ok=True)
-        print(f"⚠ 字典文件不存在: {path}")
-        print(f"使用内置字典")
-
-    return path
-
-
 def format_seconds(seconds: float) -> str:
     """格式化秒数为时间字符串"""
     if seconds < 60:

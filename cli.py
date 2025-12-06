@@ -52,6 +52,7 @@ def main():
         try:
             cw = CodeWhisper(model_name="base", dict_path=args.dict) #默认CLI使用base模型，后续支持用户使用命令添加自定义个性化字典todo
             categories = cw.get_dict_categories()
+            prompt_stats = cw.get_prompt_stats()
 
             print("\n" + "=" * 50)
             print("📊 CodeWhisper 统计信息")
@@ -61,6 +62,14 @@ def main():
             for cat, count in sorted(categories.items()):
                 print(f"  {cat:12} : {count:2} 条")
             print(f"  {'总计':12} : {total:2} 条")
+
+            print("\n智能提示词引擎：")
+            print(f"  通用术语数   : {prompt_stats['base_terms_count']} 条")
+            print(f"  用户术语数   : {prompt_stats['user_terms_count']} 条")
+            print(f"  有效术语数   : {prompt_stats['qualified_user_terms']} 条")
+            print(f"\n当前提示词：")
+            print(f"  {prompt_stats['current_prompt']}")
+
             print("\n支持的模型：tiny, base, small, medium, large")
             print("=" * 50 + "\n")
         except Exception as e:

@@ -9,3 +9,11 @@ thumbs.db
 .DS_Store
 .idea
 
+# 用户个性化数据（不提交到 Git）
+config/user_dict.json
+
+# 测试音频文件
+*.m4a
+*.wav
+*.mp3
+*.webm

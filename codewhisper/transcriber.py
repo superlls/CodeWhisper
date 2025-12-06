@@ -5,6 +5,7 @@
 import whisper
 from typing import Dict, Optional
 from .dict_manager import DictionaryManager
+from .prompt_engine import PromptEngine
 from .utils import convert_to_simplified_chinese
 
 
@@ -25,8 +26,12 @@ class CodeWhisper:
         print(f"📚 加载字典管理器")
         self.dict_manager = DictionaryManager(dict_path)
 
-        # 在初始化时生成提示词，避免每次转录时重复遍历字典
-        self.programmer_prompt = self.dict_manager.build_prompt_terms()
+        print(f"🚀 加载智能提示词引擎")
+        self.prompt_engine = PromptEngine()
+
+        # 使用新的 PromptEngine 构建提示词
+        self.programmer_prompt = self.prompt_engine.build_prompt()
+        print(f"💡 当前提示词: {self.programmer_prompt}")
 
         print(f"✓ CodeWhisper 初始化完成\n")
 
@@ -85,6 +90,26 @@ class CodeWhisper:
             # 只修正主文本一次，避免重复修正
             result["text"] = self.dict_manager.fix_text(result["text"], accumulate=False)
 
+        # 学习用户习惯：检测文本中出现的术语并更新用户术语库
+        if verbose:
+            print(f"🧠 学习用户习惯")
+
+        # 方法1：从修正记录中获取术语（优先，更准确）
+        detected_terms = self.dict_manager.get_detected_terms_from_corrections()
+
+        # 方法2：从最终文本中检测术语（补充）
+        detected_terms_from_text = self.dict_manager.detect_terms_in_text(result["text"])
+        detected_terms.update(detected_terms_from_text)
+
+        if detected_terms:
+            if verbose:
+                print(f"  检测到术语: {', '.join(list(detected_terms)[:5])}{'...' if len(detected_terms) > 5 else ''}")
+            # 更新用户术语库
+            self.prompt_engine.update_user_terms(detected_terms)
+
+            # 重新构建提示词（下次转录使用）
+            self.programmer_prompt = self.prompt_engine.build_prompt()
+
         return result
 
     def get_supported_models(self) -> list:
@@ -98,3 +123,7 @@ class CodeWhisper:
     def get_dict_categories(self) -> Dict:
         """获取字典分类统计"""
         return self.dict_manager.list_categories()
+
+    def get_prompt_stats(self) -> Dict:
+        """获取提示词引擎统计信息"""
+        return self.prompt_engine.get_stats()

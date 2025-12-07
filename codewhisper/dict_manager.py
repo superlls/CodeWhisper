@@ -68,22 +68,32 @@ class DictionaryManager:
                     wrong_text = variant.get("wrong", "")
                     correct_text = term_data.get("correct", "")
 
-                    # 构建正则表达式：短词（≤3字符）添加单词边界 \b，防止子串误匹配
-                    # 例如：避免 "Cat" 被误纠正为 "TomCat"，
+                    # 构建正则表达式：短词（≤3字符）添加边界，防止子串误匹配
+                    # 例如：避免 "Cat" 被误纠正为 "TomCat"
                     # 长词不用边界，保留原有的灵活性，能匹配格式不固定的内容（如 "Spring Boat"）
                     escaped_text = re.escape(wrong_text)
 
                     # 判断是否为短词（仅包含字母/数字，长度≤3）
                     if re.match(r'^[a-zA-Z0-9]+$', wrong_text) and len(wrong_text) <= 3:
-                        regex_pattern = r'\b' + escaped_text + r'\b'
+                        # 使用前后瞻断言，支持中文环境
+                        # (?<![a-zA-Z0-9]) 确保前面不是字母或数字
+                        # (?![a-zA-Z0-9]) 确保后面不是字母或数字
+                        # 这样可以匹配：中文TPR、TPR，、TPR。等场景
+                        regex_pattern = r'(?<![a-zA-Z0-9])' + escaped_text + r'(?![a-zA-Z0-9])'
                     else:
                         regex_pattern = escaped_text
 
                     rules.append({
                         'wrong': regex_pattern,
                         'correct': correct_text,
-                        'category': category_name
+                        'category': category_name,
+                        'wrong_len': len(wrong_text)  # 记录原始长度，用于排序
                     })
+
+        # 按错误文本长度降序排序，先匹配长的，避免短词覆盖长词
+        # 例如：先匹配 "code review" (11字符) 再匹配 "Code" (4字符)
+        # 这样 "code review" 不会被 "Code" 误匹配
+        rules = sorted(rules, key=lambda x: x['wrong_len'], reverse=True)
 
         return rules
 
@@ -105,30 +115,55 @@ class DictionaryManager:
             self.corrections = []  # 清空上次的修正记录
 
         replacement_count = 0
+        replaced_positions = set()  # 记录已替换的文本位置，防止重复替换
 
         for item in self.replacements:
             pattern = item["wrong"]
             replacement = item["correct"]
             category = item.get("category", "unknown") # unknown兜底，防止没有这个类
 
-            # 使用正则表达式进行替换，case-insensitive
-            matches = re.findall(pattern, text, flags=re.IGNORECASE)
-            if matches:
-                # 替换前的文本
-                text_before = text
-                text = re.sub(pattern, replacement, text, flags=re.IGNORECASE)
+            # 使用正则表达式查找所有匹配，case-insensitive
+            matches = list(re.finditer(pattern, text, flags=re.IGNORECASE))
 
-                # 只有文本实际改变了，才记录和打印
-                if text_before != text:
-                    # 记录每个匹配的词
-                    for match in matches:
-                        self.corrections.append({
-                            "wrong": match,
-                            "correct": replacement,
-                            "category": category
-                        })
-                    print(f" 🔧替换: '{matches[0]}' → '{replacement}' ({category})")
-                    replacement_count += len(matches)
+            if matches:
+                # 记录需要替换的位置和内容
+                replacements_to_make = []
+
+                for match in matches:
+                    start, end = match.span()
+
+                    # 检查这个位置是否已经被替换过
+                    position_occupied = any(
+                        (start >= rstart and start < rend) or
+                        (end > rstart and end <= rend) or
+                        (start <= rstart and end >= rend)
+                        for rstart, rend in replaced_positions
+                    )
+
+                    if not position_occupied:
+                        replacements_to_make.append((start, end, match.group()))
+
+                if replacements_to_make:
+                    # 检查第一个匹配，判断是否真的需要替换
+                    first_match_text = replacements_to_make[0][2]
+
+                    # 只有匹配的文本和目标替换文本不同时，才进行替换
+                    if first_match_text != replacement:
+                        # 从后往前替换，避免位置偏移
+                        for start, end, matched_text in reversed(replacements_to_make):
+                            text = text[:start] + replacement + text[end:]
+                            replaced_positions.add((start, start + len(replacement)))
+
+                            self.corrections.append({
+                                "wrong": matched_text,
+                                "correct": replacement,
+                                "category": category
+                            })
+                            replacement_count += 1
+
+                        # 显示第一个匹配的原始文本（真实捕获的内容）
+                        print(f" 🔧替换: '{first_match_text}' → '{replacement}' ({category})")
+                    # else: 如果一样，跳过替换，不打印日志
 
         self.stats["replacements_made"] += replacement_count
         return text

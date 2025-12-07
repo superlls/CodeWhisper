@@ -186,7 +186,9 @@ class CodeWhisperApp(rumps.App):
 def main():
     """主函数"""
     app = CodeWhisperApp()
-    print("🚀 应用启动中，请检查菜单栏...")
+    print("🚀 应用启动中，请检查菜单栏...（请注意术语字典库是否报错，报错会导致字典加载失败，术语命中失效❕❕感叹）")
+    print("⚠️ 请注意术语字典库是否报错，报错会导致字典加载失败，术语命中失效）")
+
     app.run()
 
 

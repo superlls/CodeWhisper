@@ -1,14 +1,24 @@
 # Contributing to CodeWhisper 🤝
 
-感谢你有兴趣贡献 CodeWhisper！
+感谢你有兴趣贡献 CodeWhisper！🙏
+
+## 为什么你的贡献很重要？
+
+CodeWhisper 核心功能就是用**社区维护的术语字典**来纠正 Whisper 模型的识别错误。每一条你提交的术语修正规则，都会直接帮助所有中文社区开发者获得更准确的转录结果。
+
+**你的一条 Issue 或 PR，也许就能帮助成千上万的开发者！** ⭐
 
 ## 我们最需要的贡献
 
 ### 1. 报告识别错误（最重要！）⭐⭐⭐⭐⭐
 
-CodeWhisper 默认使用中文模式，但是中文模式在识别英文专有名词时会有误差。
+CodeWhisper 使用 OpenAI Whisper 模型进行语音识别，虽然很强大，但在识别中文术语时仍然会有误差，特别是：
 
-**你的一条 Issue 或 PR，也许就能帮助所有中文社区开发者**
+- **英文专有名词**被按中文音韵识别（如 "MySQL" → "My circle"）
+- **中文术语**被识别成相似读音的其他词（如 "排期" → "排气"）
+- **混合术语**识别不稳定（如 "提PR" → "TPR"）
+
+**你的一条 Issue 或 PR，也许就能帮助所有中文社区开发者** 🚀
 
 如果你发现：
 - 说的是 "MySQL"，被识别成了 "My circle"
@@ -16,16 +26,22 @@ CodeWhisper 默认使用中文模式，但是中文模式在识别英文专有�
 - 说的是 "Mentor"，被识别成了 "门特尔"
 - 或任何其他识别错误
 
-请：
-1. **提交 Issue**：告诉我们你说的是什么，被识别成了什么
-   ```
-   标题：MySQL 被识别成 My circle
-   描述：当我说 "MySQL" 时，转录结果是 "My circle" （或者你可以写写今天发生了啥2333）
-   ```
+**你可以选择以下方式参与：**
 
-2. **或者直接提 PR**：（见下面的步骤）
+#### 方式 A：提交 Issue（最简单）
+```
+标题：MySQL 被识别成 My circle
 
-### 2. 添加修正规则
+描述：
+- 说的词：MySQL
+- 识别结果：My circle
+- 场景：在代码审查时谈论数据库相关工作
+```
+
+#### 方式 B：直接提 PR 添加修正规则（推荐）
+直接编辑字典文件并提交 PR，见下面的详细步骤。
+
+### 2. 添加或优化修正规则
 
 #### 第一步：Fork 到你的仓库
 
@@ -93,7 +109,8 @@ dictionaries/programmer_terms.json
 │  ├─ devops (DevOps工具)
 │  ├─ operations (运维)
 │  ├─ hardware (硬件与嵌入式)
-│  └─ protocol (通信协议)
+│  ├─ protocol (通信协议)
+│  └─ other (其他术语)
 ```
 
 #### 第四步：添加新变体
@@ -143,13 +160,14 @@ dictionaries/programmer_terms.json
 | **编程语言** | 编程语言名称 | Python、Java、Go、JavaScript、TypeScript |
 | **开发工具** | IDE、编辑器、开发工具 | IDEA、VSCode、PyCharm、WebStorm、Vim |
 | **技术概念** | 通用的技术原理和设计模式 | API、REST、GraphQL、SQL、ORM、CRUD、MVC |
-| **前端开发** | 前端框架、库和工具 | React、Vue、Angular、Webpack |
+| **前端开发** | 前端框架、库和工具 | React、Vue、Angular、Webpack、Vite |
 | **后端开发** | 后端框架、库、消息队列等 | Spring、Kafka、Zookeeper、CAT、Arthas |
 | **数据库** | 数据库系统和管理员 | MySQL、PostgreSQL、MongoDB、Redis、DBA |
 | **DevOps工具** | CI/CD、容器、包管理工具 | Docker、Kubernetes、Git、GitHub、Maven、npm |
 | **运维** | Web服务器、日志、监控 | Nginx、Apache |
 | **硬件与嵌入式** | 操作系统、微控制器、开发板 | macOS、Windows、Linux、STM32、Arduino |
-| **通信协议** | 网络通信相关协议 | HTTP、HTTPS、DNS、FTP、SMTP |
+| **通信协议** | 网络通信相关协议 | HTTP、HTTPS、SSL、会话 |
+| **其他术语** | 不属于以上分类的术语 | （待社区扩展） |
 
 **选择技巧**：
 - 如果是**编程语言本身**（Python、Java）→ 编程语言分类
@@ -348,4 +366,51 @@ A: 某些错误是 Whisper 的固有识别特性：
 
 ---
 
-**感谢你的贡献！** 🎉
+## 其他贡献方式
+
+除了字典贡献，我们还欢迎以下形式的贡献：
+
+### 📝 文档和使用指南
+- 完善 README 和文档
+- 添加更详细的使用教程
+- 翻译文档到其他语言
+
+### 🐛 Bug 报告和功能建议
+- 报告使用中遇到的问题
+- 提出改进建议
+- 分享使用体验
+
+### 💡 代码改进
+- 优化识别引擎
+- 改进学习系统
+- 提升转录准确度
+- 性能优化
+
+### 🔧 行业迁移案例
+- 分享将 CodeWhisper 迁移到其他行业（医疗、法律等）的经验
+- 提供行业特定的术语字典
+
+---
+
+## 联系我们
+
+- 📧 **Email**: 1656839861un@gmail.com
+- 🐙 **GitHub Issues**: [提交问题或建议](https://github.com/superlls/CodeWhisper/issues)
+- 💬 **讨论**: [参与讨论](https://github.com/superlls/CodeWhisper/discussions)
+
+---
+
+## 行为准则
+
+我们致力于营造一个热情、包容的社区。请遵守以下原则：
+
+- ✅ 尊重所有贡献者
+- ✅ 提供建设性的反馈
+- ✅ 专注于问题而非个人
+- ✅ 使用清晰、友好的语言
+
+---
+
+**感谢你的贡献！一起让 CodeWhisper 变得更好！** 🎉
+
+每一条修正规则、每一个 Bug 报告、每一个改进建议，都在帮助成千上万的开发者获得更好的开发体验。

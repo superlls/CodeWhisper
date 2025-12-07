@@ -108,8 +108,14 @@ dictionaries/programmer_terms.json
 │  │     │  ├─ correct: "排期"
 │  │     │  ├─ description: "根据需求和开发工作量安排完成时间，在此期间需要按计划推进..."
 │  │     │  └─ variants []
-│  │     │     ├─ {"wrong": "排气", "description": "中文音韵误识别"}
-│  │     │     └─ {"wrong": "拍期", "description": "发音近似"}
+│  │     │     ├─ {
+│  │     │     │   "wrong": "排气",
+│  │     │     │   "description": "中文音韵误识别"
+│  │     │     │ }
+│  │     │     └─ {
+│  │     │         "wrong": "拍期",
+│  │     │         "description": "发音近似"
+│  │     │       }
 │  │     │
 │  │     ├─ 逾期
 │  │     ├─ 提测
@@ -144,8 +150,14 @@ dictionaries/programmer_terms.json
       "correct": "逾期",
       "description": "任务未在排期截止时间前完成的情况，通常需要说明原因并在后续排期中补充处理。",
       "variants": [
-        {"wrong": "预期", "description": "中文音韵误识别，最常见"},
-        {"wrong": "于期", "description": "同音字且模型常输出"}
+        {
+          "wrong": "预期",
+          "description": "中文音韵误识别，最常见"
+        },
+        {
+          "wrong": "于期",
+          "description": "同音字且模型常输出"
+        }
       ]
     }
   }
@@ -156,9 +168,18 @@ dictionaries/programmer_terms.json
 
 ```json
 "variants": [
-  {"wrong": "预期", "description": "中文音韵误识别，最常见"},
-  {"wrong": "于期", "description": "同音字且模型常输出"},
-  {"wrong": "语气（这里写新发现的错误）", "description": "你的描述"}
+  {
+    "wrong": "预期",
+    "description": "中文音韵误识别，最常见"
+  },
+  {
+    "wrong": "于期",
+    "description": "同音字且模型常输出"
+  },
+  {
+    "wrong": "新发现的错误形式",
+    "description": "你对这个错误的描述"
+  }
 ]
 ```
 
@@ -192,7 +213,7 @@ dictionaries/programmer_terms.json
 - 如果是**架构思想或技术原理**（API、REST）→ 技术概念分类
 - 如果不确定，可以在 PR 时问问维护者！
 
-#### 第六步（可选）：如果你发现字典里没有你想找的这个词，直接添加新术语吧
+#### 第六步（可选）：如果你发现字典里没有你想找的这个词，直接添加新术语吧（请一定先查看这个字典库中是否已有这个术语）
 
 **场景**：想为 "work_terms" 分类添加一个新术语 "甩锅"（推卸责任）
 
@@ -203,8 +224,14 @@ dictionaries/programmer_terms.json
   "correct": "甩锅",
   "description": "把问题或责任推给别人",
   "variants": [
-    {"wrong": "率过", "description": "中文音韵误识别"},
-    {"wrong": "甩锅", "description": "正确形式"}
+    {
+      "wrong": "率过",
+      "description": "中文音韵误识别"
+    },
+    {
+      "wrong": "甩锅",
+      "description": "正确形式"
+    }
   ]
 }
 ```
@@ -236,7 +263,11 @@ dictionaries/programmer_terms.json
    - 推送完成后，访问你的 GitHub 页面：`https://github.com/your-username/CodeWhisper`
    - 你会看到一个黄色横幅，显示 "Compare & pull request" 按钮，点击它
    - 检查合并方向：确保是 `your-username/CodeWhisper (fix-paiqi-recognition)` → `superlls/CodeWhisper (main)`
-   - 添加 PR 描述，然后点击 **Create pull request**
+   - **在 PR 描述中声明改动类型**（必填！）：
+     - 新增术语：写 `新增术语：[术语名]`
+     - 新增变体：写 `新增变体：[术语名] 的 [变体形式]`
+     - 或者如果你改了其他，修复bug或添加了新功能，麻烦简短说明
+   - 点击 **Create pull request**
 
 完成！你已经提交了一个 PR，等待维护者审核。
 
@@ -256,7 +287,11 @@ git commit -m "feat: 添加逾期新变体'于期' 识别规则"
 git push origin fix-paiqi-recognition
 ```
 
-然后访问 GitHub，你会看到一个提示创建 Pull Request 的按钮，点击即可！
+然后访问 GitHub，创建 PR 时在描述中声明改动类型（必填！）：
+- 新增术语：写 `新增术语：[术语名]`
+- 新增变体：写 `新增变体：[术语名] 的 [变体形式]`
+- 或者如果你改了其他，修复bug或添加了新功能，麻烦简短说明
+
 
 **重要**：创建 PR 时，确保你的分支是合并到 **原仓库的 `main` 分支**，而不是你 Fork 的仓库的 main 分支。GitHub 会在 PR 页面清楚地显示合并方向：
 
@@ -272,7 +307,7 @@ your-username/CodeWhisper (fix-paiqi-recognition) → superlls/CodeWhisper (main
 
 **Q: 怎样判断一个规则是否正确？**
 
-A: 你可以用 CLI 测试，首先按照README文件去走CLI的步骤，并将你的录音文件拖入根目录下（和cli.py同级）：
+A: 你可以用 CLI 或者Mac进行测试，如果是CLI首先按照README文件去走CLI的步骤，并将你的录音文件拖入根目录下（和cli.py同级）：
 ```bash
 python cli.py your_audio.m4a
 ```
@@ -288,25 +323,22 @@ A: 某些错误是 Whisper 的固有识别特性：
 
 ---
 
-## 代码风格
-
-- Python 3.9+
-- 遵循 PEP 8
-- JSON 文件使用 **2 个空格缩进**
-
 ### 字典编辑规范
 
 #### 1. 格式统一性（非常重要！）
 
 确保你的改动与现有格式保持一致：
 
-**正确示例**（2 个空格缩进，格式对齐）：
+**正确示例**（2 个空格缩进，格式对齐，看上面字典咋写的照抄就行啦～）：
 ```json
 "逾期": {
   "correct": "逾期",
   "description": "任务未在排期截止时间前完成的情况",
   "variants": [
-    {"wrong": "预期", "description": "中文音韵误识别"}
+    {
+      "wrong": "预期",
+      "description": "中文音韵误识别"
+    }
   ]
 }
 ```
@@ -324,7 +356,7 @@ A: 某些错误是 Whisper 的固有识别特性：
 
 #### 2. 添加新术语前必须检查
 
-**千万不要重复添加！** 在添加新术语之前，请：
+**拜托请千万不要重复添加！** 在添加新术语之前，请：
 
 1. 在 `dictionaries/programmer_terms.json` 中**全局搜索**（Ctrl+F 或 Cmd+F）
 2. 确认这个术语还没被添加过
@@ -346,21 +378,36 @@ A: 某些错误是 Whisper 的固有识别特性：
   "correct": "Python",
   "description": "Python 编程语言",
   "variants": [
-    {"wrong": "python", "description": "小写形式"},
-    {"wrong": "派森", "description": "中文音韵识别"}
+    {
+      "wrong": "python",
+      "description": "小写形式"
+    },
+    {
+      "wrong": "派森",
+      "description": "中文音韵识别"
+    }
   ]
 }
 ```
 
-发现 "Python" 又被识别成 "蟒蛇" 了，应该在 `variants` 的**末尾追加**：
+发现 "Python" 又被识别成 "排色" 了，应该在 `variants` 的**末尾追加**：
 ```json
 "Python": {
   "correct": "Python",
   "description": "Python 编程语言",
   "variants": [
-    {"wrong": "python", "description": "小写形式"},
-    {"wrong": "派森", "description": "中文音韵识别"},
-    {"wrong": "蟒蛇", "description": "中文义译识别"}  ← 在这里追加
+    {
+      "wrong": "python",
+      "description": "小写形式"
+    },
+    {
+      "wrong": "派森",
+      "description": "中文音韵识别"
+    },
+    {
+      "wrong": "排色",
+      "description": "中文义译识别"
+    }
   ]
 }
 ```
@@ -389,11 +436,14 @@ A: 某些错误是 Whisper 的固有识别特性：
     "逾期": { ... },
     ...
     "验收": { ... },
-    "甩锅": {           ← 在这里追加
+    "甩锅": {
       "correct": "甩锅",
       "description": "把问题或责任推给别人",
       "variants": [
-        {"wrong": "率过", "description": "中文音韵误识别"}
+        {
+          "wrong": "率过",
+          "description": "中文音韵误识别"
+        }
       ]
     }
   }
@@ -421,12 +471,6 @@ A: 某些错误是 Whisper 的固有识别特性：
 - 提出改进建议
 - 分享使用体验
 
-### 💡 代码改进
-- 优化识别引擎
-- 改进学习系统
-- 提升转录准确度
-- 性能优化
-
 ### 🔧 行业迁移案例
 - 分享将 CodeWhisper 迁移到其他行业（医疗、法律等）的经验
 - 提供行业特定的术语字典
@@ -438,17 +482,6 @@ A: 某些错误是 Whisper 的固有识别特性：
 - 📧 **Email**: 1656839861un@gmail.com
 - 🐙 **GitHub Issues**: [提交问题或建议](https://github.com/superlls/CodeWhisper/issues)
 - 💬 **讨论**: [参与讨论](https://github.com/superlls/CodeWhisper/discussions)
-
----
-
-## 行为准则
-
-我们致力于营造一个热情、包容的社区。请遵守以下原则：
-
-- ✅ 尊重所有贡献者
-- ✅ 提供建设性的反馈
-- ✅ 专注于问题而非个人
-- ✅ 使用清晰、友好的语言
 
 ---
 

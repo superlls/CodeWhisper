@@ -196,12 +196,22 @@
           "variants": [
             {
               "wrong": "用力",
-              "description": "错误识别！"
+              "description": "错误识别"
+            }
+          ],
+          "示例": {
+          "correct": "示例",
+          "description": "展示用例",
+          "variants": [
+            {
+              "wrong": "视力",
+              "description": "错误识别"
             }
           ]
         }
+      }
     }
-    },
+      },
     "student_terms": {
       "name": "大学生术语",
       "description": "面向大学生的编程和开发相关术语",
@@ -305,7 +315,11 @@
           "description": "招聘过程中的笔试考试环节",
           "variants": [
             {
-              "wrong": "笔施",
+              "wrong": "鄙视",
+              "description": "同音误识别"
+            },
+            {
+              "wrong": "比试",
               "description": "同音误识别"
             }
           ]
@@ -898,6 +912,10 @@
             {
               "wrong": "kat",
               "description": "错误识别单词"
+            },
+            {
+              "wrong": "Kite",
+              "description": "错误识别单词"
             }
           ]
         },
@@ -1029,7 +1047,6 @@
             }
           ]
         }
-
       }
     },
     "devops": {
@@ -1425,5 +1442,6 @@
       "description": "不属于以上分类的其他编程和开发相关术语",
       "terms": {}
     }
+
   }
 }

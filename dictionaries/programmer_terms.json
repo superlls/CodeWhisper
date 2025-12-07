@@ -569,10 +569,6 @@
               "description": "英文分隔"
             },
             {
-              "wrong": "Code",
-              "description": "简称"
-            },
-            {
               "wrong": "VS Code",
               "description": "大小写变体"
             }
@@ -1423,6 +1419,11 @@
           ]
         }
       }
+    },
+    "other": {
+      "name": "其他术语",
+      "description": "不属于以上分类的其他编程和开发相关术语",
+      "terms": {}
     }
   }
 }

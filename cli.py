@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-CodeWhisper CLI - 程序员专用语音转文字工具
+CodeWhisper CLI - 为中文社区开发者打造的语音转文字工具
 
 使用示例:
   python cli.py demo.m4a（你的音频文件，支持MP3, MP4, MPEG, MPGA, M4A, WAV, WEBM ）      #基础转录（中文，默认）请在控制台执行此命令～
@@ -39,6 +39,7 @@ def main():
     parser.add_argument("--segments", action="store_true", help="显示详细分段")
     parser.add_argument("--info", action="store_true", help="显示统计信息")
     parser.add_argument("--dict", help="自定义字典文件路径")#后续支持用户添加自定义个性化字典todo
+
 
     args = parser.parse_args()
 

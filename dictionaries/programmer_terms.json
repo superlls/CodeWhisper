@@ -56,6 +56,20 @@
             }
           ]
         },
+        "提MR": {
+          "correct": "提MR",
+          "description": "提交 Merge Request（GitLab叫提MR，GitHub叫提PR）",
+          "variants": [
+            {
+              "wrong": "提mr",
+              "description": "小写形式"
+            },
+            {
+              "wrong": "TMR",
+              "description": "术语缩写大小写错误识别"
+            }
+          ]
+        },
         "Mentor": {
           "correct": "Mentor",
           "description": "指实习期间的带实习生的导师",
@@ -75,6 +89,14 @@
             {
               "wrong": "Menter",
               "description": "错误识别"
+            },
+            {
+              "wrong": "menter",
+              "description": "错误识别"
+            },
+            {
+              "wrong": "门特",
+              "description": "错误识别"
             }
           ]
         },
@@ -85,10 +107,6 @@
             {
               "wrong": "leader",
               "description": "小写形式"
-            },
-            {
-              "wrong": "利德儿",
-              "description": "中文音韵误识别"
             }
           ]
         },
@@ -133,8 +151,8 @@
           ]
         },
         "review": {
-          "correct": "CodeReview",
-          "description": "代码评审",
+          "correct": "Code review",
+          "description": "Code review（代码审查）就是团队成员在代码合入主分支（master/main）之前，由其他开发者对你的代码进行检查、讨论、提出修改意见的过程。",
           "variants": [
             {
               "wrong": "code review",
@@ -213,7 +231,7 @@
     }
       },
     "student_terms": {
-      "name": "大学生术语",
+      "name": "大学术语",
       "description": "面向大学生的编程和开发相关术语",
       "terms": {
         "实习": {
@@ -1067,17 +1085,27 @@
             }
           ]
         },
-        "Kubernetes": {
-          "correct": "Kubernetes",
+        "镜像": {
+          "correct": "镜像",
+          "description": "镜像是一个只读的应用运行模板，包含程序和它的所有运行环境，用来创建容器的基础蓝图",
+          "variants": [
+            {
+              "wrong": "景象",
+              "description": "小写形式"
+            }
+          ]
+        },
+        "K8s": {
+          "correct": "K8s",
           "description": "容器编排平台",
           "variants": [
             {
               "wrong": "kubernetes",
-              "description": "小写形式"
+              "description": "全称"
             },
             {
               "wrong": "K8S",
-              "description": "缩写形式"
+              "description": "小写"
             },
             {
               "wrong": "Cubanance",
@@ -1096,6 +1124,14 @@
             {
               "wrong": "Gate",
               "description": "小写形式"
+            },
+            {
+              "wrong": "kit",
+              "description": "单词误识别"
+            },
+            {
+              "wrong": "Kit",
+              "description": "识别错误"
             }
           ]
         },
@@ -1171,16 +1207,6 @@
             }
           ]
         },
-        "pip": {
-          "correct": "pip",
-          "description": "Python 包管理器",
-          "variants": [
-            {
-              "wrong": "pip",
-              "description": "小写形式"
-            }
-          ]
-        },
         "CI/CD": {
           "correct": "CI/CD",
           "description": "持续集成/持续部署",
@@ -1248,10 +1274,10 @@
       }
     },
     "hardware": {
-      "name": "硬件与嵌入式",
+      "name": "嵌入式、硬件、操作系统",
       "description": "硬件平台、嵌入式开发板和微控制器相关术语",
       "terms": {
-        "macOS": {
+        "MacOS": {
           "correct": "macOS",
           "description": "Apple 的操作系统，在开发者中广泛使用",
           "variants": [
@@ -1262,6 +1288,10 @@
             {
               "wrong": "Mac OS",
               "description": "英文分隔"
+            },
+            {
+              "wrong": "麦克",
+              "description": "中文误识别"
             }
           ]
         },
@@ -1272,10 +1302,6 @@
             {
               "wrong": "windows",
               "description": "小写形式"
-            },
-            {
-              "wrong": "视窗",
-              "description": "中文翻译"
             }
           ]
         },
@@ -1286,10 +1312,6 @@
             {
               "wrong": "linux",
               "description": "小写形式"
-            },
-            {
-              "wrong": "Linux操作系统",
-              "description": "冗余表述"
             }
           ]
         },
@@ -1302,30 +1324,8 @@
               "description": "小写形式"
             },
             {
-              "wrong": "ST32",
-              "description": "字母错误"
-            },
-            {
               "wrong": "STM 32",
               "description": "英文分隔"
-            }
-          ]
-        },
-        "51单片机": {
-          "correct": "51单片机",
-          "description": "MCS-51 系列微控制器，入门级嵌入式开发常用",
-          "variants": [
-            {
-              "wrong": "51 单片机",
-              "description": "英文分隔"
-            },
-            {
-              "wrong": "51MCU",
-              "description": "英文简称"
-            },
-            {
-              "wrong": "五十一单片机",
-              "description": "中文冗余"
             }
           ]
         },
@@ -1336,56 +1336,6 @@
             {
               "wrong": "arm",
               "description": "小写形式"
-            },
-            {
-              "wrong": "ARM 架构",
-              "description": "冗余表述"
-            }
-          ]
-        },
-        "Arduino": {
-          "correct": "Arduino",
-          "description": "开源电子原型平台，适合初学者快速原型开发",
-          "variants": [
-            {
-              "wrong": "arduino",
-              "description": "小写形式"
-            },
-            {
-              "wrong": "阿尔杜伊诺",
-              "description": "中文音韵识别"
-            }
-          ]
-        },
-        "树莓派": {
-          "correct": "树莓派",
-          "description": "Raspberry Pi，信用卡大小的单板计算机，常用于教学和嵌入式项目",
-          "variants": [
-            {
-              "wrong": "树莓派",
-              "description": "正确形式"
-            },
-            {
-              "wrong": "Raspberry Pi",
-              "description": "英文原名"
-            },
-            {
-              "wrong": "树梅派",
-              "description": "同音误识别"
-            }
-          ]
-        },
-        "RTOS": {
-          "correct": "RTOS",
-          "description": "实时操作系统，用于实时性要求高的嵌入式系统",
-          "variants": [
-            {
-              "wrong": "rtos",
-              "description": "小写形式"
-            },
-            {
-              "wrong": "实时操作系统",
-              "description": "全拼"
             }
           ]
         }
@@ -1438,10 +1388,9 @@
       }
     },
     "other": {
-      "name": "其他术语",
+      "name": "其他术语，持续补充中",
       "description": "不属于以上分类的其他编程和开发相关术语",
       "terms": {}
     }
-
   }
 }

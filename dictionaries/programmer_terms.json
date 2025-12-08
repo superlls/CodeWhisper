@@ -175,6 +175,10 @@
             {
               "wrong": "回读",
               "description": "中文音韵误识别"
+            },
+            {
+              "wrong": "汇度",
+              "description": "中文音韵误识别"
             }
           ]
         },
@@ -244,6 +248,16 @@
             },
             {
               "wrong": "实席",
+              "description": "同音误识别"
+            }
+          ]
+        },
+        "技术栈": {
+          "correct": "技术栈",
+          "description": "指掌握的技术或技能，如熟练掌握Mybatis",
+          "variants": [
+            {
+              "wrong": "技术站",
               "description": "同音误识别"
             }
           ]
@@ -872,6 +886,10 @@
             {
               "wrong": "Kafin",
               "description": "英文错误识别"
+            },
+            {
+              "wrong": "开封印",
+              "description": "中文"
             }
           ]
         },
@@ -934,6 +952,10 @@
             {
               "wrong": "Kite",
               "description": "错误识别单词"
+            },
+            {
+              "wrong": "CAD",
+              "description": "错误识别单词"
             }
           ]
         },
@@ -950,8 +972,18 @@
               "description": "中文音韵识别"
             },
             {
-              "wrong": "识别错误",
-              "description": "中文错误识别"
+              "wrong": "RSAS",
+              "description": "英文错误识别"
+            }
+          ]
+        },
+        "入参": {
+          "correct": "入参",
+          "description": "方法调用的传入参数",
+          "variants": [
+            {
+              "wrong": "入餐",
+              "description": "识别错误"
             }
           ]
         }
@@ -1082,6 +1114,16 @@
             {
               "wrong": "到克尔",
               "description": "中文音韵识别"
+            }
+          ]
+        },
+        "回滚": {
+          "correct": "回滚",
+          "description": "流水线或代码想回退到上一执行或提交版本",
+          "variants": [
+            {
+              "wrong": "混轨",
+              "description": "小写形式"
             }
           ]
         },

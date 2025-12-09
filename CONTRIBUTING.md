@@ -1,16 +1,18 @@
 # Contributing to CodeWhisper 🤝
 
-感谢你有兴趣贡献 CodeWhisper！🙏
+感谢你有兴趣贡献 CodeWhisper
 
 ## 为什么你的贡献很重要？
 
-CodeWhisper 核心功能就是用**社区维护的术语字典**来纠正 Whisper 模型的识别错误。每一条你提交的术语修正规则，都会直接帮助所有中文社区开发者获得更准确的转录结果。
+CodeWhisper 本质上就是用**社区驱动的术语字典**来纠正 Whisper 模型的识别错误。每一条你提交的术语修正规则，都会直接帮助所有中文社区开发者获得更准确的转录结果。
 
-**你的一条 Issue 或 PR，也许就能帮助成千上万的开发者！** ⭐
+无论你是刚接触编程的新朋友，还是已经有一些经验，我们都非常欢迎你的加入与贡献！
+
+**兴许你的一条 Issue 或 PR，就能帮助成千上万的开发者** ⭐
 
 ## 我们最需要的贡献
 
-### 1. 报告识别错误（最重要！）⭐⭐⭐⭐⭐
+### 1. 报告识别错误⭐⭐⭐⭐⭐
 
 CodeWhisper 使用 OpenAI Whisper 模型进行语音识别，虽然很强大，但在识别中文术语时仍然会有误差，特别是：
 
@@ -18,28 +20,28 @@ CodeWhisper 使用 OpenAI Whisper 模型进行语音识别，虽然很强大，�
 - **中文术语**被识别成相似读音的其他词（如 "排期" → "排气"）
 - **混合术语**识别不稳定（如 "提PR" → "TPR"）
 
-**你的一条 Issue 或 PR，也许就能帮助所有中文社区开发者** 🚀
 
 如果你发现：
 - 说的是 "MySQL"，被识别成了 "My circle"
 - 说的是 "Python"，被识别成了 "派森"
 - 说的是 "Mentor"，被识别成了 "门特尔"
-- 或任何其他识别错误
+- 或者字典里压根就没有你的术语！
 
 **你可以选择以下方式参与：**
 
-#### 方式 A：提交 Issue（最简单）
+#### 方式 A：提交 Issue
 ```
 标题：MySQL 被识别成 My circle
 
 描述：
 - 说的词：MySQL
 - 识别结果：My circle
-- 场景：在代码审查时谈论数据库相关工作
+- 简单描述术语的定义：常用数据库之一
 ```
 
-#### 方式 B：直接提 PR 添加修正规则（推荐）
-直接编辑字典文件并提交 PR，见下面的详细步骤。
+#### 方式 B：直接提 PR 添加修正规则
+直接编辑字典文件并提交 PR～
+
 
 ### 2. 添加或优化修正规则
 
@@ -51,7 +53,7 @@ CodeWhisper 使用 OpenAI Whisper 模型进行语音识别，虽然很强大，�
 
 **怎样 Fork？** 非常简单：
 1. 访问 [CodeWhisper GitHub 主页](https://github.com/superlls/CodeWhisper)
-2. 点击右上角的 **"Fork"** 按钮（大约在 Star 按钮旁边）
+2. 点击右上角的 **"Fork"** 按钮（在 Star 按钮旁边）
 3. 选择你要 Fork 到哪个账户（通常是你自己的用户名）
 4. 等待 Fork 完成（通常几秒钟）
 
@@ -61,17 +63,17 @@ CodeWhisper 使用 OpenAI Whisper 模型进行语音识别，虽然很强大，�
 
 Fork 完成后，将你的副本克隆到本地：
 
-##### 方式 A：使用 PyCharm GUI（推荐新手）
+##### 方式 A：使用 PyCharm
 
-1. 打开 PyCharm，点击 **File** → **New** → **Project from Version Control**
-2. 在 URL 框中输入你 Fork 后的仓库地址：`https://github.com/your-username/CodeWhisper.git`
+1. 打开 PyCharm，点击 **File（文件）** → **New（新建）** → **Project from Version Control（来自版本控制的项目）**
+2. 在 URL 框中输入你第一步fork之后的仓库地址：`https://github.com/your-username/CodeWhisper.git`
 3. 选择本地存储位置，点击 **Clone**
 4. PyCharm 会自动下载代码到本地
 
 克隆完成后，创建分支：
-1. 点击 PyCharm 右下角的 **Git 分支图标**（通常显示 `main`）
-2. 选择 **New Branch**
-3. 输入分支名（例如：`fix-paiqi-recognition`）
+1. 点击 PyCharm 右下角或左上角的 **Git 分支图标**（通常显示 `main`）
+2. 选择 **New Branch（新建分支）**
+3. 输入分支名，自定义名称即可，能说明你对哪个词动刀就更好啦（例如：`排期`或`提测`）
 4. 点击 **Create**
 
 完成！你已经进入新分支了。
@@ -79,11 +81,11 @@ Fork 完成后，将你的副本克隆到本地：
 ##### 方式 B：使用终端命令
 
 ```bash
-# Clone 你 Fork 后的仓库（不是原仓库！）
+# Clone 你 Fork 后的仓库
 git clone https://github.com/your-username/CodeWhisper.git
 cd CodeWhisper
 
-# 创建一个新分支（分支名应该能说明你的改动）
+# 创建一个新分支
 # 例如：你要修复排期识别错误
 git checkout -b fix-paiqi-recognition
 ```
@@ -122,7 +124,7 @@ dictionaries/programmer_terms.json
 │  │     ├─ Mentor
 │  │     └─ ... (其他职场术语)
 │  │
-│  ├─ student_terms (大学生术语)
+│  ├─ student_terms (大学术语)
 │  ├─ language (编程语言)
 │  ├─ tools (开发工具)
 │  ├─ concept (技术概念)
@@ -153,10 +155,6 @@ dictionaries/programmer_terms.json
         {
           "wrong": "预期",
           "description": "中文音韵误识别，最常见"
-        },
-        {
-          "wrong": "于期",
-          "description": "同音字且模型常输出"
         }
       ]
     }
@@ -175,10 +173,6 @@ dictionaries/programmer_terms.json
   {
     "wrong": "于期",
     "description": "同音字且模型常输出"
-  },
-  {
-    "wrong": "新发现的错误形式",
-    "description": "你对这个错误的描述"
   }
 ]
 ```
@@ -191,29 +185,29 @@ dictionaries/programmer_terms.json
 
 在添加新术语前，请先确定它应该属于哪个分类：
 
-| 分类 | 适用场景 | 例子 |
-|------|---------|------|
+| 分类 | 适用场景        | 例子 |
+|------|-------------|------|
 | **职场术语** | 工作相关的中文或中英混合术语 | 排期、逾期、提PR、联调、灰度、验收、工单 |
-| **大学生术语** | 招聘、实习、面试相关 | 秋招、春招、校招、offer、CV、笔试、刷题 |
-| **编程语言** | 编程语言名称 | Python、Java、Go、JavaScript、TypeScript |
+| **大学生术语** | 招聘、实习、面试相关  | 秋招、春招、校招、offer、CV、笔试、刷题 |
+| **编程语言** | 编程语言名称      | Python、Java、Go、JavaScript、TypeScript |
 | **开发工具** | IDE、编辑器、开发工具 | IDEA、VSCode、PyCharm、WebStorm、Vim |
 | **技术概念** | 通用的技术原理和设计模式 | API、REST、GraphQL、SQL、ORM、CRUD、MVC |
-| **前端开发** | 前端框架、库和工具 | React、Vue、Angular、Webpack、Vite |
+| **前端开发** | 前端框架、库和工具   | React、Vue、Angular、Webpack、Vite |
 | **后端开发** | 后端框架、库、消息队列等 | Spring、Kafka、Zookeeper、CAT、Arthas |
-| **数据库** | 数据库系统和管理员 | MySQL、PostgreSQL、MongoDB、Redis、DBA |
+| **数据库** | 数据库系统和管理员   | MySQL、PostgreSQL、MongoDB、Redis、DBA |
 | **DevOps工具** | CI/CD、容器、包管理工具 | Docker、Kubernetes、Git、GitHub、Maven、npm |
 | **运维** | Web服务器、日志、监控 | Nginx、Apache |
 | **硬件与嵌入式** | 操作系统、微控制器、开发板 | macOS、Windows、Linux、STM32、Arduino |
-| **通信协议** | 网络通信相关协议 | HTTP、HTTPS、SSL、会话 |
-| **其他术语** | 不属于以上分类的术语 | （待社区扩展） |
+| **通信协议** | 网络通信相关协议    | HTTP、HTTPS、SSL、会话 |
+| **其他术语** | 不属于以上分类的术语  | （待社区扩展） |
 
 **选择技巧**：
 - 如果是**编程语言本身**（Python、Java）→ 编程语言分类
 - 如果是**用该语言开发的工具**（PyCharm 是 Python IDE）→ 开发工具分类
 - 如果是**架构思想或技术原理**（API、REST）→ 技术概念分类
-- 如果不确定，可以在 PR 时问问维护者！
+- 如果不确定，欢迎随时拷打维护者～～
 
-#### 第六步（可选）：如果你发现字典里没有你想找的这个词，直接添加新术语吧（请一定先查看这个字典库中是否已有这个术语）
+#### 第六步（可选）：如果你发现字典里没有你想找的这个词，直接添加新术语吧（但请一定先查看这个字典库中是否已有这个术语）
 
 **场景**：想为 "work_terms" 分类添加一个新术语 "甩锅"（推卸责任）
 
@@ -227,10 +221,6 @@ dictionaries/programmer_terms.json
     {
       "wrong": "率过",
       "description": "中文音韵误识别"
-    },
-    {
-      "wrong": "甩锅",
-      "description": "正确形式"
     }
   ]
 }
@@ -238,7 +228,7 @@ dictionaries/programmer_terms.json
 
 **关键点：**
 - `correct`: 正确的术语名称
-- `description`: 术语的简短说明（1-2句话）
+- `description`: 术语的简短说明
 - `variants`: 数组，包含所有可能被错误识别的形式
 
 #### 第七步：提交 PR
@@ -248,13 +238,12 @@ dictionaries/programmer_terms.json
 ##### 方式 A：使用 PyCharm GUI（推荐新手）
 
 1. **提交修改到本地仓库**
-   - 点击 PyCharm 左上角 **File** → **Save All**（或按 **Cmd+S**）确保文件已保存
-   - 点击 PyCharm 菜单 **Git** → **Commit**
+   - 点击 PyCharm 菜单栏中的 **Git** → **Commit（提交）**
    - 在弹出的对话框中，确认修改的文件（应该只有 `dictionaries/programmer_terms.json`）
-   - 在 **Commit Message** 框中输入提交信息，例如：`feat: 添加逾期新变体'于期' 识别规则`
+   - 在 **Commit Message** 框中输入提交信息，例如：`添加“逾期”变体“于期”`
    - 点击 **Commit** 按钮
 
-2. **推送到你的 GitHub Fork**
+2. **推送到你的 GitHub fork之后的分支**
    - 点击菜单 **Git** → **Push**
    - 确认推送信息，点击 **Push** 按钮
    - PyCharm 会自动推送到你的 Fork 仓库
@@ -262,11 +251,11 @@ dictionaries/programmer_terms.json
 3. **创建 Pull Request**
    - 推送完成后，访问你的 GitHub 页面：`https://github.com/your-username/CodeWhisper`
    - 你会看到一个黄色横幅，显示 "Compare & pull request" 按钮，点击它
-   - 检查合并方向：确保是 `your-username/CodeWhisper (fix-paiqi-recognition)` → `superlls/CodeWhisper (main)`
-   - **在 PR 描述中声明改动类型**（必填！）：
+   - 检查合并方向：确保是 `your-username/CodeWhisper (你的分支名)` → `superlls/CodeWhisper (main)`
+   - **在 PR 请描述中声明改动类型**：
      - 新增术语：写 `新增术语：[术语名]`
      - 新增变体：写 `新增变体：[术语名] 的 [变体形式]`
-     - 或者如果你改了其他，修复bug或添加了新功能，麻烦简短说明
+     - 或者如果你修改了其他代码，请在PR中说明～
    - 点击 **Create pull request**
 
 完成！你已经提交了一个 PR，等待维护者审核。
@@ -287,16 +276,16 @@ git commit -m "feat: 添加逾期新变体'于期' 识别规则"
 git push origin fix-paiqi-recognition
 ```
 
-然后访问 GitHub，创建 PR 时在描述中声明改动类型（必填！）：
+然后访问 GitHub，创建 PR 时在描述中声明改动类型：
 - 新增术语：写 `新增术语：[术语名]`
 - 新增变体：写 `新增变体：[术语名] 的 [变体形式]`
-- 或者如果你改了其他，修复bug或添加了新功能，麻烦简短说明
+- 或者如果你修改了其他代码，请在PR中说明～
 
 
 **重要**：创建 PR 时，确保你的分支是合并到 **原仓库的 `main` 分支**，而不是你 Fork 的仓库的 main 分支。GitHub 会在 PR 页面清楚地显示合并方向：
 
 ```
-your-username/CodeWhisper (fix-paiqi-recognition) → superlls/CodeWhisper (main)
+your-username/CodeWhisper (你的分支名) → superlls/CodeWhisper (main)
 ```
 
 这样你的改动才能被合并到原项目中！
@@ -305,31 +294,20 @@ your-username/CodeWhisper (fix-paiqi-recognition) → superlls/CodeWhisper (main
 
 ## 常见问题 Q&A
 
-**Q: 怎样判断一个规则是否正确？**
+**Q: 显示冲突怎么办？**
 
-A: 你可以用 CLI 或者Mac进行测试，如果是CLI首先按照README文件去走CLI的步骤，并将你的录音文件拖入根目录下（和cli.py同级）：
-```bash
-python cli.py your_audio.m4a
-```
-
-**Q: 为什么有些错误很难修正？**
-
-A: 某些错误是 Whisper 的固有识别特性：
-- 中文模式会按音韵识别英文单词
-- 不同口音可能导致不同的识别结果
-- 某些词的发音确实相似
-
-这时候可以添加多个变体规则来覆盖不同情况。
+A:每次修一个词前，都应该先同步原始仓库，superlls/main；
+如果不更新，很容易跟别人产生冲突；
 
 ---
 
 ### 字典编辑规范
 
-#### 1. 格式统一性（非常重要！）
+#### 1. 格式统一性
 
 确保你的改动与现有格式保持一致：
 
-**正确示例**（2 个空格缩进，格式对齐，看上面字典咋写的照抄就行啦～）：
+**正确示例**（2 个空格缩进，格式对齐，看上面字典咋写的复制过来就行啦～）：
 ```json
 "逾期": {
   "correct": "逾期",
@@ -343,20 +321,9 @@ A: 某些错误是 Whisper 的固有识别特性：
 }
 ```
 
-**错误示例**（混用缩进、格式不一致）：
-```json
-"逾期":{
-    "correct":"逾期",
-    "description":"任务未在排期截止时间前完成的情况",
-    "variants":[
-      {"wrong":"预期","description":"中文音韵误识别"}
-    ]
-}
-```
+#### 2. 添加新术语前请检查
 
-#### 2. 添加新术语前必须检查
-
-**拜托请千万不要重复添加！** 在添加新术语之前，请：
+**在添加新术语之前，请：** 
 
 1. 在 `dictionaries/programmer_terms.json` 中**全局搜索**（Ctrl+F 或 Cmd+F）
 2. 确认这个术语还没被添加过
@@ -464,16 +431,12 @@ A: 某些错误是 Whisper 的固有识别特性：
 ### 📝 文档和使用指南
 - 完善 README 和文档
 - 添加更详细的使用教程
-- 翻译文档到其他语言
 
 ### 🐛 Bug 报告和功能建议
 - 报告使用中遇到的问题
 - 提出改进建议
 - 分享使用体验
 
-### 🔧 行业迁移案例
-- 分享将 CodeWhisper 迁移到其他行业（医疗、法律等）的经验
-- 提供行业特定的术语字典
 
 ---
 
@@ -487,4 +450,4 @@ A: 某些错误是 Whisper 的固有识别特性：
 
 **感谢你的贡献！一起让 CodeWhisper 变得更好！** 🎉
 
-每一条修正规则、每一个 Bug 报告、每一个改进建议，都在帮助成千上万的开发者获得更好的开发体验。
+每一条修正规则、每一个 Bug 报告、每一个改进建议，也许都在帮助成千上万的开发者获得更好的开发体验～

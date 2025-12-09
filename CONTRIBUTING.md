@@ -12,7 +12,7 @@ CodeWhisper 本质上就是用**社区驱动的术语字典**来纠正 Whisper �
 
 ## 我们最需要的贡献
 
-### 1. 报告识别错误⭐⭐⭐⭐⭐
+### 报告识别错误⭐⭐⭐⭐⭐
 
 CodeWhisper 使用 OpenAI Whisper 模型进行语音识别，虽然很强大，但在识别中文术语时仍然会有误差，特别是：
 
@@ -29,7 +29,7 @@ CodeWhisper 使用 OpenAI Whisper 模型进行语音识别，虽然很强大，�
 
 **你可以选择以下方式参与：**
 
-#### 方式 A：提交 Issue
+#### 方式 1：提交 Issue
 ```
 标题：MySQL 被识别成 My circle
 
@@ -39,136 +39,105 @@ CodeWhisper 使用 OpenAI Whisper 模型进行语音识别，虽然很强大，�
 - 简单描述术语的定义：常用数据库之一
 ```
 
-#### 方式 B：直接提 PR 添加修正规则
-直接编辑字典文件并提交 PR～
+#### 方式 2：直接提 PR 添加修正规则
 
-
-### 2. 添加或优化修正规则
 
 #### 第一步：Fork 到你的仓库
 
-首先，你需要把 CodeWhisper 仓库复制到自己的账户下（这就叫 **Fork**）。
-
-**什么是 Fork？** 简单说就是把别人的仓库复制一份到自己的账户下。这样你就有了完整的修改权限，可以随意编辑而不会影响原仓库。
-
-**怎样 Fork？** 非常简单：
 1. 访问 [CodeWhisper GitHub 主页](https://github.com/superlls/CodeWhisper)
-2. 点击右上角的 **"Fork"** 按钮（在 Star 按钮旁边）
-3. 选择你要 Fork 到哪个账户（通常是你自己的用户名）
-4. 等待 Fork 完成（通常几秒钟）
+2. 点击右上角的 **"Fork"** 按钮
+3. 等待完成
 
-完成后，你会看到你的账户下多了一个 `your-username/CodeWhisper` 的仓库，这就是你的副本！
+完成后，你的账户下会有 `your-username/CodeWhisper`
 
-#### 第二步：Clone 到本地并创建分支
+#### 第二步：编辑 JSON 文件
 
-Fork 完成后，将你的副本克隆到本地：
+##### 方案 A：在 GitHub 网页上直接编辑（快速方案）
 
-##### 方式 A：使用 PyCharm
+1. Fork 完成后，进入你的 `your-username/CodeWhisper` 仓库
+2. 找到 `dictionaries/programmer_terms.json` 文件，点击编辑按钮（铅笔图标）
+3. 找到对应的术语分类，编辑或添加内容
+4. 完成后，点击 **"Commit changes"**
 
-1. 打开 PyCharm，点击 **File（文件）** → **New（新建）** → **Project from Version Control（来自版本控制的项目）**
-2. 在 URL 框中输入你第一步fork之后的仓库地址：`https://github.com/your-username/CodeWhisper.git`
-3. 选择本地存储位置，点击 **Clone**
-4. PyCharm 会自动下载代码到本地
+##### 方案 B：在本地 PyCharm 中编辑
 
-克隆完成后，创建分支：
-1. 点击 PyCharm 右下角或左上角的 **Git 分支图标**（通常显示 `main`）
-2. 选择 **New Branch（新建分支）**
-3. 输入分支名，自定义名称即可，能说明你对哪个词动刀就更好啦（例如：`排期`或`提测`）
-4. 点击 **Create**
+1. Clone 你的 Fork 仓库到本地：
+   - 打开 PyCharm → **File（文件）** → **New（新建）** → **Project from Version Control（来自版本控制的项目）**
+   - 输入你的仓库地址：`https://github.com/your-username/CodeWhisper.git`
+   - 点击 **Clone**
 
-完成！你已经进入新分支了。
+2. **提交前先同步原仓库**：
+   - 打开 PyCharm 终端或 Git 菜单
+   - 在 PyCharm Git 菜单中选择 **Update Project(更新项目)** 拉取最新的 `superlls/main`
 
-##### 方式 B：使用终端命令
+3. 编辑 `dictionaries/programmer_terms.json`：
+   - 找到对应的术语分类
+   - 编辑或添加新术语/变体
+   - 保存文件
 
-```bash
-# Clone 你 Fork 后的仓库
-git clone https://github.com/your-username/CodeWhisper.git
-cd CodeWhisper
+#### 第三步：提交改动到 GitHub
 
-# 创建一个新分支
-# 例如：你要修复排期识别错误
-git checkout -b fix-paiqi-recognition
-```
+##### 如果你用的是方案 A（网页编辑）：
 
-**为什么要创建分支？** 分支就像在原代码的基础上建立一个"平行世界"，你在这个"世界"里做的修改都是独立的，不会影响主分支。这样做的好处是：
-- 可以同时做多个不同的改动
-- 改动出错了可以轻松撤销
-- 便于代码审核
+直接跳到第四步创建 PR，GitHub 会自动检测到你的改动。
 
-#### 第三步：理解字典结构
+##### 如果你用的是方案 B（PyCharm 本地编辑）：
 
-编辑 `dictionaries/programmer_terms.json` 文件。字典采用**分类 → 术语 → 变体**的三层结构：
+1. 在 PyCharm 中，打开菜单 **Git** → **Commit（提交）**
+2. 确认修改的文件（应该只有 `dictionaries/programmer_terms.json`）
+3. 在 **Commit Message** 输入框中输入提交信息，例如：
+   - `feat: 添加"排期"变体 "排气"`
+   - `feat: 新增术语"甩锅"`
+4. 点击 **Commit（提交）** 按钮
+5. 打开菜单 **Git** → **Push（推送）** 推送到你的 Fork 仓库
 
-```
-dictionaries/programmer_terms.json
-│
-├─ version: "0.1.0"
-├─ categories
-│  ├─ work_terms (职场术语)
-│  │  └─ terms {}
-│  │     ├─ 排期
-│  │     │  ├─ correct: "排期"
-│  │     │  ├─ description: "根据需求和开发工作量安排完成时间，在此期间需要按计划推进..."
-│  │     │  └─ variants []
-│  │     │     ├─ {
-│  │     │     │   "wrong": "排气",
-│  │     │     │   "description": "中文音韵误识别"
-│  │     │     │ }
-│  │     │     └─ {
-│  │     │         "wrong": "拍期",
-│  │     │         "description": "发音近似"
-│  │     │       }
-│  │     │
-│  │     ├─ 逾期
-│  │     ├─ 提测
-│  │     ├─ Mentor
-│  │     └─ ... (其他职场术语)
-│  │
-│  ├─ student_terms (大学术语)
-│  ├─ language (编程语言)
-│  ├─ tools (开发工具)
-│  ├─ concept (技术概念)
-│  ├─ frontend (前端开发)
-│  ├─ backend (后端开发)
-│  ├─ database (数据库)
-│  ├─ devops (DevOps工具)
-│  ├─ operations (运维)
-│  ├─ hardware (硬件与嵌入式)
-│  ├─ protocol (通信协议)
-│  └─ other (其他术语)
-```
+#### 第四步：提交 Pull Request
 
-#### 第四步：添加新变体
+1. 推送完成后（或网页提交后），访问你的 GitHub 页面：`https://github.com/your-username/CodeWhisper`
+2. 你会看到 **"Compare & pull request"** 按钮，点击它
+3. 确认合并方向：`your-username/CodeWhisper (你的分支)` → `superlls/CodeWhisper (main)`
+4. 填写 PR 描述，说明你改了什么，例如：
+   - `新增变体：排期 的 排气`
+   - `新增术语：甩锅`
+5. 点击 **"Create pull request"**
 
-**场景**：发现 "逾期" 又被识别成 "于期"，想添加这个变体
+完成！等待维护者审核合并。
 
-1. 利用全局搜索找到对应的术语（Mac：Command+F）：
+---
 
+### 理解字典结构
+
+需要了解字典采用**分类 → 术语 → 变体**的三层结构：
+
+**字段说明：**
+- `correct`: 正确的术语名称
+- `description`: 术语的简短说明
+- `variants`: 数组，包含所有可能被错误识别的形式
+  - `wrong`: 识别错误的文本
+  - `description`: 错误的类型（如"中文音韵误识别"）
+
+**示例 - 添加新变体**：
+
+原有的逾期术语：
 ```json
-"work_terms": {
-  "name": "职场术语",
-  "terms": {
-    "逾期": {
-      "correct": "逾期",
-      "description": "任务未在排期截止时间前完成的情况，通常需要说明原因并在后续排期中补充处理。",
-      "variants": [
-        {
-          "wrong": "预期",
-          "description": "中文音韵误识别，最常见"
-        }
-      ]
+"逾期": {
+  "correct": "逾期",
+  "description": "任务未在排期截止时间前完成的情况",
+  "variants": [
+    {
+      "wrong": "预期",
+      "description": "中文音韵误识别"
     }
-  }
+  ]
 }
 ```
 
-2. 在 `variants` 数组中添加新变体：
-
+发现又被识别成 "于期"，在 `variants` **末尾追加**：
 ```json
 "variants": [
   {
     "wrong": "预期",
-    "description": "中文音韵误识别，最常见"
+    "description": "中文音韵误识别"
   },
   {
     "wrong": "于期",
@@ -177,13 +146,23 @@ dictionaries/programmer_terms.json
 ]
 ```
 
-**每个变体只需要两个字段：**
-- `wrong`: 识别错误的文本
-- `description`: 简单描述这是什么类型的错误
+**示例 - 添加新术语**：
 
-#### 第五步：选择正确的分类
+为职场术语添加 "甩锅"：
+```json
+"甩锅": {
+  "correct": "甩锅",
+  "description": "把问题或责任推给别人",
+  "variants": [
+    {
+      "wrong": "率过",
+      "description": "中文音韵误识别"
+    }
+  ]
+}
+```
 
-在添加新术语前，请先确定它应该属于哪个分类：
+### 分类参考
 
 | 分类 | 适用场景        | 例子 |
 |------|-------------|------|
@@ -201,226 +180,13 @@ dictionaries/programmer_terms.json
 | **通信协议** | 网络通信相关协议    | HTTP、HTTPS、SSL、会话 |
 | **其他术语** | 不属于以上分类的术语  | （待社区扩展） |
 
-**选择技巧**：
-- 如果是**编程语言本身**（Python、Java）→ 编程语言分类
-- 如果是**用该语言开发的工具**（PyCharm 是 Python IDE）→ 开发工具分类
-- 如果是**架构思想或技术原理**（API、REST）→ 技术概念分类
-- 如果不确定，欢迎随时拷打维护者～～
-
-#### 第六步（可选）：如果你发现字典里没有你想找的这个词，直接添加新术语吧（但请一定先查看这个字典库中是否已有这个术语）
-
-**场景**：想为 "work_terms" 分类添加一个新术语 "甩锅"（推卸责任）
-
-1. 在相应分类的 `terms` 对象中添加：
-
-```json
-"甩锅": {
-  "correct": "甩锅",
-  "description": "把问题或责任推给别人",
-  "variants": [
-    {
-      "wrong": "率过",
-      "description": "中文音韵误识别"
-    }
-  ]
-}
-```
-
-**关键点：**
-- `correct`: 正确的术语名称
-- `description`: 术语的简短说明
-- `variants`: 数组，包含所有可能被错误识别的形式
-
-#### 第七步：提交 PR
-
-编辑完成后，提交你的改动：
-
-##### 方式 A：使用 PyCharm GUI（推荐新手）
-
-1. **提交修改到本地仓库**
-   - 点击 PyCharm 菜单栏中的 **Git** → **Commit（提交）**
-   - 在弹出的对话框中，确认修改的文件（应该只有 `dictionaries/programmer_terms.json`）
-   - 在 **Commit Message** 框中输入提交信息，例如：`添加“逾期”变体“于期”`
-   - 点击 **Commit** 按钮
-
-2. **推送到你的 GitHub fork之后的分支**
-   - 点击菜单 **Git** → **Push**
-   - 确认推送信息，点击 **Push** 按钮
-   - PyCharm 会自动推送到你的 Fork 仓库
-
-3. **创建 Pull Request**
-   - 推送完成后，访问你的 GitHub 页面：`https://github.com/your-username/CodeWhisper`
-   - 你会看到一个黄色横幅，显示 "Compare & pull request" 按钮，点击它
-   - 检查合并方向：确保是 `your-username/CodeWhisper (你的分支名)` → `superlls/CodeWhisper (main)`
-   - **在 PR 请描述中声明改动类型**：
-     - 新增术语：写 `新增术语：[术语名]`
-     - 新增变体：写 `新增变体：[术语名] 的 [变体形式]`
-     - 或者如果你修改了其他代码，请在PR中说明～
-   - 点击 **Create pull request**
-
-完成！你已经提交了一个 PR，等待维护者审核。
-
-##### 方式 B：使用终端命令
-
-```bash
-# 查看你修改了哪些文件
-git status
-
-# 添加修改的文件
-git add dictionaries/programmer_terms.json
-
-# 提交改动
-git commit -m "feat: 添加逾期新变体'于期' 识别规则"
-
-# 推送到你的 Fork 仓库
-git push origin fix-paiqi-recognition
-```
-
-然后访问 GitHub，创建 PR 时在描述中声明改动类型：
-- 新增术语：写 `新增术语：[术语名]`
-- 新增变体：写 `新增变体：[术语名] 的 [变体形式]`
-- 或者如果你修改了其他代码，请在PR中说明～
-
-
-**重要**：创建 PR 时，确保你的分支是合并到 **原仓库的 `main` 分支**，而不是你 Fork 的仓库的 main 分支。GitHub 会在 PR 页面清楚地显示合并方向：
-
-```
-your-username/CodeWhisper (你的分支名) → superlls/CodeWhisper (main)
-```
-
-这样你的改动才能被合并到原项目中！
-
 ---
 
-## 常见问题 Q&A
+## 编辑建议
 
-**Q: 显示冲突怎么办？**
-
-A:每次修一个词前，都应该先同步原始仓库，superlls/main；
-如果不更新，很容易跟别人产生冲突；
-
----
-
-### 字典编辑规范
-
-#### 1. 格式统一性
-
-确保你的改动与现有格式保持一致：
-
-**正确示例**（2 个空格缩进，格式对齐，看上面字典咋写的复制过来就行啦～）：
-```json
-"逾期": {
-  "correct": "逾期",
-  "description": "任务未在排期截止时间前完成的情况",
-  "variants": [
-    {
-      "wrong": "预期",
-      "description": "中文音韵误识别"
-    }
-  ]
-}
-```
-
-#### 2. 添加新术语前请检查
-
-**在添加新术语之前，请：** 
-
-1. 在 `dictionaries/programmer_terms.json` 中**全局搜索**（Ctrl+F 或 Cmd+F）
-2. 确认这个术语还没被添加过
-3. 如果已经存在，就直接在 `variants` 中添加新变体即可
-
-**例子**：
-- ❌ 错误：发现没有 "Python"，就添加新术语。（其实已经存在了！）
-- ✅ 正确：搜索 "Python" → 找到了 → 直接在 variants 数组末尾添加新变体
-
-#### 3. 添加变体或新术语时，在末尾追加
-
-**重要规则**：永远在对应的末尾追加，不要在中间插入！
-
-**添加新变体的例子**：
-
-原有的：
-```json
-"Python": {
-  "correct": "Python",
-  "description": "Python 编程语言",
-  "variants": [
-    {
-      "wrong": "python",
-      "description": "小写形式"
-    },
-    {
-      "wrong": "派森",
-      "description": "中文音韵识别"
-    }
-  ]
-}
-```
-
-发现 "Python" 又被识别成 "排色" 了，应该在 `variants` 的**末尾追加**：
-```json
-"Python": {
-  "correct": "Python",
-  "description": "Python 编程语言",
-  "variants": [
-    {
-      "wrong": "python",
-      "description": "小写形式"
-    },
-    {
-      "wrong": "派森",
-      "description": "中文音韵识别"
-    },
-    {
-      "wrong": "排色",
-      "description": "中文义译识别"
-    }
-  ]
-}
-```
-
-**添加新术语的例子**：
-
-原有的职场术语最后是 "验收"：
-```json
-"work_terms": {
-  "name": "职场术语",
-  "terms": {
-    "排期": { ... },
-    "逾期": { ... },
-    ...
-    "验收": { ... }
-  }
-}
-```
-
-现在要添加 "甩锅"，应该在 "验收" 之后追加：
-```json
-"work_terms": {
-  "name": "职场术语",
-  "terms": {
-    "排期": { ... },
-    "逾期": { ... },
-    ...
-    "验收": { ... },
-    "甩锅": {
-      "correct": "甩锅",
-      "description": "把问题或责任推给别人",
-      "variants": [
-        {
-          "wrong": "率过",
-          "description": "中文音韵误识别"
-        }
-      ]
-    }
-  }
-}
-```
-
-**为什么要在末尾追加？**
-- 避免 Git merge 冲突
-- 保持历史记录清晰
-- 方便代码审核
+- **添加前先搜索**：在添加新术语前，用 Ctrl+F（或 Cmd+F）搜索确保还没被添加过
+- **在末尾追加**：添加新变体或新术语时，始终在末尾追加，避免产生冲突
+- **保持格式一致**：使用 2 个空格缩进，参考现有术语的格式复制即可
 
 ---
 

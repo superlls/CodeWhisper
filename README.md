@@ -196,52 +196,41 @@ python -m venv .venv
 source .venv/bin/activate  # macOS/Linux
 # 或
 .venv\Scripts\activate  # Windows
-3.安装依赖
+3.安装依赖（如果你是Pycharm打开，按照提示创建即可）
 pip install -r requirements.txt
 ```
 
 ### ⚠️ 系统依赖 - FFmpeg
 
-CodeWhisper 依赖 **FFmpeg** 来解析音频文件（MP3, MP4, M4A, WAV 等）。
+CodeWhisper 依赖 **FFmpeg** 来解析音频文件（MP3、MP4、M4A、WAV 等）。
 
-**检查 FFmpeg 是否已安装：**
+
+#### 🔍 检查 FFmpeg 是否已安装
 
 ```bash
 ffmpeg -version
-```
+若显示版本信息，则说明 FFmpeg 可正常使用。
 
-**如果未安装，请选择以下方式之一：**
+Windows 安装 FFmpeg（使用 winget）
+推荐通过 Windows Package Manager（winget） 安装 FFmpeg，这是最稳定、最安全、最易复现的方式之一。
 
-#### 🚀 ~~方式 1：自动安装（推荐，所有平台）~~
+在 PowerShell 执行：
+winget install Gyan.FFmpeg
 
-```bash
-python scripts/setup_environment.py
-```
+安装完成后 务必关闭并重新打开终端 / IDE，否则系统不会加载新的环境变量。
 
-这个脚本会自动检测你的系统，并安装相应的 FFmpeg。
+验证安装：
+ffmpeg -version
+如果看到版本号，则安装成功。
 
-#### 方式 2：手动安装
 
-**Windows:**
-```bash
-# 使用 Chocolatey（推荐）
-choco install ffmpeg
 
-# 或使用 Windows Package Manager
-winget install ffmpeg
+🍎 macOS 安装 FFmpeg
 
-# 或访问官网手动下载，并配置到系统环境
-https://ffmpeg.org/download.html
-```
-
-**macOS:**
-```bash
-# 使用 Homebrew（推荐）
 brew install ffmpeg
+
 ```
 
-
-⚠️ **如未安装 FFmpeg**，运行 CLI 时会提示安装，避免出现 `WinError 2` 或类似错误。
 
 ---
 ### CLI使用方式

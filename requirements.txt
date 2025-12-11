@@ -4,7 +4,6 @@ torch
 tqdm
 more-itertools
 tiktoken
-rumps
 sounddevice
 soundfile
 hanziconv

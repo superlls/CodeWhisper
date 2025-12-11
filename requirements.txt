@@ -7,3 +7,4 @@ tiktoken
 sounddevice
 soundfile
 hanziconv
+PySide6

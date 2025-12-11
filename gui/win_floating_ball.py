@@ -80,10 +80,11 @@ class FloatingBall(QWidget):
                 self._toggle_recording()
 
     def _toggle_recording(self):
+        """Start/stop recording and log the state."""
         if not self.recording:
             self.recording = True
             self.audio_data = []
-            print("开始录音")
+            print("开始录音...")
             t = threading.Thread(target=self._record_audio, daemon=True)
             t.start()
         else:
@@ -114,7 +115,7 @@ class FloatingBall(QWidget):
             if not self.whisper:
                 print("模型未加载")
                 return
-            print("转录中")
+            print("转写中...")
             result = self.whisper.transcribe(
                 temp_audio_file,
                 language="zh",
@@ -122,17 +123,9 @@ class FloatingBall(QWidget):
                 verbose=True
             )
             text = result.get("text", "")
-            print(f"转录完成: {text[:80]}")
+            print(f"转写完成: {text[:80]}")
             self.textReady.emit(text)
-            try:
-                stats = self.whisper.get_dict_stats()
-                corrections = self.whisper.dict_manager.get_corrections()
-                print(f"字典总规则: {stats.get('total_rules')}, 本次修正: {stats.get('replacements_made')}")
-                if corrections:
-                    for i, c in enumerate(corrections[:5], 1):
-                        print(f"修正{i}: {c['wrong']} -> {c['correct']} ({c['category']})")
-            except Exception as e:
-                print(f"统计错误: {e}")
+            self._print_dict_stats()
         except Exception as e:
             print(f"转录错误: {e}")
         finally:
@@ -153,6 +146,28 @@ class FloatingBall(QWidget):
             QToolTip.showText(pos, "已复制转写结果")
         except Exception as e:
             print(f"剪贴板错误: {e}")
+
+    def _print_dict_stats(self):
+        """打印词典修正统计，和 mac 版保持一致输出。"""
+        try:
+            stats = self.whisper.get_dict_stats()
+            corrections = self.whisper.dict_manager.get_corrections()
+
+            print("\n词典修正统计信息:")
+            print(f"  总规则数: {stats.get('total_rules')}")
+            print(f"  修正次数: {stats.get('replacements_made')}")
+
+            if corrections:
+                print("\n修正详情:")
+                for i, correction in enumerate(corrections, 1):
+                    wrong = correction.get('wrong', '')
+                    correct = correction.get('correct', '')
+                    category = correction.get('category', 'unknown')
+                    print(f"  {i}. '{wrong}' -> '{correct}' ({category})")
+            else:
+                print("  (本次未触发修正)")
+        except Exception as e:
+            print(f"统计错误: {e}")
 
 
 def main():

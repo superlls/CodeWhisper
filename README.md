@@ -9,7 +9,7 @@
 - 🚀 **自主优化**：本地动态构建提示词，针对你的开发方向进行自主优化
 - 🔧 **极致解耦**：代码与字典极低耦合，可迁移至医疗、法律等其他行业
 
-目前Mac已上线一个MVP，CLI版本持续优化中，Windows版本开发已提上日程
+目前 Mac 已上线一个 MVP，Windows 版本开发
 
 欢迎大家quick start模块进行体验
 
@@ -186,19 +186,16 @@ config/
 ### 安装
 
 ```bash
-# ⚠️ Windows 用户注意：安装依赖前，请在 requirements.txt 中注释或删除掉以下依赖）：
-#   - rumps          # macOS 专用菜单栏应用库
-1.克隆仓库
 git clone https://github.com/superlls/CodeWhisper.git
 cd CodeWhisper
-2.创建虚拟环境（如果你是Pycharm打开，按照提示创建即可）
 python -m venv .venv
 source .venv/bin/activate  # macOS/Linux
 # 或
 .venv\Scripts\activate  # Windows
-3.安装依赖（如果你是Pycharm打开，按照提示创建即可）
-pip install -r requirements.txt
+pip install -r requirements.txt  # 已按平台拆分：mac 装 rumps，Windows 装 PySide6
 ```
+
+`requirements.txt` 使用平台标记，不需要手动注释依赖。
 
 ### ⚠️ 系统依赖 - FFmpeg
 
@@ -233,11 +230,6 @@ brew install ffmpeg
 
 
 ---
-### CLI使用方式
-
-1.将你的录音文件拖入项目根目录下（与cli.py）同级
-
-2.在控制台执行 python cli.py demo.m4a（替换成你的文件名，支持文件格式：MP3, MP4, MPEG, MPGA, M4A, WAV, WEBM）    
 
 ### Mac使用方式
 
@@ -260,7 +252,21 @@ python app.py
 3. 再次点击 → "停止录音"
 4. 转录结果自动复制到剪贴板
 5. 粘贴使用
-6. 如果要选择不同Whisper模型，请在gui/menu_bar_app.py中设置
+6. 如果要选择不同Whisper模型，请在 gui/mac_menu_bar_app.py 中设置
+
+---
+
+### Windows 使用方式
+
+```bash
+# 启动悬浮球应用
+python app.py
+```
+
+启动后会出现桌面悬浮球：
+- 点击开始录音，再次点击停止录音
+- 转写完成后自动复制到剪贴板
+- 如果要调整模型、行为，可在 `gui/win_floating_ball_app.py` 中设置
 
 ---
 
@@ -309,21 +315,6 @@ A:
 - **频次统计**：本地记录每个术语的使用次数和时间，进行动态排序
 - **动态优化**：用户的高频术语（≥3次，或者你可以选择更多）会自动进入用户个性化术语库
 - **隐私安全**：所有数据本地存储，不上传云端
-
-**Q: 运行 CLI 遇到 WinError 2 或 ffmpeg not found？**
-
-A: 这说明 FFmpeg 未安装或未添加到 PATH。解决方案：
-
-
-1**手动安装**：
-   - Windows: 官网下载并添加到你的Path目录
-   - macOS: `brew install ffmpeg`
-
-2**验证安装**：
-   ```bash
-   ffmpeg -version
-   ```
-
 
 欢迎提交 Issue 和 PR：
 

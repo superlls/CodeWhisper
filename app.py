@@ -11,11 +11,11 @@ def main() -> None:
     system = platform.system()
 
     if system == "Darwin":
-        from gui.menu_bar_app import main as mac_main
+        from gui.mac_menu_bar_app import main as mac_main
 
         mac_main()
     elif system == "Windows":
-        from gui.win_floating_ball import main as win_main
+        from gui.win_floating_ball_app import main as win_main
 
         win_main()
     else:

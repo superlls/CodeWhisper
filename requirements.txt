@@ -7,5 +7,5 @@ tiktoken
 sounddevice
 soundfile
 hanziconv
-rumps
-PySide6
+rumps; platform_system == "Darwin"
+PySide6; platform_system == "Windows"

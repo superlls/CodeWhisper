@@ -1,10 +1,26 @@
 #!/usr/bin/env python3
 """
-CodeWhisper MenuBar - 为中文社区开发者设计的语音转文字工具（Mac菜单栏版本）
+CodeWhisper - 为中文社区开发者设计的语音转文字工具
 """
 
-from gui.menu_bar_app import main
+import platform
+import sys
+
+
+def main() -> None:
+    system = platform.system()
+
+    if system == "Darwin":
+        from gui.menu_bar_app import main as mac_main
+
+        mac_main()
+    elif system == "Windows":
+        from gui.win_floating_ball import main as win_main
+
+        win_main()
+    else:
+        raise SystemExit(f"Unsupported platform: {system}. 目前只支持Mac和Windows❤")
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

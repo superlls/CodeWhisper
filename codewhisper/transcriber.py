@@ -3,6 +3,7 @@
 """
 
 import whisper
+import torch
 from typing import Dict, Optional
 from .dict_manager import DictionaryManager
 from .prompt_engine import PromptEngine
@@ -20,7 +21,13 @@ class CodeWhisper:
             dict_path: 自定义字典路径，支持后续拓展todo
         """
         print(f"📦 加载 Whisper 模型: {model_name}")
-        self.model = whisper.load_model(model_name)
+
+        # 显式设定设备与精度：优先使用 NVIDIA CUDA，其次回退 CPU
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        dtype = torch.float16 if device == "cuda" else torch.float32
+        print(f"  设备选择: device={device}, dtype={dtype}")
+
+        self.model = whisper.load_model(model_name, device=device, dtype=dtype)
         self.model_name = model_name
 
         print(f"📚 加载字典管理器")

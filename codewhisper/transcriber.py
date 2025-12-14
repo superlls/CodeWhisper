@@ -24,7 +24,7 @@ class CodeWhisper:
 
         # 显式设定设备与精度：优先使用 NVIDIA CUDA，其次回退 CPU
         device = "cuda" if torch.cuda.is_available() else "cpu"
-        print(f"  设备选择: device={device}")
+        print(f"  设备选择: device={device},如您使用CUDA报 `CUBLAS_STATUS_ALLOC_FAILED` ，请改用更小模型（base/small）")
 
         # openai-whisper 会在 CUDA 上自动使用 fp16，在 CPU 上用 fp32
         self.model = whisper.load_model(model_name, device=device)

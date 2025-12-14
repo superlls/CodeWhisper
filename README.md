@@ -1,4 +1,4 @@
-# CodeWhisper 🎤
+﻿# CodeWhisper 🎤
 
 **为中文社区开发者打造的智能语音转文字工�?* | Speech-to-Text for Developers
 
@@ -277,21 +277,21 @@ python app.py
 - **Python 版本**�?.9+
 - **网络**：首次运行需要下�?Whisper 模型�?00MB-3GB，取决于选择的模�?medium初次使用需要下�?.4G的模型）
 
-### 硬件加速支�?
+### 硬件加速支持
 
 Whisper 原生支持 GPU 加速，能根据你的硬件自动选择最优方案：
 
-- **NVIDIA 显卡**（游戏本、台式机）：�?自动检测并使用 CUDA
-  - 开箱即用，无需额外配置
-  - 推荐 RTX 系列或更新的 GTX 显卡
-    pip uninstall -y torch torchaudio torchvision
-    pip install torch torchaudio torchvision --index-url https://download.pytorch.org/whl/cu121
+- **NVIDIA 显卡**（游戏本、台式机）：需要安装匹配驱动和 GPU 版 PyTorch，否则会回落到 CPU
+  - 安装 GPU 版 Torch（驱动较旧用 cu118，较新可用 cu121）：  
+    `pip uninstall -y torch torchaudio torchvision`  
+    `pip install torch torchaudio torchvision --index-url https://download.pytorch.org/whl/cu118`  # 或 cu121
+  - 日志出现 `设备选择: device=cuda` 说明已用上 GPU；如果报 `CUBLAS_STATUS_ALLOC_FAILED`请改用更小模型（base/small）。
+  - 默认模型在 `gui/mac_menu_bar_app.py` / `gui/win_floating_ball_app.py` 的 `CodeWhisper(model_name="...")`，显存紧张可改为 `small`/`base`。
 
-- **AMD 显卡**（如 RX 6750 等）：需要手动配�?ROCm
-  - Whisper 无法自动识别，默认使�?CPU �?
-  - 配置相对复杂，建议使用CPU方案，或参�?[AMD ROCm 官方文档](https://rocm.docs.amd.com/projects/radeon/en/latest/docs/install/native_linux/install-pytorch.html)
+- **AMD 显卡**（如 RX 6750 等）：
+  - Whisper暂不支持Windows下的ROCm环境， 默认只跑 CPU
 
-- **Mac**：使�?CPU 运行
+- **Mac**：使用 CPU 运行；如果想减小占用，也可以把默认模型改成 `small`/`base`
 
 
 ### 常见问题

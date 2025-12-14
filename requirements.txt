@@ -1,4 +1,4 @@
-faster-whisper
+openai-whisper
 numpy
 torch
 tqdm

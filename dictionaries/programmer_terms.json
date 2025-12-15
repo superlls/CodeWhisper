@@ -231,6 +231,36 @@
               "description": "错误识别"
             }
           ]
+        },
+        "代码评审": {
+          "correct": "代码评审",
+          "description": "Code review，团队成员对他人代码进行的检查和讨论",
+          "variants": [
+            {
+              "wrong": "代码评水",
+              "description": "音韵误识别"
+            }
+          ]
+        },
+        "工号": {
+          "correct": "工号",
+          "description": "员工在公司的唯一编号",
+          "variants": [
+            {
+              "wrong": "公号",
+              "description": "近似音识别"
+            }
+          ]
+        },
+        "接口文档": {
+          "correct": "接口文档",
+          "description": "API接口的使用说明文档",
+          "variants": [
+            {
+              "wrong": "接触文档",
+              "description": "错误识别"
+            }
+          ]
         }
     }
       },
@@ -685,6 +715,44 @@
               "description": "小写形式"
             }
           ]
+        },
+        "Postman": {
+          "correct": "Postman",
+          "description": "API调试和测试工具",
+          "variants": [
+            {
+              "wrong": "postman",
+              "description": "小写形式"
+            },
+            {
+              "wrong": "邮差",
+              "description": "字面翻译"
+            }
+          ]
+        },
+        "master": {
+          "correct": "master",
+          "description": "Git的主分支，通常是生产代码所在分支",
+          "variants": [
+            {
+              "wrong": "Master",
+              "description": "首字母大写"
+            },
+            {
+              "wrong": "MASTER",
+              "description": "全大写"
+            }
+          ]
+        },
+        "分支": {
+          "correct": "分支",
+          "description": "Git中从主分支衍生出来的代码分支",
+          "variants": [
+            {
+              "wrong": "分枝",
+              "description": "近似字"
+            }
+          ]
         }
       }
     },
@@ -807,6 +875,58 @@
             {
               "wrong": "日止",
               "description": "中文错误识别"
+            }
+          ]
+        },
+        "Token": {
+          "correct": "Token",
+          "description": "用于身份验证和授权的令牌，常用于API请求的身份验证",
+          "variants": [
+            {
+              "wrong": "token",
+              "description": "小写形式"
+            },
+            {
+              "wrong": "令牌",
+              "description": "中文翻译"
+            }
+          ]
+        },
+        "Header": {
+          "correct": "Header",
+          "description": "HTTP请求或响应的头部信息，包含元数据",
+          "variants": [
+            {
+              "wrong": "header",
+              "description": "小写形式"
+            },
+            {
+              "wrong": "头部",
+              "description": "中文翻译"
+            }
+          ]
+        },
+        "Response": {
+          "correct": "Response",
+          "description": "服务器对请求的响应",
+          "variants": [
+            {
+              "wrong": "response",
+              "description": "小写形式"
+            },
+            {
+              "wrong": "响应",
+              "description": "中文翻译"
+            }
+          ]
+        },
+        "密钥对": {
+          "correct": "密钥对",
+          "description": "公钥和私钥组成的加密密钥对，用于加密和签名",
+          "variants": [
+            {
+              "wrong": "密钥对密",
+              "description": "重复识别"
             }
           ]
         }
@@ -986,6 +1106,142 @@
               "description": "识别错误"
             }
           ]
+        },
+        "RPC": {
+          "correct": "RPC",
+          "description": "远程过程调用，用于服务间通信",
+          "variants": [
+            {
+              "wrong": "rpc",
+              "description": "小写形式"
+            },
+            {
+              "wrong": "AR PC",
+              "description": "拆分错误"
+            }
+          ]
+        },
+        "定时任务": {
+          "correct": "定时任务",
+          "description": "按照预定时间自动执行的任务",
+          "variants": [
+            {
+              "wrong": "定时任无",
+              "description": "识别错误"
+            }
+          ]
+        },
+        "Cron": {
+          "correct": "Cron",
+          "description": "Unix/Linux中的定时任务调度工具",
+          "variants": [
+            {
+              "wrong": "cron",
+              "description": "小写形式"
+            },
+            {
+              "wrong": "克伦",
+              "description": "中文音韵识别"
+            }
+          ]
+        },
+        "cron表达式": {
+          "correct": "cron表达式",
+          "description": "用来描述定时任务执行时间的表达式",
+          "variants": [
+            {
+              "wrong": "克伦表达式",
+              "description": "Cron音韵变体"
+            }
+          ]
+        },
+        "Job": {
+          "correct": "Job",
+          "description": "任务、作业，通常指定时执行的任务",
+          "variants": [
+            {
+              "wrong": "job",
+              "description": "小写形式"
+            },
+            {
+              "wrong": "乔布",
+              "description": "中文音韵识别"
+            }
+          ]
+        },
+        "Task": {
+          "correct": "Task",
+          "description": "任务，代表一个工作单位",
+          "variants": [
+            {
+              "wrong": "task",
+              "description": "小写形式"
+            },
+            {
+              "wrong": "泰斯克",
+              "description": "中文音韵识别"
+            }
+          ]
+        },
+        "队列": {
+          "correct": "队列",
+          "description": "先进先出的数据结构，常用于消息处理",
+          "variants": [
+            {
+              "wrong": "对列",
+              "description": "近似字识别"
+            }
+          ]
+        },
+        "生产者": {
+          "correct": "生产者",
+          "description": "消息队列中生成和发送消息的组件",
+          "variants": [
+            {
+              "wrong": "身产者",
+              "description": "近似字"
+            }
+          ]
+        },
+        "消费者": {
+          "correct": "消费者",
+          "description": "消息队列中接收和处理消息的组件",
+          "variants": [
+            {
+              "wrong": "消彪者",
+              "description": "错误识别"
+            }
+          ]
+        },
+        "分布式锁": {
+          "correct": "分布式锁",
+          "description": "在分布式系统中用于同步资源访问的锁机制",
+          "variants": [
+            {
+              "wrong": "分布师锁",
+              "description": "识别错误"
+            }
+          ]
+        },
+        "映射": {
+          "correct": "映射",
+          "description": "对象转换或字段对应的过程",
+          "variants": [
+            {
+              "wrong": "荧幕",
+              "description": "近似音"
+            }
+          ]
+        },
+        "映射关系": {
+          "correct": "映射关系",
+          "description": "字段或对象之间的对应关系",
+          "variants": [
+            {
+              "wrong": "荧幕关系",
+              "description": "映射音韵变体"
+            }
+          ]
         }
       }
     },
@@ -1093,7 +1349,51 @@
           "variants": [
             {
               "wrong": "MathSQL",
-              "description": "“慢”错误识别成Math“”"
+              "description": "\"慢\"错误识别成Math"
+            }
+          ]
+        },
+        "ES": {
+          "correct": "ES",
+          "description": "Elasticsearch，分布式搜索和分析引擎",
+          "variants": [
+            {
+              "wrong": "es",
+              "description": "小写形式"
+            },
+            {
+              "wrong": "E S",
+              "description": "拆分形式"
+            }
+          ]
+        },
+        "字段": {
+          "correct": "字段",
+          "description": "数据库表或对象中的属性",
+          "variants": [
+            {
+              "wrong": "资讯",
+              "description": "近似音"
+            }
+          ]
+        },
+        "基础库": {
+          "correct": "基础库",
+          "description": "基础的工具类库或基础数据库",
+          "variants": [
+            {
+              "wrong": "基础绿",
+              "description": "识别错误"
+            }
+          ]
+        },
+        "生产库": {
+          "correct": "生产库",
+          "description": "用于生产环境的数据库",
+          "variants": [
+            {
+              "wrong": "生产绿",
+              "description": "识别错误"
             }
           ]
         }
@@ -1270,6 +1570,70 @@
               "description": "小写形式"
             }
           ]
+        },
+        "DevOps": {
+          "correct": "DevOps",
+          "description": "开发运维一体化，强调开发与运维的合作",
+          "variants": [
+            {
+              "wrong": "devops",
+              "description": "小写形式"
+            },
+            {
+              "wrong": "dev ops",
+              "description": "英文分隔"
+            }
+          ]
+        },
+        "流水线": {
+          "correct": "流水线",
+          "description": "CI/CD流程中自动化的构建和部署流程",
+          "variants": [
+            {
+              "wrong": "流水显",
+              "description": "识别错误"
+            }
+          ]
+        },
+        "部署": {
+          "correct": "部署",
+          "description": "将应用程序发布到服务器或环境中",
+          "variants": [
+            {
+              "wrong": "布署",
+              "description": "繁体字变体"
+            }
+          ]
+        },
+        "发布": {
+          "correct": "发布",
+          "description": "发布新版本或新功能到生产环境",
+          "variants": [
+            {
+              "wrong": "发步",
+              "description": "近似音"
+            }
+          ]
+        },
+        "测试环境": {
+          "correct": "测试环境",
+          "description": "用于测试的环境，通常复制生产环境配置",
+          "variants": [
+            {
+              "wrong": "测试火景",
+              "description": "识别错误"
+            }
+          ]
+        },
+        "生产环境": {
+          "correct": "生产环境",
+          "description": "运行真实业务的正式环境",
+          "variants": [
+            {
+              "wrong": "生产火景",
+              "description": "识别错误"
+            }
+          ]
         }
       }
     },
@@ -1310,6 +1674,36 @@
             {
               "wrong": "阿帕奇",
               "description": "规范转义"
+            }
+          ]
+        },
+        "内网": {
+          "correct": "内网",
+          "description": "公司或组织内部的局域网",
+          "variants": [
+            {
+              "wrong": "涅网",
+              "description": "识别错误"
+            }
+          ]
+        },
+        "代理": {
+          "correct": "代理",
+          "description": "代理服务器或代理程序，用于转发请求",
+          "variants": [
+            {
+              "wrong": "带理",
+              "description": "近似音"
+            }
+          ]
+        },
+        "重启": {
+          "correct": "重启",
+          "description": "重新启动服务器或应用程序",
+          "variants": [
+            {
+              "wrong": "中启",
+              "description": "近似音"
             }
           ]
         }
@@ -1432,7 +1826,18 @@
     "other": {
       "name": "其他术语，持续补充中",
       "description": "不属于以上分类的其他编程和开发相关术语",
-      "terms": {}
+      "terms": {
+        "依赖": {
+          "correct": "依赖",
+          "description": "项目或模块之间的依赖关系，引用其他包或库",
+          "variants": [
+            {
+              "wrong": "依赖赖",
+              "description": "重复识别"
+            }
+          ]
+        }
+      }
     }
   }
 }

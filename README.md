@@ -18,6 +18,168 @@
 
 ---
 
+## Quick Start 🚀
+
+### ⚠️ 系统依赖 - FFmpeg
+
+CodeWhisper 依赖 **FFmpeg** 来解析音频文件(MP3, MP4, M4A, WAV 等)。
+
+**如未安装 FFmpeg**,会出现 `WinError 2` 或类似错误。
+
+**检查 FFmpeg 是否已安装:**
+
+```bash
+ffmpeg -version
+```
+
+**如果未安装,请选择以下方式之一:**
+
+#### 🚀方式:
+
+**Windows:**
+```bash
+# 或用 Windows Package Manager
+winget install ffmpeg
+
+```
+
+**macOS:**
+```bash
+# 使用 Homebrew(推荐)
+brew install ffmpeg
+```
+
+---
+
+### 安装
+
+```bash
+1.克隆仓库
+git clone https://github.com/superlls/CodeWhisper.git
+cd CodeWhisper
+2.创建虚拟环境(如果Pycharm打开,按照提示创建即可)
+python -m venv .venv
+source .venv/bin/activate  # macOS
+# 或
+.venv\Scripts\activate  # Windows
+3.安装依赖
+pip install -r requirements.txt
+依赖会自动根据你的操作系统选择下载相应的版本依赖
+```
+
+---
+
+### Mac使用方式
+
+```bash
+# 启动菜单栏应用
+python app.py
+```
+
+应用启动后,点击菜单栏的 🎙️ 图标,选择"开始录音"即可:
+
+- 🎙️ - 待命状态
+- 🔴 - 正在录音
+- ⏳ - 正在转录
+- ✅ - 转录完成(自动复制到剪贴板)
+
+**工作流程**:
+1. 点击菜单栏 🎙️ → "开始录音"
+2. 说出你的内容
+3. 再次点击 → "停止录音"
+4. 转录结果自动复制到剪贴板
+5. 粘贴使用
+6. **模型配置**:默认为 `medium`,如需修改请在 `gui/mac_menu_bar_app.py` 中设置 `CodeWhisper(model_name="...")`
+
+---
+
+### Windows使用方式
+
+```bash
+# 启动悬浮球应用
+python app.py
+```
+
+启动后会出现桌面悬浮球:
+- 点击开始录音,再次点击停止录音
+- 转写完成后自动复制到剪贴板
+- **模型配置**:默认为 `small`,如需修改请在 `gui/win_floating_ball_app.py` 中设置 `CodeWhisper(model_name="...")`
+
+---
+
+## 注意事项 ⚠️
+
+### 系统要求
+
+- **Python 版本**：3.11
+- **网络**：首次运行需要下载 Whisper 模型（100MB-3GB，取决于选择的模型,medium初次使用需要下载1.4G的模型）
+
+### 硬件加速支持
+
+**默认情况**：依赖包使用 CPU 进行 Whisper 模型推理。如果你有 NVIDIA 显卡，可以通过以下步骤启用 GPU 加速：
+
+#### ⚡ NVIDIA 显卡加速（推荐）
+
+如果你有 NVIDIA 显卡（游戏本、台式机），安装 GPU 版 PyTorch 后可显著加快转录速度：
+
+**1️⃣ 检查你的 CUDA 版本**
+
+在 PowerShell 或 CMD 中运行：
+```bash
+nvidia-smi
+```
+
+输出示例：
+```
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 545.23.06    Driver Version: 545.23.06   CUDA Version: 12.1     |
++-----------------------------------------------------------------------------+
+```
+
+查看 `CUDA Version` 的值，根据版本选择对应的 Torch：
+- CUDA 12.1（较新） → 用 `cu121`
+- CUDA 11.8 及以下（较旧） → 用 `cu118`
+
+**2️⃣ 根据驱动版本安装对应的 GPU 版 Torch**
+```bash
+# 先卸载 CPU 版本
+pip uninstall -y torch torchaudio torchvision
+
+# 驱动较旧（2024年前）→ cu118
+pip install torch torchaudio torchvision --index-url https://download.pytorch.org/whl/cu118
+
+# 驱动较新（2024年后）→ cu121
+pip install torch torchaudio torchvision --index-url https://download.pytorch.org/whl/cu121
+```
+
+**3️⃣ 验证 GPU 是否启用**
+```bash
+# 运行应用，查看日志
+python app.py
+# 如果显示 "设备选择: device=cuda"，说明已成功启用 GPU ✅
+```
+
+**4️⃣ 显存不足的处理**
+- 如果报错 `CUBLAS_STATUS_ALLOC_FAILED`，说明显存不足
+- 解决方案：改用更小的模型（`small` 或 `base`）
+- 在 `gui/mac_menu_bar_app.py` 或 `gui/win_floating_ball_app.py` 中修改 `CodeWhisper(model_name="small")`
+
+---
+
+#### ❌ AMD 显卡
+
+- **Windows**：Whisper 暂不支持 Windows 下的 ROCm 环境，目前只能使用 CPU
+- **Linux**：可尝试配置 ROCm，但需要额外的环境配置
+
+---
+
+#### 🍎 Mac
+
+- 使用 CPU 运行（Apple Silicon 会自动优化，无需额外配置）
+- 如果想减小 CPU 占用，可将默认模型改为 `small` 或 `base`
+
+---
+
 ## 核心理念 💡
 
 **我们为什么做 CodeWhisper？**
@@ -97,14 +259,9 @@ graph LR
        
 # 使用一段时间后（你经常说 SpringBoot Dubbo、Redis、Kafka）
 提示词：计算机行业从业者：提测、联调、排期、Dubbo、Redis、Kafka、SpringBoot、MySQL、并发、缓存。
-       ↑ 系统自动学习到你的高频术语，并分析出你是一位资深的后端开发工程师～ 
+       ↑ 系统自动检测到你的高频术语，并分析出你是一位资深的后端开发工程师～ 
 ```
 
-**实现细节**：
-- 📊 **频次统计**：记录每个术语的使用次数和时间
-- 🎯 **智能排序**：高频术语优先进入用户个性化提示词库
-- 🗑️ **自动淘汰**：低频术语自动移除，保持词库精简
-- 💾 **本地存储**：所有数据本地保存，隐私安全
 
 ---
 
@@ -112,21 +269,23 @@ graph LR
 
 **覆盖 12+ 大分类，100+ 条术语规则**（持续收录大家提供的术语～）：
 
-| 分类 | 包含术语 |
+| 分类 | 示例术语 |
 |------|---------|
-| 职场术语 | 提PR、提测、排期、逾期、联调、灰度、验收、Mentor、Leader、工单... |
-| 大学术语 | 秋招、春招、校招、社招、offer、CV、笔试、面试、大厂、算法、刷题... |
+| 职场术语 | 提PR/提MR、提测、排期、逾期、联调、灰度、验收、权限、工单、用例... |
+| 大学术语 | 秋招、春招、校招、社招、offer、CV、实习、技术栈、笔试、面试、刷题... |
 | 编程语言 | Python、Java、Go、JavaScript、TypeScript、Rust、C++、C#、PHP、Ruby、Kotlin... |
-| 开发工具 | IDEA、VSCode、WebStorm、PyCharm、Goland、Vim、Emacs... |
-| 技术概念 | API、REST、GraphQL、SQL、ORM、CRUD、MVC、日志、RESTful... |
-| 前端开发 | （待扩展） |
-| 后端开发 | Spring、SpringBoot、Kafka、Zookeeper、Apollo、Caffeine、CAT、Arthas... |
-| 数据库 | MySQL、PostgreSQL、MongoDB、Redis、DB、DBA、数据库、慢SQL... |
-| DevOps工具 | Docker、Kubernetes、Git、GitHub、GitLab、Maven、Gradle、npm、Yarn、pip、CI/CD... |
-| 运维 | Nginx、Apache... |
-| 硬件与嵌入式 | macOS、Windows、Linux、STM32、Arduino、树莓派、ARM、RTOS、51单片机... |
+| 开发工具 | IDEA、VSCode、WebStorm、PyCharm、Goland、Vim、Emacs、Postman、master... |
+| 技术概念 | API、REST、GraphQL、SQL、ORM、CRUD、MVC、日志、Token、Header、密钥对... |
+| 前端开发 | （持续补充，欢迎 PR） |
+| 后端开发 | Spring、SpringBoot、Kafka、Zookeeper、Apollo、Caffeine、CAT、Arthas、RPC、Cron... |
+| 数据库 | MySQL、PostgreSQL、MongoDB、Redis、ES、DB、DBA、慢SQL、字段、生产库... |
+| DevOps工具 | Docker、Kubernetes、K8s、Git、GitHub、GitLab、Maven、Gradle、npm、Yarn、CI/CD、流水线... |
+| 运维 | Nginx、Apache、内网、代理、重启... |
+| 硬件与嵌入式 | macOS、Windows、Linux、STM32、ARM... |
 | 通信协议 | HTTP、HTTPS、SSL、会话... |
-| 其他术语 | （待扩展） |
+| 其他术语 | 依赖（持续扩展） |
+
+> 完整规则见 `dictionaries/programmer_terms.json`，如有遗漏欢迎提 Issue/PR 补充～
 
 **社区字典双重作用**：
 1. ✅ **兜底纠错**：识别错误时立即命中并修正
@@ -182,170 +341,10 @@ config/
 
 > 💡 **提示**：如果你有 NVIDIA 显卡，GPU 推理会显著加快转录速度。详见下方 **硬件加速支持** 部分。
 
----
 
-## Quick Start 🚀
+## License 📄
 
-### 安装
-
-```bash
-1.克隆仓库
-git clone https://github.com/superlls/CodeWhisper.git
-cd CodeWhisper
-2.创建虚拟环境（如果你是Pycharm打开，按照提示创建即可）
-python -m venv .venv
-source .venv/bin/activate  # macOS/Linux
-# 或
-.venv\Scripts\activate  # Windows
-3.安装依赖
-pip install -r requirements.txt
-依赖会自动根据你的操作系统选择下载相应的版本依赖
-```
-
-### ⚠️ 系统依赖 - FFmpeg
-
-CodeWhisper 依赖 **FFmpeg** 来解析音频文件（MP3, MP4, M4A, WAV 等）。
-
-**检查 FFmpeg 是否已安装：**
-
-```bash
-ffmpeg -version
-```
-
-**如果未安装，请选择以下方式之一：**
-
-#### 🚀方式：
-
-**Windows:**
-```bash
-# 或用 Windows Package Manager
-winget install ffmpeg
-
-```
-
-**macOS:**
-```bash
-# 使用 Homebrew（推荐）
-brew install ffmpeg
-```
-
-
-⚠️ **如未安装 FFmpeg**，会出现 `WinError 2` 或类似错误。
-
----
-
-### Mac使用方式
-
-```bash
-# 启动菜单栏应用
-python app.py
-```
-
-应用启动后，点击菜单栏的 🎙️ 图标，选择"开始录音"即可：
-
-- 🎙️ - 待命状态
-- 🔴 - 正在录音
-- ⏳ - 正在转录
-- ✅ - 转录完成（自动复制到剪贴板）
-
-**工作流程**：
-1. 点击菜单栏 🎙️ → "开始录音"
-2. 说出你的内容
-3. 再次点击 → "停止录音"
-4. 转录结果自动复制到剪贴板
-5. 粘贴使用
-6. **模型配置**：默认为 `medium`，如需修改请在 `gui/mac_menu_bar_app.py` 中设置 `CodeWhisper(model_name="...")`
-
----
-
-### Windows使用方式
-
-```bash
-# 启动悬浮球应用
-python app.py
-```
-
-启动后会出现桌面悬浮球：
-- 点击开始录音，再次点击停止录音
-- 转写完成后自动复制到剪贴板
-- **模型配置**：默认为 `small`，如需修改请在 `gui/win_floating_ball_app.py` 中设置 `CodeWhisper(model_name="...")`
-
----
-
-## 注意事项 ⚠️
-
-### 系统要求
-
-- **Python 版本**：3.11
-- **网络**：首次运行需要下载 Whisper 模型（100MB-3GB，取决于选择的模型,medium初次使用需要下载1.4G的模型）
-
-### 硬件加速支持
-
-**默认情况**：依赖包使用 CPU 进行 Whisper 模型推理。如果你有 NVIDIA 显卡，可以通过以下步骤启用 GPU 加速：
-
-#### ⚡ NVIDIA 显卡加速（推荐）
-
-如果你有 NVIDIA 显卡（游戏本、台式机），安装 GPU 版 PyTorch 后可显著加快转录速度：
-
-**1️⃣ 检查你的 CUDA 版本**
-
-在 PowerShell 或 CMD 中运行：
-```bash
-nvidia-smi
-```
-
-输出示例：
-```
-+-----------------------------------------------------------------------------+
-| NVIDIA-SMI 545.23.06    Driver Version: 545.23.06   CUDA Version: 12.1     |
-+-----------------------------------------------------------------------------+
-```
-
-查看 `CUDA Version` 的值，根据版本选择对应的 Torch：
-- CUDA 12.1（较新） → 用 `cu121`
-- CUDA 11.8 及以下（较旧） → 用 `cu118`
-
-**2️⃣ 根据驱动版本安装对应的 GPU 版 Torch**
-```bash
-# 先卸载 CPU 版本
-pip uninstall -y torch torchaudio torchvision
-
-# 驱动较旧（2024年前）→ cu118
-pip install torch torchaudio torchvision --index-url https://download.pytorch.org/whl/cu118
-
-# 驱动较新（2024年后）→ cu121
-pip install torch torchaudio torchvision --index-url https://download.pytorch.org/whl/cu121
-```
-
-**3️⃣ 验证 GPU 是否启用**
-```bash
-# 运行应用，查看日志
-python app.py
-# 如果显示 "设备选择: device=cuda"，说明已成功启用 GPU ✅
-```
-
-**4️⃣ 显存不足的处理**
-- 如果报错 `CUBLAS_STATUS_ALLOC_FAILED`，说明显存不足
-- 解决方案：改用更小的模型（`small` 或 `base`）
-- 在 `gui/mac_menu_bar_app.py` 或 `gui/win_floating_ball_app.py` 中修改 `CodeWhisper(model_name="small")`
-
----
-
-#### ❌ AMD 显卡
-
-- **Windows**：Whisper 暂不支持 Windows 下的 ROCm 环境，目前只能使用 CPU
-- **Linux**：可尝试配置 ROCm，但需要额外的环境配置
-
----
-
-#### 🍎 Mac
-
-- 使用 CPU 运行（Apple Silicon 会自动优化，无需额外配置）
-- 如果想减小 CPU 占用，可将默认模型改为 `small` 或 `base`
-
-
-### 常见问题
-
+MIT License - 详见 [LICENSE](./LICENSE)
 
 欢迎提交 Issue 和 PR：
 
@@ -355,7 +354,3 @@ python app.py
 - 📚 联系邮箱：1656839861un@gmail.com
 
 详见 [CONTRIBUTING.md](./CONTRIBUTING.md)
-
-## License 📄
-
-MIT License - 详见 [LICENSE](./LICENSE)

@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 CodeWhisper - 为中文社区开发者设计的语音转文字工具
 """

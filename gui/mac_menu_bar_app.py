@@ -5,7 +5,6 @@ CodeWhisper MenuBar Application - macOS 菜单栏应用（使用 rumps）
 import os
 import threading
 import tempfile
-from pathlib import Path
 import subprocess
 
 import rumps
@@ -29,7 +28,7 @@ class CodeWhisperApp(rumps.App):
 
         self.is_recording = False
         self.audio_data = []
-        self.sample_rate = 16000 #之后迁移到windows版本，可能要获取设备采样率
+        self.sample_rate = 16000
         self.stream = None
 
         try:
@@ -54,7 +53,7 @@ class CodeWhisperApp(rumps.App):
 
         # 后台启动线程进行录音
         recording_thread = threading.Thread(target=self._record_audio)
-        recording_thread.daemon = True #定义守护线程，滚去和主线程一起殉葬
+        recording_thread.daemon = True #定义守护线程
         recording_thread.start()
 
     def _record_audio(self):

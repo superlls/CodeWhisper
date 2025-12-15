@@ -1,5 +1,5 @@
 """
-CodeWhisper FloatingBall Application - （使用 Pyside6）
+CodeWhisper FloatingBall Application - Windows悬浮球应用（使用 Pyside6）
 """
 import sys
 import threading

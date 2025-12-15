@@ -115,7 +115,7 @@ graph LR
 | 分类 | 包含术语 |
 |------|---------|
 | 职场术语 | 提PR、提测、排期、逾期、联调、灰度、验收、Mentor、Leader、工单... |
-| 大学生术语 | 秋招、春招、校招、社招、offer、CV、笔试、面试、大厂、算法、刷题... |
+| 大学术语 | 秋招、春招、校招、社招、offer、CV、笔试、面试、大厂、算法、刷题... |
 | 编程语言 | Python、Java、Go、JavaScript、TypeScript、Rust、C++、C#、PHP、Ruby、Kotlin... |
 | 开发工具 | IDEA、VSCode、WebStorm、PyCharm、Goland、Vim、Emacs... |
 | 技术概念 | API、REST、GraphQL、SQL、ORM、CRUD、MVC、日志、RESTful... |

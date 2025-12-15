@@ -339,9 +339,6 @@ config/
 
 例如改为 `CodeWhisper(model_name="large")` 即可使用更高精度的模型。
 
-> 💡 **提示**：如果你有 NVIDIA 显卡，GPU 推理会显著加快转录速度。详见下方 **硬件加速支持** 部分。
-
-
 ## License 📄
 
 MIT License - 详见 [LICENSE](./LICENSE)

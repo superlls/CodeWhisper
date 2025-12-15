@@ -1,3 +1,6 @@
+"""
+CodeWhisper FloatingBall Application - （使用 Pyside6）
+"""
 import sys
 import threading
 import tempfile
@@ -30,7 +33,7 @@ class FloatingBall(QWidget):
         self.sample_rate = 16000
         self.stream = None
         try:
-            self.whisper = CodeWhisper(model_name="medium")
+            self.whisper = CodeWhisper(model_name="small")
         except Exception as e:
             print(f"模型加载失败: {e}")
             self.whisper = None

@@ -1,5 +1,5 @@
 """
-CodeWhisper MenuBar GUI
+CodeWhisper GUI
 """
 
 __version__ = "0.1.0"

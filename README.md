@@ -171,10 +171,10 @@ nvidia-smi
 # 先卸载 CPU 版本
 pip uninstall -y torch torchaudio torchvision
 
-# 驱动较旧（2024年前）→ cu118
+# 驱动较旧（2023年前）→ cu118
 pip install torch torchaudio torchvision --index-url https://download.pytorch.org/whl/cu118
 
-# 驱动较新（2024年后）→ cu121
+# 驱动较新（2023年后）→ cu121
 pip install torch torchaudio torchvision --index-url https://download.pytorch.org/whl/cu121
 ```
 
@@ -326,8 +326,8 @@ config/
 - `large`：最准，专业场景
 
 **默认模型配置**：
-- **Mac**：默认为 `medium`（性能充足）
-- **Windows**：默认为 `small`（兼容性考虑）
+- **Mac**：默认为 `medium`
+- **Windows**：默认为 `small`
 
 **如果你想升级模型**，在以下文件中修改 `CodeWhisper(model_name="...")` 参数：
 - Mac：`gui/mac_menu_bar_app.py`

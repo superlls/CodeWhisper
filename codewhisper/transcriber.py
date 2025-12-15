@@ -13,12 +13,18 @@ from .utils import convert_to_simplified_chinese
 class CodeWhisper:
     """主转录引擎"""
 
-    def __init__(self, model_name: str = "medium", dict_path: Optional[str] = None):
+    def __init__(
+        self,
+        model_name: str = "medium",
+        dict_path: Optional[str] = None,
+        use_prompt: bool = False,
+    ):
         """
          CodeWhisper 初始化，同时预加载字典的特定术语并将其构建为提示词喂给Whisper进行预热；模型默认medium
         Args:
             model_name: Whisper 模型 (tiny, base, small, medium, large)
             dict_path: 自定义字典路径，支持后续拓展todo
+            use_prompt: 是否启用构建好的提示词喂给 Whisper（默认关闭，便于对照测试）
         """
         print(f"📦 加载 Whisper 模型: {model_name}")
 
@@ -36,9 +42,11 @@ class CodeWhisper:
         print(f"🚀 加载智能提示词引擎")
         self.prompt_engine = PromptEngine()
 
-        # 使用新的 PromptEngine 构建提示词
-        self.programmer_prompt = self.prompt_engine.build_prompt()
-        print(f"💡 当前提示词 {self.programmer_prompt}")
+        # 统一开关：可配置是否喂提示词
+        self.use_prompt = use_prompt
+        self.programmer_prompt = self.prompt_engine.build_prompt() if self.use_prompt else ""
+        prompt_state = "启用" if self.use_prompt else "禁用"
+        print(f"💡 提示词开关：{prompt_state}（initial_prompt={'构建提示词' if self.use_prompt else '空字符串'}）")
 
         print(f"✅CodeWhisper 初始化完成\n")
 
@@ -73,7 +81,7 @@ class CodeWhisper:
         result = self.model.transcribe(
             audio_file,
             language=language,
-            initial_prompt=self.programmer_prompt,
+            initial_prompt=self.programmer_prompt if self.use_prompt else "",
             verbose=False,  # Whisper 内部日志关闭，由 CodeWhisper 的verbose 控制外部日志
             temperature=temperature
         )
@@ -115,9 +123,19 @@ class CodeWhisper:
             self.prompt_engine.update_user_terms(detected_terms)
 
             # 重新构建提示词（下次转录使用）
-            self.programmer_prompt = self.prompt_engine.build_prompt()
+            if self.use_prompt:
+                self.programmer_prompt = self.prompt_engine.build_prompt()
 
         return result
+
+    def set_prompt_enabled(self, enabled: bool):
+        """
+        运行时切换是否向 Whisper 喂提示词
+        """
+        self.use_prompt = enabled
+        self.programmer_prompt = self.prompt_engine.build_prompt() if enabled else ""
+        state = "启用" if enabled else "禁用"
+        print(f"💡 已{state}提示词，initial_prompt={'构建提示词' if enabled else '空字符串'}")
 
     def get_supported_models(self) -> list:
         """获取支持的模型列表"""

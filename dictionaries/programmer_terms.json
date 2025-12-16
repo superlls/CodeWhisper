@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "description": "CodeWhisper 编程术语字典 - 纠正各种工作中的编程术语变体",
+  "description": "CodeWhisper 开发者术语字典",
   "categories": {
     "work_terms": {
       "name": "职场术语",
@@ -208,7 +208,7 @@
           "variants": [
             {
               "wrong": "公单",
-              "description": "工单"
+              "description": "错误识别"
             }
           ]
         },
@@ -269,22 +269,7 @@
         },
         "OC": {
           "correct": "OC",
-          "description": "On-call 轮值，负责值班响应线上故障和报警",
-          "variants": []
-        },
-        "QPS": {
-          "correct": "QPS",
-          "description": "Queries Per Second，每秒处理的查询请求数",
-          "variants": []
-        },
-        "TPS": {
-          "correct": "TPS",
-          "description": "Transactions Per Second，每秒处理的事务或请求数",
-          "variants": []
-        },
-        "ThreadLocal": {
-          "correct": "ThreadLocal",
-          "description": "线程本地存储机制，为每个线程提供独立变量副本",
+          "description": "Offer Call，指 HR 或用人方通过电话/口头方式与候选人确认录用意向、薪资及入职相关信息的环节，通常发生在正式书面 offer 发放之前，代表录用基本确定但尚未完成流程",
           "variants": []
         },
         "上线": {
@@ -302,11 +287,6 @@
           "description": "内存未被释放持续增长，最终可能耗尽资源的问题",
           "variants": []
         },
-        "分布式锁": {
-          "correct": "分布式锁",
-          "description": "在分布式环境中协调资源访问的锁机制",
-          "variants": []
-        },
         "卡点": {
           "correct": "卡点",
           "description": "项目推进中的阻塞点或关键依赖",
@@ -322,54 +302,14 @@
           "description": "每周汇报进展和计划的工作报告",
           "variants": []
         },
-        "回滚": {
-          "correct": "回滚",
-          "description": "将系统或数据恢复到上一稳定版本",
-          "variants": []
-        },
         "大需求": {
           "correct": "大需求",
           "description": "工作量大、影响范围广的重要需求",
           "variants": []
         },
-        "容量评估": {
-          "correct": "容量评估",
-          "description": "评估系统所需资源容量和并发承载能力",
-          "variants": []
-        },
-        "峰值流量": {
-          "correct": "峰值流量",
-          "description": "业务高峰时达到的最高请求量",
-          "variants": []
-        },
-        "并发场景": {
-          "correct": "并发场景",
-          "description": "多个请求同时操作共享资源的情况",
-          "variants": []
-        },
-        "慢SQL": {
-          "correct": "慢SQL",
-          "description": "执行耗时过长的 SQL 语句，需要优化",
-          "variants": []
-        },
-        "技术债": {
-          "correct": "技术债",
-          "description": "为赶进度等原因遗留的待偿还技术问题",
-          "variants": []
-        },
-        "接口幂等": {
-          "correct": "接口幂等",
-          "description": "接口多次调用结果一致且无副作用的特性",
-          "variants": []
-        },
         "推进": {
           "correct": "推进",
           "description": "推动需求或问题向前闭环的过程",
-          "variants": []
-        },
-        "日常实习": {
-          "correct": "日常实习",
-          "description": "在岗长期实习生角色，按周或按天参与团队工作",
           "variants": []
         },
         "日志追踪": {
@@ -392,21 +332,6 @@
           "description": "监控关键指标并在异常时触发告警通知",
           "variants": []
         },
-        "缓存击穿": {
-          "correct": "缓存击穿",
-          "description": "热点 key 失效瞬间大量请求直达后端导致压力骤增",
-          "variants": []
-        },
-        "缓存穿透": {
-          "correct": "缓存穿透",
-          "description": "请求不存在的数据绕过缓存直接打到数据库的风险",
-          "variants": []
-        },
-        "缓存雪崩": {
-          "correct": "缓存雪崩",
-          "description": "大量缓存同时失效导致后端被集中请求压垮",
-          "variants": []
-        },
         "背锅": {
           "correct": "背锅",
           "description": "承担问题或故障责任的戏称",
@@ -415,11 +340,6 @@
         "补丁": {
           "correct": "补丁",
           "description": "紧急修复包或小范围变更以解决问题",
-          "variants": []
-        },
-        "转正": {
-          "correct": "转正",
-          "description": "试用期或实习期结束成为正式员工",
           "variants": []
         },
         "连接池": {
@@ -442,8 +362,8 @@
           "description": "将大需求拆分为可执行的子任务和交付物",
           "variants": []
         },
-        "项目复盘": {
-          "correct": "项目复盘",
+        "复盘": {
+          "correct": "复盘",
           "description": "项目结束后回顾经验教训和改进点",
           "variants": []
         },
@@ -478,6 +398,10 @@
           "variants": [
             {
               "wrong": "技术站",
+              "description": "同音误识别"
+            },
+            {
+              "wrong": "技术战",
               "description": "同音误识别"
             }
           ]
@@ -623,16 +547,6 @@
         "刷题": {
           "correct": "刷题",
           "description": "反复练习编程题目，特别是在面试准备中",
-          "variants": [
-            {
-              "wrong": "刷题",
-              "description": "正确形式"
-            }
-          ]
-        },
-        "Java": {
-          "correct": "Java",
-          "description": "主流后端语言，面向对象并运行在JVM之上",
           "variants": []
         },
         "JVM": {
@@ -745,11 +659,6 @@
           "description": "线程长期得不到CPU时间片或资源而无法执行",
           "variants": []
         },
-        "MySQL": {
-          "correct": "MySQL",
-          "description": "常见的关系型数据库管理系统，支持事务和多种存储引擎",
-          "variants": []
-        },
         "索引": {
           "correct": "索引",
           "description": "数据库中用于加速查询的数据结构，常见为B+树",
@@ -795,29 +704,9 @@
           "description": "通过索引、重写语句和统计信息等手段降低SQL开销",
           "variants": []
         },
-        "Redis": {
-          "correct": "Redis",
-          "description": "基于内存的高性能键值数据库，支持多种数据结构",
-          "variants": []
-        },
         "缓存": {
           "correct": "缓存",
           "description": "将热点数据存入快速介质以减少访问延迟",
-          "variants": []
-        },
-        "缓存穿透": {
-          "correct": "缓存穿透",
-          "description": "请求不存在的数据导致直接落到数据库的风险",
-          "variants": []
-        },
-        "缓存击穿": {
-          "correct": "缓存击穿",
-          "description": "热点key过期瞬间大量请求同时落库造成压力",
-          "variants": []
-        },
-        "缓存雪崩": {
-          "correct": "缓存雪崩",
-          "description": "大量缓存集中失效导致后端服务和数据库被冲垮",
           "variants": []
         },
         "持久化": {
@@ -833,16 +722,6 @@
         "AOF": {
           "correct": "AOF",
           "description": "Redis追加日志的持久化方式，记录写操作以便重放",
-          "variants": []
-        },
-        "分布式锁": {
-          "correct": "分布式锁",
-          "description": "跨多节点环境中保证互斥访问的锁实现",
-          "variants": []
-        },
-        "Kafka": {
-          "correct": "Kafka",
-          "description": "分布式高吞吐的消息队列系统",
           "variants": []
         },
         "消息队列": {
@@ -868,7 +747,12 @@
         "幂等": {
           "correct": "幂等",
           "description": "同一操作执行多次结果一致，避免重复影响",
-          "variants": []
+          "variants": [
+            {
+              "wrong": "密等",
+              "description": "音韵误识别"
+            }
+          ]
         },
         "重复消费": {
           "correct": "重复消费",
@@ -883,16 +767,6 @@
         "Offset": {
           "correct": "Offset",
           "description": "消息队列的消费位点，用于记录读取进度",
-          "variants": []
-        },
-        "Spring": {
-          "correct": "Spring",
-          "description": "企业级Java开发框架，提供IOC和AOP等能力",
-          "variants": []
-        },
-        "SpringBoot": {
-          "correct": "SpringBoot",
-          "description": "基于Spring的快速启动框架，简化配置和部署",
           "variants": []
         },
         "SpringCloud": {
@@ -923,16 +797,6 @@
         "微服务": {
           "correct": "微服务",
           "description": "将系统拆分为多个可独立部署的小服务架构模式",
-          "variants": []
-        },
-        "HTTP": {
-          "correct": "HTTP",
-          "description": "超文本传输协议，常用于Web通信的应用层协议",
-          "variants": []
-        },
-        "HTTPS": {
-          "correct": "HTTPS",
-          "description": "在HTTP之上加入TLS加密的安全通信协议",
           "variants": []
         },
         "TCP": {
@@ -975,34 +839,9 @@
           "description": "将请求分摊到多个实例或节点以提升吞吐和可用性",
           "variants": []
         },
-        "Nginx": {
-          "correct": "Nginx",
-          "description": "高性能Web服务器、反向代理和负载均衡器",
-          "variants": []
-        },
-        "反向代理": {
-          "correct": "反向代理",
-          "description": "代理服务器代表客户端向后端服务转发请求的模式",
-          "variants": []
-        },
         "正向代理": {
           "correct": "正向代理",
           "description": "代理客户端访问外部资源的代理方式",
-          "variants": []
-        },
-        "限流": {
-          "correct": "限流",
-          "description": "控制请求速率或并发量以防系统过载",
-          "variants": []
-        },
-        "熔断": {
-          "correct": "熔断",
-          "description": "检测下游异常后短路请求以保护系统的措施",
-          "variants": []
-        },
-        "降级": {
-          "correct": "降级",
-          "description": "能力受限或故障时提供简化或备用方案的处理",
           "variants": []
         },
         "分布式": {
@@ -1025,11 +864,6 @@
           "description": "基本可用、软状态、最终一致性的分布式理论",
           "variants": []
         },
-        "Zookeeper": {
-          "correct": "Zookeeper",
-          "description": "分布式协调服务，提供选主、配置和注册能力",
-          "variants": []
-        },
         "注册中心": {
           "correct": "注册中心",
           "description": "微服务用于服务发现和注册的中心组件",
@@ -1040,19 +874,9 @@
           "description": "集中存储并动态下发配置的基础设施",
           "variants": []
         },
-        "Docker": {
-          "correct": "Docker",
-          "description": "容器化技术，用镜像快速启动隔离的运行环境",
-          "variants": []
-        },
         "容器": {
           "correct": "容器",
           "description": "共享宿主机内核的轻量级隔离运行单元",
-          "variants": []
-        },
-        "Kubernetes": {
-          "correct": "Kubernetes",
-          "description": "容器编排平台，负责调度、伸缩和管理集群",
           "variants": []
         },
         "Pod": {
@@ -1063,21 +887,6 @@
         "Service": {
           "correct": "Service",
           "description": "Kubernetes中为Pod提供稳定访问地址的抽象",
-          "variants": []
-        },
-        "部署": {
-          "correct": "部署",
-          "description": "将应用打包发布到目标运行环境的过程",
-          "variants": []
-        },
-        "CI/CD": {
-          "correct": "CI/CD",
-          "description": "持续集成与持续交付/部署的实践流程",
-          "variants": []
-        },
-        "Linux": {
-          "correct": "Linux",
-          "description": "开源类Unix操作系统，服务器和研发常用平台",
           "variants": []
         },
         "进程": {
@@ -1635,16 +1444,6 @@
           "description": "保证消息在传输和存储过程中不丢失的机制",
           "variants": []
         },
-        "生产者": {
-          "correct": "生产者",
-          "description": "向消息队列发送消息的角色或服务",
-          "variants": []
-        },
-        "消费者": {
-          "correct": "消费者",
-          "description": "从消息队列读取并处理消息的角色或服务",
-          "variants": []
-        },
         "broker": {
           "correct": "broker",
           "description": "消息队列的服务节点，负责存储和转发消息",
@@ -1770,11 +1569,6 @@
           "description": "跨站请求伪造攻击，利用已登录身份发起恶意请求",
           "variants": []
         },
-        "日志": {
-          "correct": "日志",
-          "description": "记录系统运行事件和关键数据的文本或结构化信息",
-          "variants": []
-        },
         "监控": {
           "correct": "监控",
           "description": "采集指标、分析和告警以保障系统可观测性",
@@ -1838,11 +1632,6 @@
         "HR面": {
           "correct": "HR面",
           "description": "由 HR 进行的面试轮次，关注意向、薪资、入职时间等非技术问题",
-          "variants": []
-        },
-        "OC": {
-          "correct": "OC",
-          "description": "Offer Call，HR 电话确认意向或口头承诺接收 Offer 的沟通",
           "variants": []
         },
         "Offer Call": {
@@ -2887,6 +2676,21 @@
               "description": "映射音韵变体"
             }
           ]
+        },
+        "QPS": {
+          "correct": "QPS",
+          "description": "Queries Per Second，每秒处理的查询请求数",
+          "variants": []
+        },
+        "TPS": {
+          "correct": "TPS",
+          "description": "Transactions Per Second，每秒处理的事务或请求数",
+          "variants": []
+        },
+        "ThreadLocal": {
+          "correct": "ThreadLocal",
+          "description": "线程本地存储机制，为每个线程提供独立变量副本",
+          "variants": []
         }
       }
     },
@@ -2994,7 +2798,11 @@
           "variants": [
             {
               "wrong": "MathSQL",
-              "description": "\"慢\"错误识别成Math"
+              "description": "错误识别成Math"
+            },
+            {
+              "wrong": "MindSQL",
+              "description": "错误识别"
             }
           ]
         },
@@ -3041,6 +2849,21 @@
               "description": "识别错误"
             }
           ]
+        },
+        "缓存击穿": {
+          "correct": "缓存击穿",
+          "description": "热点 key 失效瞬间大量请求直达后端导致压力骤增",
+          "variants": []
+        },
+        "缓存穿透": {
+          "correct": "缓存穿透",
+          "description": "请求不存在的数据绕过缓存直接打到数据库的风险",
+          "variants": []
+        },
+        "缓存雪崩": {
+          "correct": "缓存雪崩",
+          "description": "大量缓存同时失效导致后端被集中请求压垮",
+          "variants": []
         }
       }
     },

@@ -261,9 +261,199 @@
               "description": "错误识别"
             }
           ]
+        },
+        "HC": {
+          "correct": "HC",
+          "description": "Headcount，指招聘编制或岗位名额",
+          "variants": []
+        },
+        "OC": {
+          "correct": "OC",
+          "description": "On-call 轮值，负责值班响应线上故障和报警",
+          "variants": []
+        },
+        "QPS": {
+          "correct": "QPS",
+          "description": "Queries Per Second，每秒处理的查询请求数",
+          "variants": []
+        },
+        "TPS": {
+          "correct": "TPS",
+          "description": "Transactions Per Second，每秒处理的事务或请求数",
+          "variants": []
+        },
+        "ThreadLocal": {
+          "correct": "ThreadLocal",
+          "description": "线程本地存储机制，为每个线程提供独立变量副本",
+          "variants": []
+        },
+        "上线": {
+          "correct": "上线",
+          "description": "将功能或版本发布到生产环境",
+          "variants": []
+        },
+        "业务上手": {
+          "correct": "业务上手",
+          "description": "快速熟悉业务并能独立处理需求的状态",
+          "variants": []
+        },
+        "内存泄漏": {
+          "correct": "内存泄漏",
+          "description": "内存未被释放持续增长，最终可能耗尽资源的问题",
+          "variants": []
+        },
+        "分布式锁": {
+          "correct": "分布式锁",
+          "description": "在分布式环境中协调资源访问的锁机制",
+          "variants": []
+        },
+        "卡点": {
+          "correct": "卡点",
+          "description": "项目推进中的阻塞点或关键依赖",
+          "variants": []
+        },
+        "压测": {
+          "correct": "压测",
+          "description": "压力测试，验证系统在高负载下的表现",
+          "variants": []
+        },
+        "周报": {
+          "correct": "周报",
+          "description": "每周汇报进展和计划的工作报告",
+          "variants": []
+        },
+        "回滚": {
+          "correct": "回滚",
+          "description": "将系统或数据恢复到上一稳定版本",
+          "variants": []
+        },
+        "大需求": {
+          "correct": "大需求",
+          "description": "工作量大、影响范围广的重要需求",
+          "variants": []
+        },
+        "容量评估": {
+          "correct": "容量评估",
+          "description": "评估系统所需资源容量和并发承载能力",
+          "variants": []
+        },
+        "峰值流量": {
+          "correct": "峰值流量",
+          "description": "业务高峰时达到的最高请求量",
+          "variants": []
+        },
+        "并发场景": {
+          "correct": "并发场景",
+          "description": "多个请求同时操作共享资源的情况",
+          "variants": []
+        },
+        "慢SQL": {
+          "correct": "慢SQL",
+          "description": "执行耗时过长的 SQL 语句，需要优化",
+          "variants": []
+        },
+        "技术债": {
+          "correct": "技术债",
+          "description": "为赶进度等原因遗留的待偿还技术问题",
+          "variants": []
+        },
+        "接口幂等": {
+          "correct": "接口幂等",
+          "description": "接口多次调用结果一致且无副作用的特性",
+          "variants": []
+        },
+        "推进": {
+          "correct": "推进",
+          "description": "推动需求或问题向前闭环的过程",
+          "variants": []
+        },
+        "日常实习": {
+          "correct": "日常实习",
+          "description": "在岗长期实习生角色，按周或按天参与团队工作",
+          "variants": []
+        },
+        "日志追踪": {
+          "correct": "日志追踪",
+          "description": "通过日志串联请求链路以定位问题",
+          "variants": []
+        },
+        "服务治理": {
+          "correct": "服务治理",
+          "description": "围绕服务稳定性、规范和自治能力的治理建设",
+          "variants": []
+        },
+        "熔断": {
+          "correct": "熔断",
+          "description": "在故障或超时情况下快速失败以阻断级联影响",
+          "variants": []
+        },
+        "监控告警": {
+          "correct": "监控告警",
+          "description": "监控关键指标并在异常时触发告警通知",
+          "variants": []
+        },
+        "缓存击穿": {
+          "correct": "缓存击穿",
+          "description": "热点 key 失效瞬间大量请求直达后端导致压力骤增",
+          "variants": []
+        },
+        "缓存穿透": {
+          "correct": "缓存穿透",
+          "description": "请求不存在的数据绕过缓存直接打到数据库的风险",
+          "variants": []
+        },
+        "缓存雪崩": {
+          "correct": "缓存雪崩",
+          "description": "大量缓存同时失效导致后端被集中请求压垮",
+          "variants": []
+        },
+        "背锅": {
+          "correct": "背锅",
+          "description": "承担问题或故障责任的戏称",
+          "variants": []
+        },
+        "补丁": {
+          "correct": "补丁",
+          "description": "紧急修复包或小范围变更以解决问题",
+          "variants": []
+        },
+        "转正": {
+          "correct": "转正",
+          "description": "试用期或实习期结束成为正式员工",
+          "variants": []
+        },
+        "连接池": {
+          "correct": "连接池",
+          "description": "复用连接的池化组件，减少频繁创建销毁开销",
+          "variants": []
+        },
+        "降级": {
+          "correct": "降级",
+          "description": "在异常或高压下关闭非核心功能以保证主流程",
+          "variants": []
+        },
+        "限流": {
+          "correct": "限流",
+          "description": "限制请求速率或并发以防止系统过载",
+          "variants": []
+        },
+        "需求拆解": {
+          "correct": "需求拆解",
+          "description": "将大需求拆分为可执行的子任务和交付物",
+          "variants": []
+        },
+        "项目复盘": {
+          "correct": "项目复盘",
+          "description": "项目结束后回顾经验教训和改进点",
+          "variants": []
+        },
+        "风险评估": {
+          "correct": "风险评估",
+          "description": "识别并评估可能影响项目的风险",
+          "variants": []
         }
-    }
-      },
+      }
+    },
     "student_terms": {
       "name": "大学、八股文术语",
       "description": "面向大学生的编程和开发相关术语",
@@ -1633,6 +1823,266 @@
         "灰度发布": {
           "correct": "灰度发布",
           "description": "逐步放量验证的新版本发布策略，降低上线风险",
+          "variants": []
+        },
+        "211": {
+          "correct": "211",
+          "description": "国家重点建设的高校，常作为招聘或考研的学历参考",
+          "variants": []
+        },
+        "985": {
+          "correct": "985",
+          "description": "国家重点支持的高水平大学项目，常被当作学历标签",
+          "variants": []
+        },
+        "HR面": {
+          "correct": "HR面",
+          "description": "由 HR 进行的面试轮次，关注意向、薪资、入职时间等非技术问题",
+          "variants": []
+        },
+        "OC": {
+          "correct": "OC",
+          "description": "Offer Call，HR 电话确认意向或口头承诺接收 Offer 的沟通",
+          "variants": []
+        },
+        "Offer Call": {
+          "correct": "Offer Call",
+          "description": "HR 致电告知或确认 Offer 的沟通环节",
+          "variants": []
+        },
+        "SP": {
+          "correct": "SP",
+          "description": "Special Offer，较普通 Offer 更高一档或特批的录用名额",
+          "variants": []
+        },
+        "SSP": {
+          "correct": "SSP",
+          "description": "Super Special Offer，待遇或级别高于 SP 的顶级 Offer",
+          "variants": []
+        },
+        "上岸": {
+          "correct": "上岸",
+          "description": "俗称成功拿到 Offer 或通过关键考核",
+          "variants": []
+        },
+        "业务面": {
+          "correct": "业务面",
+          "description": "业务团队或技术线负责人进行的面试，关注岗位匹配度",
+          "variants": []
+        },
+        "保底": {
+          "correct": "保底",
+          "description": "为稳妥准备的保险选择或低风险 Offer",
+          "variants": []
+        },
+        "卡学历": {
+          "correct": "卡学历",
+          "description": "招聘或选拔环节设置的学历、学校背景硬性筛选",
+          "variants": []
+        },
+        "卷": {
+          "correct": "卷",
+          "description": "竞争激烈、大家都投入过多精力的状态",
+          "variants": []
+        },
+        "双非": {
+          "correct": "双非",
+          "description": "非 211、非 985 院校背景的简称",
+          "variants": []
+        },
+        "复试": {
+          "correct": "复试",
+          "description": "第二轮或后续复核的面试/考试环节",
+          "variants": []
+        },
+        "大冤种": {
+          "correct": "大冤种",
+          "description": "在求职或录取中自嘲吃亏、待遇不公的说法",
+          "variants": []
+        },
+        "学历厂": {
+          "correct": "学历厂",
+          "description": "对学历要求很高、偏好名校背景的公司称呼",
+          "variants": []
+        },
+        "寄了": {
+          "correct": "寄了",
+          "description": "戏称失败或凉了，没拿到预期结果",
+          "variants": []
+        },
+        "已读不回": {
+          "correct": "已读不回",
+          "description": "消息被查看但长时间未回复的情况",
+          "variants": []
+        },
+        "年包": {
+          "correct": "年包",
+          "description": "按年度计算的薪酬总包，含基本薪资和奖金等",
+          "variants": []
+        },
+        "开奖": {
+          "correct": "开奖",
+          "description": "等待并公布笔试、面试或抽签结果的戏称",
+          "variants": []
+        },
+        "心态炸了": {
+          "correct": "心态炸了",
+          "description": "因求职受挫情绪崩溃的状态",
+          "variants": []
+        },
+        "总包": {
+          "correct": "总包",
+          "description": "总薪酬包，包含工资、奖金、股票等组成部分",
+          "variants": []
+        },
+        "意向书": {
+          "correct": "意向书",
+          "description": "正式 Offer 前出具的录用意向函",
+          "variants": []
+        },
+        "技术面": {
+          "correct": "技术面",
+          "description": "主要考察技术能力的面试轮次",
+          "variants": []
+        },
+        "拉满": {
+          "correct": "拉满",
+          "description": "全力以赴或达到最高水平的状态",
+          "variants": []
+        },
+        "摆烂": {
+          "correct": "摆烂",
+          "description": "放弃努力、不再投入准备的消极状态",
+          "variants": []
+        },
+        "日常实习": {
+          "correct": "日常实习",
+          "description": "在学期间的长期实习岗位，通常按周安排",
+          "variants": []
+        },
+        "暑期实习": {
+          "correct": "暑期实习",
+          "description": "暑假期间全职或集中的实习项目",
+          "variants": []
+        },
+        "月包": {
+          "correct": "月包",
+          "description": "按月计算的薪酬包或补贴",
+          "variants": []
+        },
+        "横向对比": {
+          "correct": "横向对比",
+          "description": "在多个 Offer 或机会间进行条件和体验的比较",
+          "variants": []
+        },
+        "毁意向": {
+          "correct": "毁意向",
+          "description": "毁约或撤回已签署的意向书/Offer",
+          "variants": []
+        },
+        "沉淀": {
+          "correct": "沉淀",
+          "description": "通过项目或学习积累经验与可复用成果",
+          "variants": []
+        },
+        "泡池子": {
+          "correct": "泡池子",
+          "description": "投递后在人才库等待后续联系的状态",
+          "variants": []
+        },
+        "焦虑": {
+          "correct": "焦虑",
+          "description": "求职过程中焦躁不安、担心结果的情绪",
+          "variants": []
+        },
+        "白菜价": {
+          "correct": "白菜价",
+          "description": "薪资待遇非常低的报价",
+          "variants": []
+        },
+        "破防": {
+          "correct": "破防",
+          "description": "被刺激到难以接受，情绪失守的状态",
+          "variants": []
+        },
+        "秒挂": {
+          "correct": "秒挂",
+          "description": "面试或沟通很快被拒绝或终止",
+          "variants": []
+        },
+        "简历挂": {
+          "correct": "简历挂",
+          "description": "在简历筛选阶段被淘汰",
+          "variants": []
+        },
+        "简历筛选": {
+          "correct": "简历筛选",
+          "description": "HR 或用人部门对简历进行初步筛查",
+          "variants": []
+        },
+        "终面": {
+          "correct": "终面",
+          "description": "最终的面试轮次，通常由负责人或高层进行",
+          "variants": []
+        },
+        "舔简历": {
+          "correct": "舔简历",
+          "description": "过度包装或粉饰简历的自嘲说法",
+          "variants": []
+        },
+        "薪资倒挂": {
+          "correct": "薪资倒挂",
+          "description": "后入职或级别低的员工薪资高于老员工的现象",
+          "variants": []
+        },
+        "血亏": {
+          "correct": "血亏",
+          "description": "付出与回报极不匹配、损失巨大的感受",
+          "variants": []
+        },
+        "被拷打": {
+          "correct": "被拷打",
+          "description": "面试中被高强度追问或挑战的情形",
+          "variants": []
+        },
+        "被捞": {
+          "correct": "被捞",
+          "description": "被 HR 主动联系或从候选池重新拉起",
+          "variants": []
+        },
+        "被教育": {
+          "correct": "被教育",
+          "description": "在面试中被严厉指出问题或批评",
+          "variants": []
+        },
+        "被鸽": {
+          "correct": "被鸽",
+          "description": "面试或入职被对方临时取消或延后",
+          "variants": []
+        },
+        "躺平": {
+          "correct": "躺平",
+          "description": "选择不再卷或主动竞争的态度",
+          "variants": []
+        },
+        "转正": {
+          "correct": "转正",
+          "description": "实习或试用结束转为正式录用",
+          "variants": []
+        },
+        "转正率": {
+          "correct": "转正率",
+          "description": "实习生或试用期转正的比例",
+          "variants": []
+        },
+        "门槛": {
+          "correct": "门槛",
+          "description": "进入岗位的最低要求，如学历或经验",
+          "variants": []
+        },
+        "面评": {
+          "correct": "面评",
+          "description": "面试官对候选人的评价记录",
           "variants": []
         }
       }

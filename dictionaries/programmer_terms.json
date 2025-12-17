@@ -327,8 +327,8 @@
           "description": "在故障或超时情况下快速失败以阻断级联影响",
           "variants": []
         },
-        "监控告警": {
-          "correct": "监控告警",
+        "告警": {
+          "correct": "告警",
           "description": "监控关键指标并在异常时触发告警通知",
           "variants": []
         },
@@ -367,8 +367,8 @@
           "description": "项目结束后回顾经验教训和改进点",
           "variants": []
         },
-        "风险评估": {
-          "correct": "风险评估",
+        "评估": {
+          "correct": "评估",
           "description": "识别并评估可能影响项目的风险",
           "variants": []
         }

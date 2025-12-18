@@ -260,21 +260,21 @@ graph LR
 
 **覆盖 13+ 大分类，400+ 条术语规则**（持续收录大家提供的术语～）：
 
-| 分类 | 示例术语 |
-|------|---------|
-| 职场术语 | 提PR/提MR、提测、排期、逾期、联调、灰度、验收、权限、工单、复盘、风险评估、需求拆解... |
-| 大学、八股文术语 | 秋招、春招、校招、社招、offer、CV、实习、技术栈、笔试、面试、刷题、年包、SP、SSP、上岸... |
-| 编程语言 | Python、Java、Go、JavaScript、TypeScript、Rust、C++、C#、PHP、Ruby、Kotlin... |
-| 开发工具 | IDEA、VSCode、WebStorm、PyCharm、Goland、Vim、Emacs、Postman、Git、GitHub、GitLab... |
-| 技术概念 | API、REST、GraphQL、SQL、ORM、CRUD、MVC、日志、Token、Header、密钥对、设计模式... |
-| 前端开发 | （持续补充，欢迎 PR） |
+| 分类 | 示例术语                                                                             |
+|------|----------------------------------------------------------------------------------|
+| 职场术语 | 提PR/提MR、提测、排期、逾期、联调、灰度、验收、权限、工单、复盘、风险评估、需求拆解...                                  |
+| 大学、八股文术语 | 秋招、春招、校招、社招、offer、CV、实习、技术栈、笔试、面试、刷题、年包、SP、SSP、上岸...                             |
+| 编程语言 | Python、Java、Go、JavaScript、TypeScript、Rust、C++、C#、PHP、Ruby、Kotlin...              |
+| 开发工具 | IDEA、VSCode、WebStorm、PyCharm、Goland、Vim、Emacs、Postman、Git、GitHub、GitLab...       |
+| 技术概念 | API、REST、GraphQL、SQL、ORM、CRUD、MVC、日志、Token、Header、密钥对、设计模式...                    |
+| 前端开发 | Vue（持续补充，欢迎 PR）                                                                  |
 | 后端开发 | Spring、SpringBoot、Kafka、Zookeeper、Apollo、Caffeine、CAT、Arthas、RPC、Cron、QPS、TPS... |
-| 数据库 | MySQL、PostgreSQL、MongoDB、Redis、ES、DB、DBA、慢SQL、字段、生产库、缓存击穿、缓存雪崩... |
-| DevOps工具 | Docker、Kubernetes、K8s、Git、GitHub、GitLab、Maven、Gradle、npm、Yarn、CI/CD、流水线... |
-| 运维 | Nginx、Apache、内网、代理、重启、监控告警、日志追踪、服务治理... |
-| 硬件与嵌入式、操作系统 | macOS、Windows、Linux、STM32、ARM、虚拟内存、写时复制... |
-| 通信协议 | HTTP、HTTPS、SSL、会话、TCP、UDP、三次握手、四次挥手、KeepAlive... |
-| 其他术语 | 依赖、高并发、高可用、高性能、微服务、分布式、容器、心跳机制... |
+| 数据库 | MySQL、PostgreSQL、MongoDB、Redis、ES、DB、DBA、慢SQL、字段、生产库、缓存击穿、缓存雪崩...                |
+| DevOps工具 | Docker、Kubernetes、K8s、Git、GitHub、GitLab、Maven、Gradle、npm、Yarn、CI/CD、流水线...       |
+| 运维 | Nginx、Apache、内网、代理、重启、监控告警、日志追踪、服务治理...                                          |
+| 硬件与嵌入式、操作系统 | macOS、Windows、Linux、STM32、ARM、虚拟内存、写时复制...                                       |
+| 通信协议 | HTTP、HTTPS、SSL、会话、TCP、UDP、三次握手、四次挥手、KeepAlive...                                 |
+| 其他术语 | 依赖、高并发、高可用、高性能、微服务、分布式、容器、心跳机制...                                                |
 
 > 完整规则见 `dictionaries/programmer_terms.json`，如有遗漏欢迎提 Issue/PR 补充～
 

@@ -75,7 +75,11 @@ class CodeWhisper:
             language=language,
             initial_prompt=self.programmer_prompt,
             verbose=False,  # Whisper 内部日志关闭，由 CodeWhisper 的verbose 控制外部日志
-            temperature=temperature
+            temperature=temperature,
+            # 防止 Whisper 幻觉重复 bug
+            condition_on_previous_text=False,  # 禁用前文依赖，减少重复循环
+            compression_ratio_threshold=2.4,   # 压缩比阈值，超过则认为是重复/乱码
+            no_speech_threshold=0.6,           # 静音检测阈值，减少静音段幻觉
         )
 
         if verbose:

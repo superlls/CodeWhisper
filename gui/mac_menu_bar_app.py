@@ -23,6 +23,8 @@ class CodeWhisperApp(rumps.App):
             "🎙️",
             menu=[
                 rumps.MenuItem("开始录音", self.start_recording),
+                None,  # 分隔线
+                rumps.MenuItem("快速添加术语", self.quick_add_term),
             ]
         )
 
@@ -180,6 +182,106 @@ class CodeWhisperApp(rumps.App):
             self.is_recording = False
             # 直接更新菜单项标题
             sender.title = "开始录音"
+
+    @rumps.clicked("快速添加术语")
+    def quick_add_term(self, sender):
+        """快速添加术语到字典"""
+        # 使用 AppleScript 对话框（更稳定）
+        script = '''
+        tell application "System Events"
+            activate
+            set userInput to text returned of (display dialog "格式：错误变体 正确术语\n例如：瑞迪斯 Redis" default answer "" with title "快速添加术语" buttons {"取消", "添加"} default button "添加")
+            return userInput
+        end tell
+        '''
+        try:
+            result = subprocess.run(
+                ['osascript', '-e', script],
+                capture_output=True,
+                text=True
+            )
+
+            if result.returncode != 0:
+                return  # 用户取消
+
+            text = result.stdout.strip()
+            if not text:
+                return
+
+            # 用空格分隔
+            parts = text.split()
+            if len(parts) != 2:
+                subprocess.run(['osascript', '-e', 'display notification "请输入：错误变体 正确术语" with title "格式错误"'])
+                return
+
+            wrong_variant = parts[0]
+            correct_term = parts[1]
+
+            # 保存到字典
+            if self._save_term_to_dict(correct_term, wrong_variant):
+                # 用 AppleScript 显示通知
+                notify_script = f'display notification "重启后生效" with title "添加成功" subtitle "{wrong_variant} → {correct_term}"'
+                subprocess.run(['osascript', '-e', notify_script])
+            else:
+                subprocess.run(['osascript', '-e', 'display notification "保存出错" with title "添加失败"'])
+
+        except Exception as e:
+            print(f"❌ 快速添加失败: {e}")
+
+    def _save_term_to_dict(self, correct_term: str, wrong_variant: str) -> bool:
+        """保存术语到字典的 other 分类"""
+        import json
+        from pathlib import Path
+
+        try:
+            # 字典文件路径
+            project_root = Path(__file__).parent.parent
+            dict_path = project_root / "dictionaries" / "programmer_terms.json"
+
+            # 读取字典
+            with open(dict_path, 'r', encoding='utf-8') as f:
+                dict_data = json.load(f)
+
+            # 获取 other 分类
+            other_category = dict_data["categories"].get("other", {})
+            terms = other_category.setdefault("terms", {})
+
+            # 检查术语是否已存在
+            if correct_term in terms:
+                # 已存在，添加变体
+                variants = terms[correct_term].setdefault("variants", [])
+                # 检查变体是否已存在
+                for v in variants:
+                    if v.get("wrong") == wrong_variant:
+                        print(f"变体已存在: {wrong_variant}")
+                        return True
+                variants.append({
+                    "wrong": wrong_variant,
+                    "description": "通过快速添加添加"
+                })
+            else:
+                # 不存在，创建新术语
+                terms[correct_term] = {
+                    "correct": correct_term,
+                    "description": "通过快速添加添加",
+                    "variants": [{
+                        "wrong": wrong_variant,
+                        "description": "通过快速添加添加"
+                    }]
+                }
+
+            # 保存字典
+            with open(dict_path, 'w', encoding='utf-8') as f:
+                json.dump(dict_data, f, ensure_ascii=False, indent=2)
+
+            print(f"✅ 已添加术语: {wrong_variant} → {correct_term}")
+            return True
+
+        except Exception as e:
+            print(f"❌ 保存术语失败: {e}")
+            import traceback
+            traceback.print_exc()
+            return False
 
 
 def main():

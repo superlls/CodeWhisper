@@ -42,6 +42,49 @@ class CodeWhisper:
 
         print(f"✅CodeWhisper 初始化完成\n")
 
+    def _remove_prompt_prefix(self, text: str) -> str:
+        """
+        过滤掉转录结果中的提示词前缀
+
+        Whisper 在静音或音质差时，可能把 initial_prompt 当成转录结果输出
+        """
+        if not text:
+            return text
+
+        # 获取提示词前缀
+        prompt_prefix = self.prompt_engine.config.get("prompt_prefix", "计算机行业从业者：")
+
+        # 如果转录结果以提示词前缀开头，移除它
+        if text.startswith(prompt_prefix):
+            text = text[len(prompt_prefix):].strip()
+            # 如果剩余内容也是提示词的一部分（术语列表），可能整个都是幻觉
+            # 检查是否只剩下术语和标点
+            if self._is_only_prompt_content(text):
+                return ""
+
+        return text
+
+    def _is_only_prompt_content(self, text: str) -> bool:
+        """检查文本是否只包含提示词内容（术语列表）"""
+        if not text:
+            return True
+
+        # 移除常见分隔符和标点
+        cleaned = text.replace("、", "").replace("，", "").replace("。", "").replace(" ", "")
+
+        # 获取所有术语
+        all_terms = set(self.prompt_engine.base_dict)
+        for term_info in self.prompt_engine.user_dict:
+            all_terms.add(term_info.get("term", ""))
+
+        # 检查清理后的文本是否全部由术语组成
+        remaining = cleaned
+        for term in sorted(all_terms, key=len, reverse=True):
+            remaining = remaining.replace(term, "")
+
+        # 如果剩余内容为空或很短，说明全是术语
+        return len(remaining) <= 2
+
     def transcribe(
         self,
         audio_file: str,
@@ -84,6 +127,9 @@ class CodeWhisper:
 
         if verbose:
             print(f"✅转录完成")
+
+        # 过滤掉提示词前缀（Whisper 幻觉问题：静音时可能把 initial_prompt 当成转录结果）
+        result["text"] = self._remove_prompt_prefix(result["text"])
 
         # 将繁体转换为简体
         if verbose:

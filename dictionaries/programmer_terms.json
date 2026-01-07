@@ -3304,6 +3304,26 @@
               "description": "重复识别"
             }
           ]
+        },
+        "字符串": {
+          "correct": "字符串",
+          "description": "通过快速添加添加",
+          "variants": [
+            {
+              "wrong": "自负串",
+              "description": "通过快速添加添加"
+            }
+          ]
+        },
+        "双指针": {
+          "correct": "双指针",
+          "description": "通过快速添加添加",
+          "variants": [
+            {
+              "wrong": "双织针",
+              "description": "通过快速添加添加"
+            }
+          ]
         }
       }
     }

@@ -6,6 +6,7 @@ import os
 import threading
 import tempfile
 import subprocess
+from concurrent.futures import ThreadPoolExecutor
 
 import rumps
 import sounddevice as sd
@@ -29,9 +30,13 @@ class CodeWhisperApp(rumps.App):
         )
 
         self.is_recording = False
-        self.audio_data = []
         self.sample_rate = 16000
         self.stream = None
+        self.recording_thread = None
+        self.transcribe_executor = ThreadPoolExecutor(
+            max_workers=1,
+            thread_name_prefix="cw-transcribe"
+        )
 
         try:
             print("📦 加载 CodeWhisper 模型...")
@@ -48,51 +53,79 @@ class CodeWhisperApp(rumps.App):
             self.stop_recording(sender)
             return
 
+        if self.recording_thread and self.recording_thread.is_alive():
+            print("⚠️ 上一次录音线程正在退出，请稍后再试")
+            return
+
         self.is_recording = True
-        self.audio_data = []
         sender.title = "停止录音"
         self.title = "🔴"
 
         # 后台启动线程进行录音
-        recording_thread = threading.Thread(target=self._record_audio)
-        recording_thread.daemon = True #定义守护线程
-        recording_thread.start()
+        self.recording_thread = threading.Thread(
+            target=self._record_audio,
+            name="cw-record"
+        )
+        self.recording_thread.daemon = True #定义守护线程
+        self.recording_thread.start()
 
     def _record_audio(self):
         """后台线程：录音"""
+        audio_buffer = []
         try:
             print("🎙️ 开始录音...")
 
-            # 使用 sounddevice 录音 获取麦克风权限 单声道 默认定义采样率
-            with sd.InputStream(samplerate=self.sample_rate, channels=1, dtype="float32") as stream:
-                while self.is_recording:
-                    data, _ = stream.read(1024)
-                    self.audio_data.extend(data.flatten().tolist())
+            def callback(indata, frames, time_info, status):
+                if status:
+                    print(f"⚠️ 输入流状态: {status}")
+                if self.is_recording:
+                    audio_buffer.extend(indata[:, 0].copy())
 
-            duration = len(self.audio_data) / self.sample_rate
+            # 使用回调模式录音，便于及时响应停止信号
+            self.stream = sd.InputStream(
+                samplerate=self.sample_rate,
+                channels=1,
+                dtype="float32",
+                blocksize=512,
+                callback=callback
+            )
+
+            with self.stream:
+                while self.is_recording:
+                    sd.sleep(20)
+
+            duration = len(audio_buffer) / self.sample_rate if self.sample_rate else 0
             print(f"✓ 录音完成，共 {duration:.2f} 秒")
-            print(f"✓ 录音数据点数: {len(self.audio_data)}")
+            print(f"✓ 录音数据点数: {len(audio_buffer)}")
             self.title = "🎙️"
 
-            # 转录音频
-            self._transcribe_audio()
+            # 转录音频（在独立线程池中）
+            if audio_buffer:
+                self.transcribe_executor.submit(
+                    self._transcribe_audio,
+                    np.array(audio_buffer, dtype="float32")
+                )
+            else:
+                print("⚠️ 未捕获到音频，跳过转录")
 
         except Exception as e:
             print(f"❌ 录音错误: {e}")
             import traceback
             traceback.print_exc()
             self.title = "❌"
+        finally:
+            self.stream = None
+            self.recording_thread = None
+            self.is_recording = False
 
 
-    def _transcribe_audio(self):
+    def _transcribe_audio(self, audio_array: np.ndarray):
         """转录音频"""
         temp_audio_file = None
         try:
             print("🔄 转录中...")
             self.title = "⏳"
 
-            # 将累积的 Python 列表转为 Whisper 所需要的一维 float32 波形数组
-            audio_array = np.array(self.audio_data, dtype="float32")
             print(f"📊 音频数组形状: {audio_array.shape}")
 
             #创建包装成临时WAV文件，准备喂给Whisper模型
@@ -180,6 +213,14 @@ class CodeWhisperApp(rumps.App):
         """停止录音"""
         if self.is_recording:
             self.is_recording = False
+            if self.stream:
+                try:
+                    self.stream.abort()
+                except Exception:
+                    try:
+                        self.stream.stop()
+                    except Exception:
+                        pass
             # 直接更新菜单项标题
             sender.title = "开始录音"
 

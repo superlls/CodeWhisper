@@ -4,7 +4,10 @@
 
 import whisper
 import torch
-from typing import Dict, Optional
+import re
+from typing import Dict, Optional, Tuple, List
+
+import numpy as np
 from .dict_manager import DictionaryManager
 from .prompt_engine import PromptEngine
 from .utils import convert_to_simplified_chinese
@@ -41,6 +44,113 @@ class CodeWhisper:
         print(f"💡 当前提示词 {self.programmer_prompt}")
 
         print(f"✅CodeWhisper 初始化完成\n")
+
+    def _audio_level_stats(self, audio_file: str) -> Tuple[float, float, float]:
+        """
+        读取音频并计算强度统计信息，用于快速判断“几乎静音”的输入。
+
+        Returns:
+            (duration_seconds, rms, peak)
+        """
+        try:
+            audio = whisper.load_audio(audio_file)
+        except Exception:
+            # 读取失败时不做静音判定（避免误判直接跳过转录）
+            return -1.0, 0.0, 0.0
+
+        if audio is None or len(audio) == 0:
+            return 0.0, 0.0, 0.0
+
+        duration_seconds = float(len(audio) / whisper.audio.SAMPLE_RATE)
+        rms = float(np.sqrt(np.mean(np.square(audio), dtype=np.float64)))
+        peak = float(np.max(np.abs(audio)))
+        return duration_seconds, rms, peak
+
+    def _looks_like_repetition_loop(self, text: str, max_repeat: int = 10) -> bool:
+        """
+        检测明显的“循环重复”幻觉（常见于静音/低质量音频）。
+
+        目标是过滤掉极端情况：某个词/字符/短语连续重复很多次。
+        """
+        if not text:
+            return False
+
+        normalized = re.sub(r"\s+", " ", text.strip())
+        if not normalized:
+            return False
+
+        # 1) 按空格分词：检测连续相同词的超长 run（更适用于英文/夹杂英文）
+        words = [w for w in normalized.split(" ") if w]
+        if len(words) >= max_repeat:
+            run = 1
+            for idx in range(1, len(words)):
+                if words[idx] == words[idx - 1]:
+                    run += 1
+                    if run >= max_repeat:
+                        return True
+                else:
+                    run = 1
+
+        # 2) 中文常见是无空格输出：去除标点/空白后做字符与短语重复检测
+        compact = re.sub(r"[\\s，。！？,.!?:;；、】【\\[\\]()（）\"'“”‘’—…·]+", "", normalized)
+        if len(compact) < max_repeat:
+            return False
+
+        # 2.1) 单字符重复（如 “啊啊啊啊...”）
+        if re.search(rf"(.)\\1{{{max_repeat - 1},}}", compact):
+            return True
+
+        # 2.2) 短语重复（如 “谢谢观看谢谢观看...”）
+        # 尝试 2~10 字符的短片段，避免过于昂贵
+        for unit_len in range(2, 11):
+            if len(compact) < unit_len * max_repeat:
+                continue
+            if re.search(rf"(.{{{unit_len}}})\\1{{{max_repeat - 1},}}", compact):
+                return True
+
+        return False
+
+    def _filter_hallucinated_segments(
+        self,
+        segments: List[dict],
+        *,
+        max_repeat: int = 10,
+        no_speech_prob_threshold: float = 0.8,
+        avg_logprob_threshold: float = -0.8,
+        compression_ratio_threshold: float = 2.4,
+    ) -> List[dict]:
+        """
+        在 Whisper 输出后做一次轻量过滤，剔除明显静音/乱码/重复循环段。
+
+        - no_speech_prob 高且 avg_logprob 低：常见静音幻觉
+        - compression_ratio 过高：常见重复/乱码
+        - 文本出现明显循环重复：常见“卡住式”幻觉
+        """
+        kept: List[dict] = []
+        for seg in segments or []:
+            text = (seg.get("text") or "").strip()
+            if not text:
+                continue
+
+            no_speech_prob = float(seg.get("no_speech_prob", 0.0) or 0.0)
+            avg_logprob = float(seg.get("avg_logprob", 0.0) or 0.0)
+            compression_ratio = float(seg.get("compression_ratio", 0.0) or 0.0)
+
+            # 参考 whisper 的静音跳过逻辑：no_speech_prob 高且 logprob 低时判为静音
+            if no_speech_prob >= no_speech_prob_threshold and avg_logprob <= avg_logprob_threshold:
+                continue
+
+            # 重复/乱码过滤
+            if compression_ratio_threshold is not None and compression_ratio > compression_ratio_threshold:
+                continue
+
+            # 循环重复过滤
+            if self._looks_like_repetition_loop(text, max_repeat=max_repeat):
+                continue
+
+            kept.append(seg)
+
+        return kept
 
     def _remove_prompt_prefix(self, text: str) -> str:
         """
@@ -92,6 +202,9 @@ class CodeWhisper:
         fix_programmer_terms: bool = True,
         verbose: bool = True,
         temperature: float = 0.0,
+        hallucination_filter: bool = True,
+        silence_rms_threshold: float = 0.002,
+        silence_peak_threshold: float = 0.02,
     ) -> Dict:
         """
         转录音频文件
@@ -102,6 +215,9 @@ class CodeWhisper:
             fix_programmer_terms: 是否修正程序员术语默认为True
             verbose: 是否打印详细信息 默认为True (打印输出状态、提示词加载、繁简转换、术语修正等步骤)
             temperature: 控制模型的“随机性”，范围通常在0—1。默认为0，数值越高，输出越有随机性（不推荐用于语音转录）
+            hallucination_filter: 是否启用幻觉/重复过滤（默认启用）
+            silence_rms_threshold: 静音 RMS 阈值（越大越激进）
+            silence_peak_threshold: 静音 Peak 阈值（越大越激进）
 
 
         Returns:
@@ -109,6 +225,33 @@ class CodeWhisper:
         """
         if verbose:
             print(f"🎙️ 转录中 {audio_file} (语言: {language})")
+
+        # 快速静音判断：避免静音输入触发 Whisper 产生“重复幻觉”
+        if hallucination_filter:
+            duration_seconds, rms, peak = self._audio_level_stats(audio_file)
+            if verbose:
+                print(f"🔇 音频强度: 时长={duration_seconds:.2f}s, rms={rms:.5f}, peak={peak:.5f}")
+
+            # duration_seconds < 0 表示无法读取音频，跳过静音判断
+            if duration_seconds == 0.0:
+                if verbose:
+                    print("⏭️ 音频为空，跳过转录")
+                return {
+                    "text": "",
+                    "segments": [],
+                    "language": language,
+                    "_skipped_reason": "empty_audio",
+                }
+
+            if duration_seconds > 0.0 and (rms < silence_rms_threshold and peak < silence_peak_threshold):
+                if verbose:
+                    print("⏭️ 检测到几乎静音，跳过转录")
+                return {
+                    "text": "",
+                    "segments": [],
+                    "language": language,
+                    "_skipped_reason": "silence",
+                }
 
         # 调用 Whisper 进行转录（使用初始化时缓存的提示词）
         # 注意：这里verbose=False 是指 OpenAI 的Whisper 自身的调试日志（解码进度等）
@@ -130,6 +273,8 @@ class CodeWhisper:
 
         # 过滤掉提示词前缀（Whisper 幻觉问题：静音时可能把 initial_prompt 当成转录结果）
         result["text"] = self._remove_prompt_prefix(result["text"])
+        for segment in result.get("segments", []):
+            segment["text"] = self._remove_prompt_prefix(segment.get("text", ""))
 
         # 将繁体转换为简体
         if verbose:
@@ -138,6 +283,14 @@ class CodeWhisper:
         result["text"] = convert_to_simplified_chinese(result["text"])
         for segment in result["segments"]:
             segment["text"] = convert_to_simplified_chinese(segment["text"])
+
+        # 过滤静音/乱码/循环重复分段，减少“幻觉重复”
+        if hallucination_filter:
+            filtered_segments = self._filter_hallucinated_segments(result.get("segments", []))
+            if len(filtered_segments) != len(result.get("segments", [])) and verbose:
+                print(f"🧽 幻觉过滤: {len(result.get('segments', []))} -> {len(filtered_segments)} 段")
+            result["segments"] = filtered_segments
+            result["text"] = "".join([seg.get("text", "") for seg in filtered_segments]).strip()
 
         # 替换术语
         if fix_programmer_terms:

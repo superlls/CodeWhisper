@@ -10,7 +10,7 @@ from typing import Dict, Optional, Tuple, List
 import numpy as np
 from .dict_manager import DictionaryManager
 from .prompt_engine import PromptEngine
-from .utils import convert_to_simplified_chinese
+from .utils import convert_to_simplified_chinese, normalize_zh_punctuation
 
 
 class CodeWhisper:
@@ -284,6 +284,12 @@ class CodeWhisper:
         for segment in result["segments"]:
             segment["text"] = convert_to_simplified_chinese(segment["text"])
 
+        # 规范化中文标点（如英文逗号 -> 中文逗号）
+        if language and language.lower().startswith("zh"):
+            result["text"] = normalize_zh_punctuation(result["text"])
+            for segment in result["segments"]:
+                segment["text"] = normalize_zh_punctuation(segment["text"])
+
         # 过滤静音/乱码/循环重复分段，减少“幻觉重复”
         if hallucination_filter:
             filtered_segments = self._filter_hallucinated_segments(result.get("segments", []))
@@ -292,6 +298,9 @@ class CodeWhisper:
             result["segments"] = filtered_segments
             result["text"] = "".join([seg.get("text", "") for seg in filtered_segments]).strip()
 
+            if language and language.lower().startswith("zh"):
+                result["text"] = normalize_zh_punctuation(result["text"])
+
         # 替换术语
         if fix_programmer_terms:
             if verbose:
@@ -299,6 +308,9 @@ class CodeWhisper:
 
             # 只修正正文文本一次，避免重复修正
             result["text"] = self.dict_manager.fix_text(result["text"], accumulate=False)
+
+            if language and language.lower().startswith("zh"):
+                result["text"] = normalize_zh_punctuation(result["text"])
 
         # 学习用户习惯：检测文本中出现的术语并更新用户术语库
         if verbose:

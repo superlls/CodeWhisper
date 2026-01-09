@@ -3424,6 +3424,26 @@
               "description": "通过快速添加添加"
             }
           ]
+        },
+        "拥有": {
+          "correct": "拥有",
+          "description": "通过快速添加添加",
+          "variants": [
+            {
+              "wrong": "游泳",
+              "description": "通过快速添加添加"
+            }
+          ]
+        },
+        "遍历": {
+          "correct": "遍历",
+          "description": "通过快速添加添加",
+          "variants": [
+            {
+              "wrong": "变例",
+              "description": "通过快速添加添加"
+            }
+          ]
         }
       }
     }

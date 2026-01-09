@@ -3444,6 +3444,80 @@
               "description": "通过快速添加添加"
             }
           ]
+        },
+        "Lua": {
+          "correct": "Lua",
+          "description": "通过快速添加添加",
+          "variants": [
+            {
+              "wrong": "LUA",
+              "description": "通过快速添加添加"
+            }
+          ]
+        },
+        "供应": {
+          "correct": "供应",
+          "description": "通过快速添加添加",
+          "variants": [
+            {
+              "wrong": "公用",
+              "description": "通过快速添加添加"
+            }
+          ]
+        },
+        "线程池": {
+          "correct": "线程池",
+          "description": "通过快速添加添加",
+          "variants": [
+            {
+              "wrong": "现成池",
+              "description": "通过快速添加添加"
+            },
+            {
+              "wrong": "线程尺",
+              "description": "通过快速添加添加"
+            }
+          ]
+        },
+        "补丁": {
+          "correct": "补丁",
+          "description": "通过快速添加添加",
+          "variants": [
+            {
+              "wrong": "布丁",
+              "description": "通过快速添加添加"
+            }
+          ]
+        },
+        "MySQL": {
+          "correct": "MySQL",
+          "description": "通过快速添加添加",
+          "variants": [
+            {
+              "wrong": "mineSQL",
+              "description": "通过快速添加添加"
+            }
+          ]
+        },
+        "索引": {
+          "correct": "索引",
+          "description": "通过快速添加添加",
+          "variants": [
+            {
+              "wrong": "缩影",
+              "description": "通过快速添加添加"
+            }
+          ]
+        },
+        "B+树": {
+          "correct": "B+树",
+          "description": "通过快速添加添加",
+          "variants": [
+            {
+              "wrong": "B加数",
+              "description": "通过快速添加添加"
+            }
+          ]
         }
       }
     }

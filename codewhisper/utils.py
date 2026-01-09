@@ -13,6 +13,18 @@ except ImportError:
     HANZICONV_AVAILABLE = False
 
 
+def normalize_zh_punctuation(text: str) -> str:
+    """
+    规范化中文输出的标点符号。
+
+    目前仅处理：英文逗号 `,` -> 中文逗号 `，`。
+    """
+    if not text:
+        return text
+
+    return text.replace(",", "，")
+
+
 def convert_to_simplified_chinese(text: str) -> str:
     """
     将繁体中文转换为简体中文

@@ -3518,6 +3518,16 @@
               "description": "通过快速添加添加"
             }
           ]
+        },
+        "栈": {
+          "correct": "栈",
+          "description": "通过快速添加添加",
+          "variants": [
+            {
+              "wrong": "站",
+              "description": "通过快速添加添加"
+            }
+          ]
         }
       }
     }

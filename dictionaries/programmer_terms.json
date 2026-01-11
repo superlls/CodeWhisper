@@ -3392,6 +3392,10 @@
             {
               "wrong": "题杆",
               "description": "通过快速添加添加"
+            },
+            {
+              "wrong": "体感",
+              "description": "通过快速添加添加"
             }
           ]
         },
@@ -3525,6 +3529,46 @@
           "variants": [
             {
               "wrong": "站",
+              "description": "通过快速添加添加"
+            }
+          ]
+        },
+        "负数": {
+          "correct": "负数",
+          "description": "通过快速添加添加",
+          "variants": [
+            {
+              "wrong": "附属",
+              "description": "通过快速添加添加"
+            }
+          ]
+        },
+        "鲁棒性": {
+          "correct": "鲁棒性",
+          "description": "通过快速添加添加",
+          "variants": [
+            {
+              "wrong": "鲁邦性",
+              "description": "通过快速添加添加"
+            }
+          ]
+        },
+        "递归": {
+          "correct": "递归",
+          "description": "通过快速添加添加",
+          "variants": [
+            {
+              "wrong": "地规",
+              "description": "通过快速添加添加"
+            }
+          ]
+        },
+        "节点": {
+          "correct": "节点",
+          "description": "通过快速添加添加",
+          "variants": [
+            {
+              "wrong": "接点",
               "description": "通过快速添加添加"
             }
           ]

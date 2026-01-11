@@ -3,10 +3,12 @@ CodeWhisper MenuBar Application - macOS 菜单栏应用（使用 rumps）
 """
 
 import os
+import queue
 import threading
 import tempfile
 import subprocess
 from concurrent.futures import ThreadPoolExecutor
+from typing import Optional
 
 import rumps
 import sounddevice as sd
@@ -14,16 +16,19 @@ import soundfile as sf
 import numpy as np
 
 from codewhisper.transcriber import CodeWhisper
+from codewhisper.history_manager import HistoryManager
 
 
 class CodeWhisperApp(rumps.App):
     """CodeWhisper Mac菜单栏应用"""
 
     def __init__(self):
+        self.history_menu_item = rumps.MenuItem("最近记录 (History)")
         super(CodeWhisperApp, self).__init__(
             "🎙️",
             menu=[
                 rumps.MenuItem("开始录音", self.start_recording),
+                self.history_menu_item,
                 None,  # 分隔线
                 rumps.MenuItem("快速添加术语", self.quick_add_term),
             ]
@@ -33,6 +38,10 @@ class CodeWhisperApp(rumps.App):
         self.sample_rate = 16000
         self.stream = None
         self.recording_thread = None
+        self.history_manager = HistoryManager()
+        self._ui_queue: "queue.Queue[str]" = queue.Queue()
+        self._ui_timer = rumps.Timer(self._process_ui_queue, 0.3)
+        self._ui_timer.start()
         self.transcribe_executor = ThreadPoolExecutor(
             max_workers=1,
             thread_name_prefix="cw-transcribe"
@@ -45,6 +54,8 @@ class CodeWhisperApp(rumps.App):
         except Exception as e:
             print(f"❌ 模型加载失败: {e}")
             self.whisper = None
+
+        self._refresh_history_menu()
 
     @rumps.clicked("开始录音")
     def start_recording(self, sender):
@@ -154,6 +165,10 @@ class CodeWhisperApp(rumps.App):
 
             # 复制到剪切板
             self._copy_to_clipboard(transcribed_text)
+
+            # 写入历史记录并刷新菜单（通过主线程 Timer）
+            self.history_manager.add(transcribed_text)
+            self._enqueue_history_refresh()
             self.title = "✅"
 
             # 打印字典修正统计信息
@@ -188,6 +203,58 @@ class CodeWhisperApp(rumps.App):
             print(f"📋 已复制到剪切板: {text[:50]}...")
         except Exception as e:
             print(f"❌ 复制到剪切板失败: {e}")
+
+    def _enqueue_history_refresh(self) -> None:
+        """从后台线程请求 UI 刷新（主线程执行）。"""
+        try:
+            self._ui_queue.put_nowait("refresh_history")
+        except Exception:
+            pass
+
+    def _process_ui_queue(self, _timer) -> None:
+        """rumps Timer 回调：运行在主线程，安全地更新菜单 UI。"""
+        need_refresh = False
+        while True:
+            try:
+                event = self._ui_queue.get_nowait()
+            except queue.Empty:
+                break
+            if event == "refresh_history":
+                need_refresh = True
+
+        if need_refresh:
+            self._refresh_history_menu()
+
+    def _refresh_history_menu(self) -> None:
+        """刷新“最近记录”子菜单内容（主线程调用）。"""
+        try:
+            # MenuItem 在第一次添加子项前没有 submenu；避免对 None 调 clear()
+            if getattr(self.history_menu_item, "_menu", None) is not None:
+                self.history_menu_item.clear()
+
+            records = self.history_manager.list()
+            if not records:
+                self.history_menu_item.add(rumps.MenuItem("（空）"))
+                return
+
+            # 最新的放最上面
+            for idx, record in enumerate(reversed(records), 1):
+                preview = (record.text or "").replace("\n", " ").strip()
+                if len(preview) > 20:
+                    preview = preview[:20] + "…"
+                title = f"{idx}. {preview}"
+                item = rumps.MenuItem(title, callback=self._copy_history_item)
+                setattr(item, "_cw_full_text", record.text)
+                self.history_menu_item.add(item)
+        except Exception as e:
+            print(f"❌ 刷新历史菜单失败: {e}")
+
+    def _copy_history_item(self, sender) -> None:
+        """点击历史记录：复制该条内容到剪贴板。"""
+        text = getattr(sender, "_cw_full_text", None)
+        if not isinstance(text, str) or not text.strip():
+            return
+        self._copy_to_clipboard(text)
 
     def _print_dict_stats(self):
         """打印字典修正的统计信息"""

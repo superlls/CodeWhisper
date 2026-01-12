@@ -3572,6 +3572,26 @@
               "description": "通过快速添加添加"
             }
           ]
+        },
+        "协程": {
+          "correct": "协程",
+          "description": "通过快速添加添加",
+          "variants": [
+            {
+              "wrong": "携程",
+              "description": "通过快速添加添加"
+            }
+          ]
+        },
+        "重试": {
+          "correct": "重试",
+          "description": "通过快速添加添加",
+          "variants": [
+            {
+              "wrong": "重视",
+              "description": "通过快速添加添加"
+            }
+          ]
         }
       }
     }

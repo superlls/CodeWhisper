@@ -141,6 +141,11 @@ python app.py
 
 **模型配置**：默认为 `medium`，如需修改请在 `gui/mac_menu_bar_app.py` 中设置 `CodeWhisper(model_name="...")`
 
+**菜单功能补充**：
+- `最近记录 (History)`：保存最近 10 条转录结果（持久化到项目根目录 `history.json`），点击某条可再次复制到剪贴板
+- `清除历史记录`：清空 `history.json`（写入空记录）
+- `快速添加术语`：弹窗输入 `错误变体 正确术语`（例如：`瑞迪斯 Redis`），会写入 `dictionaries/programmer_terms.json` 的 `other` 分类，重启后生效
+
 ### Windows 悬浮球应用
 
 启动后会出现桌面悬浮球：

@@ -3596,6 +3596,16 @@
               "description": "通过快速添加添加"
             }
           ]
+        },
+        "lls": {
+          "correct": "lls",
+          "description": "通过快速添加添加",
+          "variants": [
+            {
+              "wrong": "李林轩",
+              "description": "通过快速添加添加"
+            }
+          ]
         }
       }
     }

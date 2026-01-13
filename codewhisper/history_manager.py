@@ -80,3 +80,8 @@ class HistoryManager:
         with self._lock:
             return list(self._records)
 
+    def clear(self) -> None:
+        """清空历史记录，并将空记录写回到本地文件。"""
+        with self._lock:
+            self._records = []
+        self._save()

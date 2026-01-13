@@ -3560,6 +3560,10 @@
             {
               "wrong": "地规",
               "description": "通过快速添加添加"
+            },
+            {
+              "wrong": "地归",
+              "description": "通过快速添加添加"
             }
           ]
         },

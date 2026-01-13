@@ -30,6 +30,7 @@ class CodeWhisperApp(rumps.App):
                 rumps.MenuItem("开始录音", self.start_recording),
                 self.history_menu_item,
                 None,  # 分隔线
+                rumps.MenuItem("清除历史记录", self.clear_history),
                 rumps.MenuItem("快速添加术语", self.quick_add_term),
             ]
         )
@@ -255,6 +256,28 @@ class CodeWhisperApp(rumps.App):
         if not isinstance(text, str) or not text.strip():
             return
         self._copy_to_clipboard(text)
+
+    def clear_history(self, _sender):
+        """清除本地历史记录（带确认）。"""
+        try:
+            response = rumps.alert(
+                title="清除历史记录",
+                message="确定要清除所有历史记录吗？此操作不可撤销。",
+                ok="清除",
+                cancel="取消",
+            )
+            if response != 1:
+                return
+
+            self.history_manager.clear()
+            self._refresh_history_menu()
+            subprocess.run(
+                ["osascript", "-e", 'display notification "已清除历史记录" with title "CodeWhisper"'],
+                capture_output=True,
+                text=True,
+            )
+        except Exception as e:
+            print(f"❌ 清除历史记录失败: {e}")
 
     def _print_dict_stats(self):
         """打印字典修正的统计信息"""

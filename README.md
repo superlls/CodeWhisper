@@ -1,8 +1,7 @@
 # CodeWhisper 🎤
 
-**本地语音输入，想喂哪个 AI 就喂哪个 AI** | Local Speech-to-Text for Any AI
+**针对中文语境优化的语音转文字工具，一键转录至剪贴板，打破网页端限制，实现与各家大模型（ChatGPT/Grok/Gemini 等）的无缝对话。** | Local Speech-to-Text for Any AI
 
-基于 OpenAI Whisper，专为中文开发者优化。录完直接复制到剪贴板，不绑定任何大模型平台。
 
 ---
 
@@ -14,7 +13,7 @@
 
 ```
 你的大脑：💨💨💨 "我想让你帮我优化这个算法，用双指针..."
-你的手指：🐢 "我...想...让...你..."
+你的手指速度：🐢 "我...想...让...你..."
 ```
 
 **键盘成为了 AI 的牢笼。语音输入是解决人机交互带宽瓶颈的最自然方式。**
@@ -23,12 +22,12 @@
 
 你想用语音输入解决打字慢的问题，但各大厂商的语音转文字都有坑：
 
-| 厂商 | 问题 | 来源 |
-|------|------|------|
-| **ChatGPT** | 超过 20 秒经常崩溃；5 分钟以上录音直接丢失；网络波动全没了 | [OpenAI 官方论坛](https://community.openai.com/t/transcription-failures-with-voice-messages-on-chatgpt/705251) |
-| **Gemini** | 中文支持差，语音识别不稳定，用户反馈 "Voice Recognition simply does not work" | [Google 支持社区](https://support.google.com/gemini/thread/342537101) |
-| **Grok** | 语音模式需要 Premium+ 订阅（付费），普通用户没有 | [Social Media Today](https://www.socialmediatoday.com/news/xai-x-formerly-twitter-adds-grok-voice-mode/740820/) |
-| **Mac 自带** | 没有对中文程序员优化，专业术语全错 | - |
+| 厂商 | 问题                                                                   | 来源 |
+|------|----------------------------------------------------------------------|------|
+| **ChatGPT** | 由于网络波动或语音输入tokens限制，超过 20 秒经常发生吞用户录音的情况                              | [OpenAI 官方论坛](https://community.openai.com/t/transcription-failures-with-voice-messages-on-chatgpt/705251) |
+| **Gemini** | 中文支持差，说的越多越吞文字，用户反馈 "Voice Recognition simply does not work" | [Google 支持社区](https://support.google.com/gemini/thread/342537101) |
+| **Grok** | 语音模式需要 Premium+ 订阅                                                   | [Social Media Today](https://www.socialmediatoday.com/news/xai-x-formerly-twitter-adds-grok-voice-mode/740820/) |
+| **Mac 自带** | 依旧采用上一代ASR技术，转录中文后语义直接崩塌                                             | - |
 
 > 而且各大厂商针对中文社区并不能做很好的特定优化，加之网络本身就不稳定，更容易出问题。
 
@@ -40,12 +39,9 @@
 - 本地运行，不怕断网
 - 不绑定任何平台，想喂哪个 AI 就粘贴到哪个
 
-### 兜底思路：大模型可以救场
-
-这里有个关键洞察：**大模型天然具备兜底能力**。
+### 双向奔赴 ：大模型的的兜底推理能力
 
 一个句子中即使有一两个词识别错了，并不影响整个语义。下游的大模型能通过上下文捕获你的真实意图：
-
 ```
 你说的："帮我用双指针解决这个力扣题"
 识别成："帮我用双只针解决这个利扣题"
@@ -54,7 +50,7 @@
 
 **所以语音输入层有些小错误没关系，下游大模型会兜底。整体问题不大。**
 
-当然，能更准确肯定更好——这就是为什么 CodeWhisper 还做了术语字典纠正。
+当然，能更准确肯定更好——这就是为什么 CodeWhisper 还做了特定术语的字典纠正功能。
 
 ---
 
@@ -77,7 +73,7 @@
 **核心优势：**
 - ✅ **本地运行**：不依赖网络，不会断联吞文本
 - ✅ **不绑定平台**：想和哪个 AI 聊就粘贴到哪个
-- ✅ **中文程序员优化**：400+ 术语纠正规则，社区共建
+- ✅ **中文开发优化**：400+ 术语纠正规则，社区共建
 - ✅ **可迁移架构**：代码与字典低耦合，可迁移至医疗、法律等行业
 
 ---
@@ -194,7 +190,7 @@ python app.py
 - 如果想减小 CPU 占用，可将模型改为 `small` 或 `base`
 
 
-## 误打误撞的附加功能 ✨
+## 误打误撞的功能 ✨
 
 > 这个项目本来是想做一个**写日报的工具**。在了解 Whisper 的过程中，发现它对中文转录效果很好，于是基于 Whisper 构建了一套流程：
 >
@@ -216,13 +212,13 @@ python app.py
 
 各大语音识别对程序员术语的识别都很差，CodeWhisper 自动纠正：
 
-| 说的话 | 普通识别 | CodeWhisper |
-|--------|----------|-------------|
-| 提PR | "提皮啊" ❌ | 提PR ✅ |
-| 双指针 | "双只针" ❌ | 双指针 ✅ |
-| MySQL | "my circle" ❌ | MySQL ✅ |
-| 排期 | "排气" ❌ | 排期 ✅ |
-| Redis | "瑞迪斯" ❌ | Redis ✅ |
+| 说的话    | 普通识别          | CodeWhisper |
+|--------|---------------|-------------|
+| 提PR    | "TPR" ❌       | 提PR ✅       |
+| Mentor | "门特尔" ❌       | Mentor ✅    |
+| MySQL  | "my circle" ❌ | MySQL ✅     |
+| Apollo | "阿波罗" ❌       | Apollo ✅    |
+| 提测     | "体测" ❌        | 提测 ✅        |
 
 #### 2️⃣ 智能学习系统
 

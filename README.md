@@ -111,6 +111,8 @@ source .venv/bin/activate  # macOS
 pip install -r requirements.txt
 ```
 
+macOS 说明：全局快捷键（按住 `Command + M` 录音）依赖 `pyobjc-framework-Quartz`，已包含在 `requirements.txt`，如你是老环境请重新执行一次安装依赖。
+
 ### 启动
 
 ```bash
@@ -138,6 +140,13 @@ python app.py
 3. 再次点击 → "停止录音"
 4. 转录结果自动复制到剪贴板
 5. 粘贴到任意 AI 使用
+
+**快捷键（macOS）**：
+- 按住 `Command + M` 开始录音，松开结束
+
+**权限（macOS）**：
+- 全局快捷键需要“辅助功能”权限：系统设置 → 隐私与安全性 → 辅助功能 → 允许当前运行的 `Python`/应用
+- 若未授权，应用会提示 `AXIsProcessTrusted`/`CGEventTapCreate` 相关失败，热键不会生效
 
 **模型配置**：默认为 `medium`，如需修改请在 `gui/mac_menu_bar_app.py` 中设置 `CodeWhisper(model_name="...")`
 

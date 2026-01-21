@@ -24,10 +24,11 @@ class CodeWhisperApp(rumps.App):
 
     def __init__(self):
         self.history_menu_item = rumps.MenuItem("最近记录 (History)")
+        self.record_menu_item = rumps.MenuItem("开始录音", self.start_recording)
         super(CodeWhisperApp, self).__init__(
             "🎙️",
             menu=[
-                rumps.MenuItem("开始录音", self.start_recording),
+                self.record_menu_item,
                 self.history_menu_item,
                 None,  # 分隔线
                 rumps.MenuItem("清除历史记录", self.clear_history),
@@ -41,12 +42,14 @@ class CodeWhisperApp(rumps.App):
         self.recording_thread = None
         self.history_manager = HistoryManager()
         self._ui_queue: "queue.Queue[str]" = queue.Queue()
-        self._ui_timer = rumps.Timer(self._process_ui_queue, 0.3)
+        # 既用于刷新历史菜单，也用于从非主线程（例如全局热键监听）安全触发录音开始/停止。
+        self._ui_timer = rumps.Timer(self._process_ui_queue, 0.05)
         self._ui_timer.start()
         self.transcribe_executor = ThreadPoolExecutor(
             max_workers=1,
             thread_name_prefix="cw-transcribe"
         )
+        self._hotkey_pressed = False
 
         try:
             print("📦 加载 CodeWhisper 模型...")
@@ -57,8 +60,8 @@ class CodeWhisperApp(rumps.App):
             self.whisper = None
 
         self._refresh_history_menu()
+        self._start_hold_to_record_hotkey()
 
-    @rumps.clicked("开始录音")
     def start_recording(self, sender):
         """开始录音"""
         if self.is_recording:
@@ -215,6 +218,9 @@ class CodeWhisperApp(rumps.App):
     def _process_ui_queue(self, _timer) -> None:
         """rumps Timer 回调：运行在主线程，安全地更新菜单 UI。"""
         need_refresh = False
+        need_start = False
+        need_stop = False
+        need_hotkey_warn = False
         while True:
             try:
                 event = self._ui_queue.get_nowait()
@@ -222,7 +228,29 @@ class CodeWhisperApp(rumps.App):
                 break
             if event == "refresh_history":
                 need_refresh = True
+            elif event == "start_recording":
+                need_start = True
+            elif event == "stop_recording":
+                need_stop = True
+            elif event == "hotkey_permission_warning":
+                need_hotkey_warn = True
 
+        if need_start:
+            # 避免“按住”重复触发导致录音被 toggle 掉
+            if not self.is_recording:
+                self.start_recording(self.record_menu_item)
+        if need_stop:
+            if self.is_recording:
+                self.stop_recording(self.record_menu_item)
+        if need_hotkey_warn:
+            try:
+                subprocess.run(
+                    ["osascript", "-e", 'display notification "请在 系统设置 → 隐私与安全性 → 辅助功能 中允许本应用，否则 Command+M 热键无法工作" with title "CodeWhisper"'],
+                    capture_output=True,
+                    text=True,
+                )
+            except Exception:
+                pass
         if need_refresh:
             self._refresh_history_menu()
 
@@ -301,18 +329,119 @@ class CodeWhisperApp(rumps.App):
 
     def stop_recording(self, sender):
         """停止录音"""
-        if self.is_recording:
-            self.is_recording = False
-            if self.stream:
+        # 允许重复调用：无论当前状态如何，都尽量把 UI 恢复到“开始录音”
+        self.is_recording = False
+        if self.stream:
+            try:
+                self.stream.abort()
+            except Exception:
                 try:
-                    self.stream.abort()
+                    self.stream.stop()
                 except Exception:
-                    try:
-                        self.stream.stop()
-                    except Exception:
-                        pass
-            # 直接更新菜单项标题
-            sender.title = "开始录音"
+                    pass
+        sender.title = "开始录音"
+
+    def _start_hold_to_record_hotkey(self) -> None:
+        """
+        启动 macOS 全局热键监听：按住 Command+M 开始录音，松开停止。
+
+        依赖 PyObjC（rumps 在 macOS 上通常已带上）。若未授权“辅助功能”，事件监听将不可用。
+        """
+        try:
+            import Quartz
+        except Exception as e:
+            print(f"⚠️ 全局热键不可用（Quartz 导入失败）: {e}")
+            return
+
+        # M 键硬件 keycode；大多数 ANSI 键盘为 46。若用户使用非标准布局，可后续做可配置化。
+        keycode_m = 46
+
+        # 先做一次可用性提示；尽量触发系统授权提示（不保证一定弹出）
+        try:
+            if hasattr(Quartz, "AXIsProcessTrustedWithOptions"):
+                # 在 PyObjC 里该 key 有时是常量，有时使用字符串；两者都尝试。
+                try:
+                    is_trusted = bool(Quartz.AXIsProcessTrustedWithOptions({Quartz.kAXTrustedCheckOptionPrompt: True}))
+                except Exception:
+                    is_trusted = bool(Quartz.AXIsProcessTrustedWithOptions({"AXTrustedCheckOptionPrompt": True}))
+            else:
+                is_trusted = bool(getattr(Quartz, "AXIsProcessTrusted", lambda: True)())
+            if not is_trusted:
+                print("⚠️ 未授予“辅助功能”权限：Command+M 全局热键可能无法工作。")
+                print("   请在 系统设置 -> 隐私与安全性 -> 辅助功能 中允许本应用。")
+                try:
+                    self._ui_queue.put_nowait("hotkey_permission_warning")
+                except Exception:
+                    pass
+        except Exception:
+            pass
+
+        def _enqueue(event: str) -> None:
+            try:
+                self._ui_queue.put_nowait(event)
+            except Exception:
+                pass
+
+        def _tap_callback(_proxy, _type, event, _refcon):
+            try:
+                event_type = Quartz.CGEventGetType(event)
+                if event_type not in (Quartz.kCGEventKeyDown, Quartz.kCGEventKeyUp):
+                    return event
+
+                keycode = Quartz.CGEventGetIntegerValueField(event, Quartz.kCGKeyboardEventKeycode)
+                if keycode != keycode_m:
+                    return event
+
+                if event_type == Quartz.kCGEventKeyDown:
+                    flags = Quartz.CGEventGetFlags(event)
+                    has_cmd = bool(flags & Quartz.kCGEventFlagMaskCommand)
+                    if not has_cmd:
+                        return event
+                    # 按住时系统会重复触发 keyDown；只在首次按下时开始录音
+                    if not self._hotkey_pressed:
+                        self._hotkey_pressed = True
+                        _enqueue("start_recording")
+                else:  # kCGEventKeyUp
+                    # keyUp 时 modifier flags 可能已经变化（例如先松开 Command 再松开 M），
+                    # 因此只要检测到 M 松开且之前处于 pressed 状态就停止录音。
+                    if self._hotkey_pressed:
+                        self._hotkey_pressed = False
+                        _enqueue("stop_recording")
+            except Exception:
+                # 监听器异常不影响主程序
+                pass
+            return event
+
+        def _run_event_tap() -> None:
+            try:
+                mask = (
+                    (1 << Quartz.kCGEventKeyDown) |
+                    (1 << Quartz.kCGEventKeyUp)
+                )
+                tap = Quartz.CGEventTapCreate(
+                    Quartz.kCGSessionEventTap,
+                    Quartz.kCGHeadInsertEventTap,
+                    Quartz.kCGEventTapOptionListenOnly,
+                    mask,
+                    _tap_callback,
+                    None,
+                )
+                if not tap:
+                    print("⚠️ 全局热键监听启动失败：可能缺少“辅助功能”权限。")
+                    return
+
+                run_loop_source = Quartz.CFMachPortCreateRunLoopSource(None, tap, 0)
+                run_loop = Quartz.CFRunLoopGetCurrent()
+                Quartz.CFRunLoopAddSource(run_loop, run_loop_source, Quartz.kCFRunLoopCommonModes)
+                Quartz.CGEventTapEnable(tap, True)
+
+                print("⌨️ 已启用全局热键：按住 Command+M 录音，松开停止")
+                Quartz.CFRunLoopRun()
+            except Exception as e:
+                print(f"⚠️ 全局热键监听线程异常退出: {e}")
+
+        t = threading.Thread(target=_run_event_tap, name="cw-hotkey", daemon=True)
+        t.start()
 
     @rumps.clicked("快速添加术语")
     def quick_add_term(self, sender):

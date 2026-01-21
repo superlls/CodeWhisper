@@ -3596,6 +3596,16 @@
               "description": "通过快速添加添加"
             }
           ]
+        },
+        "幻读": {
+          "correct": "幻读",
+          "description": "通过快速添加添加",
+          "variants": [
+            {
+              "wrong": "换读",
+              "description": "通过快速添加添加"
+            }
+          ]
         }
       }
     }

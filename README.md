@@ -142,11 +142,15 @@ python app.py
 5. 粘贴到任意 AI 使用
 
 **快捷键（macOS）**：
-- 按住 `Command + M` 开始录音，松开结束
+- `Command + M` 开始录音；再按一次停止录音并开始转录
 
 **权限（macOS）**：
 - 全局快捷键需要“辅助功能”权限：系统设置 → 隐私与安全性 → 辅助功能 → 允许当前运行的 `Python`/应用
 - 若未授权，应用会提示 `AXIsProcessTrusted`/`CGEventTapCreate` 相关失败，热键不会生效
+
+**性能优化（macOS）**：
+- 录音过程中会后台分块转录（默认每 10 秒一个分块），尽量把转录耗时“摊平”到录音期间，从而减少录音结束后的等待时间
+- 可用环境变量调整：`CODEWHISPER_CHUNK_SECONDS`（默认 10）、`CODEWHISPER_MIN_FINAL_SECONDS`（默认 1.5）
 
 **模型配置**：默认为 `medium`，如需修改请在 `gui/mac_menu_bar_app.py` 中设置 `CodeWhisper(model_name="...")`
 

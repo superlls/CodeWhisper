@@ -8,6 +8,7 @@ import re
 from typing import Dict, List, Optional, Set
 
 from .utils import get_project_root
+from .console import debug, warn
 
 
 class DictionaryManager:
@@ -34,16 +35,16 @@ class DictionaryManager:
         dict_file = self._get_dict_file_path()
 
         if not dict_file or not os.path.exists(dict_file):
-            print(f"❌ 字典文件不存在: {dict_file}")
+            warn(f"❌ 字典文件不存在: {dict_file}")
             return []
 
         try:
             with open(dict_file, 'r', encoding='utf-8') as f:
                 data = json.load(f)
-                print(f"✓ 已加载字典: {dict_file}")
+                debug(f"✓ 已加载字典: {dict_file}")
                 return self._parse_dict(data)
         except Exception as e:
-            print(f"❌ 加载字典失败: {e}")
+            warn(f"❌ 加载字典失败: {e}")
             return []
 
     def _get_dict_file_path(self) -> Optional[str]:
@@ -162,7 +163,7 @@ class DictionaryManager:
                             replacement_count += 1
 
                         # 显示第一个匹配的原始文本（真实捕获的内容）
-                        print(f" 🔧替换: '{first_match_text}' → '{replacement}' ({category})")
+                        debug(f" 🔧替换: '{first_match_text}' → '{replacement}' ({category})")
                     # else: 如果一样，跳过替换，不打印日志
 
         self.stats["replacements_made"] += replacement_count

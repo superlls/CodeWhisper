@@ -8,6 +8,8 @@ from datetime import datetime
 from typing import Dict, List, Optional, Set
 from pathlib import Path
 
+from .console import debug, warn
+
 
 class PromptEngine:
     """智能提示词引擎
@@ -39,19 +41,19 @@ class PromptEngine:
         self.base_dict = self._load_base_dict()
         self.user_dict = self._load_user_dict()
 
-        print(f"✓ Prompt Engine 初始化完成")
-        print(f"  通用术语数: {len(self.base_dict)}")
-        print(f"  用户术语数: {len(self.user_dict)}")
+        debug("✓ Prompt Engine 初始化完成")
+        debug(f"  通用术语数: {len(self.base_dict)}")
+        debug(f"  用户术语数: {len(self.user_dict)}")
 
     def _load_config(self) -> Dict:
         """加载配置文件"""
         try:
             with open(self.config_path, 'r', encoding='utf-8') as f:
                 config = json.load(f)
-                print(f"✓ 已加载配置: {self.config_path}")
+                debug(f"✓ 已加载配置: {self.config_path}")
                 return config
         except Exception as e:
-            print(f"❌ 加载配置文件失败: {e}")
+            warn(f"❌ 加载配置文件失败: {e}")
             # 返回默认配置
             return {
                 "prompt_prefix": "计算机行业从业者：",
@@ -72,10 +74,10 @@ class PromptEngine:
             with open(base_dict_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
                 terms = data.get("terms", [])
-                print(f"✓ 已加载通用术语库: {len(terms)} 个术语")
+                debug(f"✓ 已加载通用术语库: {len(terms)} 个术语")
                 return terms
         except Exception as e:
-            print(f"❌ 加载通用术语库失败: {e}")
+            warn(f"❌ 加载通用术语库失败: {e}")
             return []
 
     def _load_user_dict(self) -> List[Dict]:
@@ -87,10 +89,10 @@ class PromptEngine:
             with open(user_dict_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
                 terms = data.get("terms", [])
-                print(f"✓ 已加载用户术语库: {len(terms)} 个术语")
+                debug(f"✓ 已加载用户术语库: {len(terms)} 个术语")
                 return terms
         except Exception as e:
-            print(f"⚠️  用户术语库文件不存在或为空，将创建新库")
+            debug("⚠️  用户术语库文件不存在或为空，将创建新库")
             return []
 
     def _save_user_dict(self):
@@ -101,9 +103,9 @@ class PromptEngine:
         try:
             with open(user_dict_path, 'w', encoding='utf-8') as f:
                 json.dump({"terms": self.user_dict}, f, ensure_ascii=False, indent=2)
-            print(f"💾 用户术语库已保存: {len(self.user_dict)} 个术语")
+            debug(f"💾 用户术语库已保存: {len(self.user_dict)} 个术语")
         except Exception as e:
-            print(f"❌ 保存用户术语库失败: {e}")
+            warn(f"❌ 保存用户术语库失败: {e}")
 
     def build_prompt(self) -> str:
         """
@@ -237,7 +239,7 @@ class PromptEngine:
         removed_count = len(self.user_dict) - max_terms
         self.user_dict = sorted_terms[:max_terms]
 
-        print(f"🗑️  用户术语库淘汰了 {removed_count} 个低频术语")
+        debug(f"🗑️  用户术语库淘汰了 {removed_count} 个低频术语")
 
     def get_stats(self) -> Dict:
         """获取统计信息"""

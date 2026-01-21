@@ -17,6 +17,7 @@ import numpy as np
 
 from codewhisper.transcriber import CodeWhisper
 from codewhisper.history_manager import HistoryManager
+from codewhisper.console import preview_text
 
 
 class CodeWhisperApp(rumps.App):
@@ -244,7 +245,7 @@ class CodeWhisperApp(rumps.App):
                 self.title = "🎙️"
                 return
 
-            print(f"✓ 转录完成: {final_text}")
+            print(f'📝 最终转录预览: "{preview_text(final_text, 120)}"')
             self._copy_to_clipboard(final_text)
             self.history_manager.add(final_text)
             self._enqueue_history_refresh()

@@ -11,6 +11,7 @@ import numpy as np
 from .dict_manager import DictionaryManager
 from .prompt_engine import PromptEngine
 from .utils import convert_to_simplified_chinese, normalize_zh_punctuation
+from .console import info, debug
 
 
 class CodeWhisper:
@@ -23,27 +24,27 @@ class CodeWhisper:
             model_name: Whisper 模型 (tiny, base, small, medium, large)
             dict_path: 自定义字典路径，支持后续拓展todo
         """
-        print(f"📦 加载 Whisper 模型: {model_name}")
+        info(f"📦 Whisper 模型: {model_name}")
 
         # 显式设定设备与精度：优先使用 NVIDIA CUDA，其次回退 CPU
-        device = "cuda" if torch.cuda.is_available() else "cpu"
-        print(f"  设备选择: device={device},如您使用CUDA报 `CUBLAS_STATUS_ALLOC_FAILED` ，请改用更小模型（base/small）")
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        info(f"🧠 推理设备: {self.device} (CPU 将使用 FP32)")
 
         # openai-whisper 会在 CUDA 上自动使用 fp16，在 CPU 上用 fp32
-        self.model = whisper.load_model(model_name, device=device)
+        self.model = whisper.load_model(model_name, device=self.device)
         self.model_name = model_name
 
-        print(f"📚 加载字典管理器")
+        debug("📚 加载字典管理器")
         self.dict_manager = DictionaryManager(dict_path)
 
-        print(f"🚀 加载智能提示词引擎")
+        debug("🚀 加载智能提示词引擎")
         self.prompt_engine = PromptEngine()
 
         # 使用新的 PromptEngine 构建提示词
         self.programmer_prompt = self.prompt_engine.build_prompt()
-        print(f"💡 当前提示词 {self.programmer_prompt}")
+        info(f"💡 当前提示词: {self.programmer_prompt}")
 
-        print(f"✅CodeWhisper 初始化完成\n")
+        info("✅ CodeWhisper 初始化完成")
 
     def _audio_level_stats(self, audio_file: str) -> Tuple[float, float, float]:
         """
@@ -224,18 +225,18 @@ class CodeWhisper:
             包含转录结果的字典
         """
         if verbose:
-            print(f"🎙️ 转录中 {audio_file} (语言: {language})")
+            debug(f"🎙️ 转录中 {audio_file} (语言: {language})")
 
         # 快速静音判断：避免静音输入触发 Whisper 产生“重复幻觉”
         if hallucination_filter:
             duration_seconds, rms, peak = self._audio_level_stats(audio_file)
             if verbose:
-                print(f"🔇 音频强度: 时长={duration_seconds:.2f}s, rms={rms:.5f}, peak={peak:.5f}")
+                debug(f"🔇 音频强度: 时长={duration_seconds:.2f}s, rms={rms:.5f}, peak={peak:.5f}")
 
             # duration_seconds < 0 表示无法读取音频，跳过静音判断
             if duration_seconds == 0.0:
                 if verbose:
-                    print("⏭️ 音频为空，跳过转录")
+                    debug("⏭️ 音频为空，跳过转录")
                 return {
                     "text": "",
                     "segments": [],
@@ -245,7 +246,7 @@ class CodeWhisper:
 
             if duration_seconds > 0.0 and (rms < silence_rms_threshold and peak < silence_peak_threshold):
                 if verbose:
-                    print("⏭️ 检测到几乎静音，跳过转录")
+                    debug("⏭️ 检测到几乎静音，跳过转录")
                 return {
                     "text": "",
                     "segments": [],
@@ -260,16 +261,19 @@ class CodeWhisper:
             audio_file,
             language=language,
             initial_prompt=self.programmer_prompt,
-            verbose=False,  # Whisper 内部日志关闭，由 CodeWhisper 的verbose 控制外部日志
+            # openai-whisper 新版本：verbose=False 会显示 tqdm 进度条；verbose=None 才会安静
+            verbose=None,
             temperature=temperature,
             # 防止 Whisper 幻觉重复 bug
             condition_on_previous_text=False,  # 禁用前文依赖，减少重复循环
             compression_ratio_threshold=2.4,   # 压缩比阈值，超过则认为是重复/乱码
             no_speech_threshold=0.6,           # 静音检测阈值，减少静音段幻觉
+            # 避免 CPU 上 fp16 警告噪音
+            fp16=(self.device == "cuda"),
         )
 
         if verbose:
-            print(f"✅转录完成")
+            debug("✅ 转录完成")
 
         # 过滤掉提示词前缀（Whisper 幻觉问题：静音时可能把 initial_prompt 当成转录结果）
         result["text"] = self._remove_prompt_prefix(result["text"])
@@ -278,7 +282,7 @@ class CodeWhisper:
 
         # 将繁体转换为简体
         if verbose:
-            print(f"🧹 转换繁体为简体")
+            debug("🧹 转换繁体为简体")
 
         result["text"] = convert_to_simplified_chinese(result["text"])
         for segment in result["segments"]:
@@ -294,7 +298,7 @@ class CodeWhisper:
         if hallucination_filter:
             filtered_segments = self._filter_hallucinated_segments(result.get("segments", []))
             if len(filtered_segments) != len(result.get("segments", [])) and verbose:
-                print(f"🧽 幻觉过滤: {len(result.get('segments', []))} -> {len(filtered_segments)} 段")
+                debug(f"🧽 幻觉过滤: {len(result.get('segments', []))} -> {len(filtered_segments)} 段")
             result["segments"] = filtered_segments
             result["text"] = "".join([seg.get("text", "") for seg in filtered_segments]).strip()
 
@@ -304,7 +308,7 @@ class CodeWhisper:
         # 替换术语
         if fix_programmer_terms:
             if verbose:
-                print(f"🛠 修正为开发者术语")
+                debug("🛠 修正为开发者术语")
 
             # 只修正正文文本一次，避免重复修正
             result["text"] = self.dict_manager.fix_text(result["text"], accumulate=False)
@@ -314,7 +318,7 @@ class CodeWhisper:
 
         # 学习用户习惯：检测文本中出现的术语并更新用户术语库
         if verbose:
-            print(f"🧠 学习用户习惯")
+            debug("🧠 学习用户习惯")
 
         # 方法1：从修正记录中获取术语（优先，更精准）
         detected_terms = self.dict_manager.get_detected_terms_from_corrections()
@@ -325,7 +329,7 @@ class CodeWhisper:
 
         if detected_terms:
             if verbose:
-                print(f"  检测到术语: {', '.join(list(detected_terms)[:5])}{'...' if len(detected_terms) > 5 else ''}")
+                debug(f"  检测到术语: {', '.join(list(detected_terms)[:5])}{'...' if len(detected_terms) > 5 else ''}")
             # 更新用户术语库
             self.prompt_engine.update_user_terms(detected_terms)
 

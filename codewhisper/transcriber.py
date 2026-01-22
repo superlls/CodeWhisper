@@ -206,6 +206,9 @@ class CodeWhisper:
         hallucination_filter: bool = True,
         silence_rms_threshold: float = 0.002,
         silence_peak_threshold: float = 0.02,
+        *,
+        use_initial_prompt: bool = True,
+        learn_user_terms: bool = True,
     ) -> Dict:
         """
         转录音频文件
@@ -219,6 +222,8 @@ class CodeWhisper:
             hallucination_filter: 是否启用幻觉/重复过滤（默认启用）
             silence_rms_threshold: 静音 RMS 阈值（越大越激进）
             silence_peak_threshold: 静音 Peak 阈值（越大越激进）
+            use_initial_prompt: 是否把提示词喂给 Whisper（默认启用）。分块/低质量音频建议关闭以减少“提示词幻觉”。
+            learn_user_terms: 是否根据本次转录结果更新用户术语库（默认启用）。分块转录建议关闭以避免频繁写盘。
 
 
         Returns:
@@ -260,7 +265,7 @@ class CodeWhisper:
         result = self.model.transcribe(
             audio_file,
             language=language,
-            initial_prompt=self.programmer_prompt,
+            initial_prompt=(self.programmer_prompt if use_initial_prompt else None),
             # openai-whisper 新版本：verbose=False 会显示 tqdm 进度条；verbose=None 才会安静
             verbose=None,
             temperature=temperature,
@@ -317,24 +322,25 @@ class CodeWhisper:
                 result["text"] = normalize_zh_punctuation(result["text"])
 
         # 学习用户习惯：检测文本中出现的术语并更新用户术语库
-        if verbose:
-            debug("🧠 学习用户习惯")
-
-        # 方法1：从修正记录中获取术语（优先，更精准）
-        detected_terms = self.dict_manager.get_detected_terms_from_corrections()
-
-        # 方法2：从最终文本中检测术语（补充）
-        detected_terms_from_text = self.dict_manager.detect_terms_in_text(result["text"])
-        detected_terms.update(detected_terms_from_text)
-
-        if detected_terms:
+        if learn_user_terms:
             if verbose:
-                debug(f"  检测到术语: {', '.join(list(detected_terms)[:5])}{'...' if len(detected_terms) > 5 else ''}")
-            # 更新用户术语库
-            self.prompt_engine.update_user_terms(detected_terms)
+                debug("🧠 学习用户习惯")
 
-            # 重新构建提示词（下次转录使用）
-            self.programmer_prompt = self.prompt_engine.build_prompt()
+            # 方法1：从修正记录中获取术语（优先，更精准）
+            detected_terms = self.dict_manager.get_detected_terms_from_corrections()
+
+            # 方法2：从最终文本中检测术语（补充）
+            detected_terms_from_text = self.dict_manager.detect_terms_in_text(result["text"])
+            detected_terms.update(detected_terms_from_text)
+
+            if detected_terms:
+                if verbose:
+                    debug(f"  检测到术语: {', '.join(list(detected_terms)[:5])}{'...' if len(detected_terms) > 5 else ''}")
+                # 更新用户术语库
+                self.prompt_engine.update_user_terms(detected_terms)
+
+                # 重新构建提示词（下次转录使用）
+                self.programmer_prompt = self.prompt_engine.build_prompt()
 
         return result
 

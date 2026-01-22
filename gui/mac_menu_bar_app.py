@@ -26,10 +26,17 @@ class CodeWhisperApp(rumps.App):
     def __init__(self):
         self.history_menu_item = rumps.MenuItem("最近记录 (History)")
         self.record_menu_item = rumps.MenuItem("开始录音", self.start_recording)
+        self.transcribe_mode_menu = rumps.MenuItem("转录模式")
+        self.mode_fast_item = rumps.MenuItem("极速模式（边录边转）", callback=self.set_mode_fast)
+        self.mode_full_item = rumps.MenuItem("全量模式（录完再转，带标点）", callback=self.set_mode_full)
+        self.transcribe_mode_menu.add(self.mode_fast_item)
+        self.transcribe_mode_menu.add(self.mode_full_item)
+
         super(CodeWhisperApp, self).__init__(
             "🎙️",
             menu=[
                 self.record_menu_item,
+                self.transcribe_mode_menu,
                 self.history_menu_item,
                 None,  # 分隔线
                 rumps.MenuItem("清除历史记录", self.clear_history),
@@ -42,7 +49,8 @@ class CodeWhisperApp(rumps.App):
         self.stream = None
         self.recording_thread = None
         self.history_manager = HistoryManager()
-        self._ui_queue: "queue.Queue[str]" = queue.Queue()
+        # rumps/Cocoa 的 UI 更新需要在主线程执行；后台线程通过 queue 投递事件。
+        self._ui_queue: "queue.Queue[object]" = queue.Queue()
         # 既用于刷新历史菜单，也用于从非主线程（例如全局热键监听）安全触发录音开始/停止。
         self._ui_timer = rumps.Timer(self._process_ui_queue, 0.05)
         self._ui_timer.start()
@@ -54,6 +62,8 @@ class CodeWhisperApp(rumps.App):
         self._recording_seq = 0
         self._chunk_text_lock = threading.Lock()
         self._chunk_texts = {}
+        self.transcribe_mode = self._load_gui_config().get("transcribe_mode", "fast")
+        self._refresh_mode_menu_state()
 
         try:
             print("📦 加载 CodeWhisper 模型...")
@@ -65,6 +75,64 @@ class CodeWhisperApp(rumps.App):
 
         self._refresh_history_menu()
         self._start_hold_to_record_hotkey()
+
+    def _gui_config_path(self):
+        from pathlib import Path
+        project_root = Path(__file__).parent.parent
+        return project_root / "config" / "gui_config.json"
+
+    def _load_gui_config(self) -> dict:
+        import json
+        path = self._gui_config_path()
+        try:
+            if not path.exists():
+                return {}
+            with open(path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            return data if isinstance(data, dict) else {}
+        except Exception:
+            return {}
+
+    def _save_gui_config(self, data: dict) -> None:
+        import json
+        path = self._gui_config_path()
+        try:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with open(path, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+        except Exception:
+            pass
+
+    def _refresh_mode_menu_state(self) -> None:
+        # rumps 用 state=1 显示勾选
+        self.mode_fast_item.state = 1 if self.transcribe_mode == "fast" else 0
+        self.mode_full_item.state = 1 if self.transcribe_mode == "full" else 0
+
+    def _set_transcribe_mode(self, mode: str) -> None:
+        if self.is_recording:
+            try:
+                subprocess.run(
+                    ["osascript", "-e", 'display notification "请先停止录音再切换转录模式" with title "CodeWhisper"'],
+                    capture_output=True,
+                    text=True,
+                )
+            except Exception:
+                pass
+            return
+
+        if mode not in {"fast", "full"}:
+            return
+        self.transcribe_mode = mode
+        self._refresh_mode_menu_state()
+        cfg = self._load_gui_config()
+        cfg["transcribe_mode"] = mode
+        self._save_gui_config(cfg)
+
+    def set_mode_fast(self, _sender) -> None:
+        self._set_transcribe_mode("fast")
+
+    def set_mode_full(self, _sender) -> None:
+        self._set_transcribe_mode("full")
 
     def start_recording(self, sender):
         """开始录音"""
@@ -119,67 +187,82 @@ class CodeWhisperApp(rumps.App):
             )
 
             with self.stream:
-                # 分块后台转录：边录边把“已录到的音频”分段丢给 Whisper，
-                # 这样录音结束后只需要转录最后一段，整体等待时间更短。
-                chunk_seconds = float(os.environ.get("CODEWHISPER_CHUNK_SECONDS", "10"))
-                min_final_seconds = float(os.environ.get("CODEWHISPER_MIN_FINAL_SECONDS", "1.5"))
-                chunk_samples = max(1, int(self.sample_rate * chunk_seconds))
-                min_final_samples = max(1, int(self.sample_rate * min_final_seconds))
                 next_chunk_start = 0
                 chunk_index = 0
 
+                # 极速模式：边录边分块转录，减少录音结束后的等待
+                if self.transcribe_mode == "fast":
+                    chunk_seconds = float(os.environ.get("CODEWHISPER_CHUNK_SECONDS", "10"))
+                    min_final_seconds = float(os.environ.get("CODEWHISPER_MIN_FINAL_SECONDS", "1.5"))
+                    chunk_samples = max(1, int(self.sample_rate * chunk_seconds))
+                    min_final_samples = max(1, int(self.sample_rate * min_final_seconds))
+                else:
+                    # 全量模式：录完再统一转录
+                    chunk_samples = None
+                    min_final_samples = None
+
                 while self.is_recording:
                     sd.sleep(20)
-                    # 录音进行中：只要累计超过一个 chunk，就切一段出来异步转录
-                    while True:
-                        with buffer_lock:
-                            available = len(audio_buffer) - next_chunk_start
-                            if available < chunk_samples:
-                                break
-                            chunk = np.array(
-                                audio_buffer[next_chunk_start: next_chunk_start + chunk_samples],
-                                dtype="float32",
+                    if self.transcribe_mode == "fast":
+                        # 录音进行中：只要累计超过一个 chunk，就切一段出来异步转录
+                        while True:
+                            with buffer_lock:
+                                available = len(audio_buffer) - next_chunk_start
+                                if available < chunk_samples:
+                                    break
+                                chunk = np.array(
+                                    audio_buffer[next_chunk_start: next_chunk_start + chunk_samples],
+                                    dtype="float32",
+                                )
+                                next_chunk_start += chunk_samples
+
+                            self.transcribe_executor.submit(
+                                self._transcribe_chunk_store,
+                                recording_seq,
+                                chunk_index,
+                                chunk,
                             )
-                            next_chunk_start += chunk_samples
+                            chunk_index += 1
 
-                        self.transcribe_executor.submit(
-                            self._transcribe_chunk_store,
-                            recording_seq,
-                            chunk_index,
-                            chunk,
-                        )
-                        chunk_index += 1
+            if self.transcribe_mode == "fast":
+                # 录音停止后，把剩余未处理的尾巴也丢去转录；太短则不转，避免浪费开销
+                with buffer_lock:
+                    tail = np.array(audio_buffer[next_chunk_start:], dtype="float32")
 
-            # 录音停止后，把剩余未处理的尾巴也丢去转录；太短则不转，避免浪费开销
-            with buffer_lock:
-                tail = np.array(audio_buffer[next_chunk_start:], dtype="float32")
-
-            if len(tail) >= min_final_samples:
-                self.transcribe_executor.submit(
-                    self._transcribe_chunk_store,
-                    recording_seq,
-                    chunk_index,
-                    tail,
-                )
-                chunk_index += 1
+                if len(tail) >= min_final_samples:
+                    self.transcribe_executor.submit(
+                        self._transcribe_chunk_store,
+                        recording_seq,
+                        chunk_index,
+                        tail,
+                    )
+                    chunk_index += 1
 
             duration = len(audio_buffer) / self.sample_rate if self.sample_rate else 0
             print(f"✓ 录音完成，共 {duration:.2f} 秒")
             print(f"✓ 录音数据点数: {len(audio_buffer)}")
-            self.title = "⏳"
+            self._enqueue_set_title("⏳")
 
-            # 最终拼接/复制/写历史：排在 executor 队列尾部，确保先跑完所有分块
-            if audio_buffer:
+            if not audio_buffer:
+                print("⚠️ 未捕获到音频，跳过转录")
+                self._enqueue_set_title("🎙️")
+                return
+
+            if self.transcribe_mode == "fast":
+                # 最终拼接/复制/写历史：排在 executor 队列尾部，确保先跑完所有分块
                 self.transcribe_executor.submit(self._finalize_chunked_transcription, recording_seq)
             else:
-                print("⚠️ 未捕获到音频，跳过转录")
-                self.title = "🎙️"
+                # 全量模式：一次性转录整段，标点/上下文更好
+                self.transcribe_executor.submit(
+                    self._transcribe_audio,
+                    np.array(audio_buffer, dtype="float32"),
+                )
 
         except Exception as e:
             print(f"❌ 录音错误: {e}")
             import traceback
             traceback.print_exc()
-            self.title = "❌"
+            self._enqueue_set_title("❌")
         finally:
             self.stream = None
             self.recording_thread = None
@@ -211,6 +294,13 @@ class CodeWhisperApp(rumps.App):
                 language="zh",
                 fix_programmer_terms=True,
                 verbose=False,
+                # 分块转录时关闭 initial_prompt，能明显减少“提示词术语列表”幻觉
+                use_initial_prompt=False,
+                # 分块转录不做用户术语学习，避免频繁写盘/扰动 prompt
+                learn_user_terms=False,
+                # 分块更容易遇到静音/半句，适当提高静音阈值减少幻觉
+                silence_rms_threshold=0.0035,
+                silence_peak_threshold=0.03,
             )
             text = (result.get("text") or "").strip()
             if not text:
@@ -242,18 +332,18 @@ class CodeWhisperApp(rumps.App):
 
             if not final_text:
                 print("⚠️ 最终文本为空，跳过复制/写入历史")
-                self.title = "🎙️"
+                self._enqueue_set_title("🎙️")
                 return
 
             print(f'📝 最终转录预览: "{preview_text(final_text, 120)}"')
             self._copy_to_clipboard(final_text)
             self.history_manager.add(final_text)
             self._enqueue_history_refresh()
-            self.title = "✅"
+            self._enqueue_set_title("✅")
             self._print_dict_stats()
         except Exception as e:
             print(f"❌ 最终收尾失败: {e}")
-            self.title = "❌"
+            self._enqueue_set_title("❌")
 
 
     def _transcribe_audio(self, audio_array: np.ndarray):
@@ -261,7 +351,7 @@ class CodeWhisperApp(rumps.App):
         temp_audio_file = None
         try:
             print("🔄 转录中...")
-            self.title = "⏳"
+            self._enqueue_set_title("⏳")
 
             print(f"📊 音频数组形状: {audio_array.shape}")
 
@@ -274,7 +364,7 @@ class CodeWhisperApp(rumps.App):
             #兜底保护
             if not self.whisper:
                 print("❌ 模型未加载")
-                self.title = "❌"
+                self._enqueue_set_title("❌")
                 return
 
             # 使用 CodeWhisper 转录
@@ -295,7 +385,7 @@ class CodeWhisperApp(rumps.App):
             # 写入历史记录并刷新菜单（通过主线程 Timer）
             self.history_manager.add(transcribed_text)
             self._enqueue_history_refresh()
-            self.title = "✅"
+            self._enqueue_set_title("✅")
 
             # 打印字典修正统计信息
             self._print_dict_stats()
@@ -304,7 +394,7 @@ class CodeWhisperApp(rumps.App):
             print(f"❌ 转录错误: {e}")
             import traceback
             traceback.print_exc()
-            self.title = "❌"
+            self._enqueue_set_title("❌")
 
         finally:
             # 清理临时文件
@@ -337,6 +427,13 @@ class CodeWhisperApp(rumps.App):
         except Exception:
             pass
 
+    def _enqueue_set_title(self, title: str) -> None:
+        """从后台线程请求更新菜单栏图标（主线程执行）。"""
+        try:
+            self._ui_queue.put_nowait(("set_title", title))
+        except Exception:
+            pass
+
     def _process_ui_queue(self, _timer) -> None:
         """rumps Timer 回调：运行在主线程，安全地更新菜单 UI。"""
         need_refresh = False
@@ -344,11 +441,15 @@ class CodeWhisperApp(rumps.App):
         need_stop = False
         need_toggle = False
         need_hotkey_warn = False
+        pending_title: Optional[str] = None
         while True:
             try:
                 event = self._ui_queue.get_nowait()
             except queue.Empty:
                 break
+            if isinstance(event, tuple) and len(event) == 2 and event[0] == "set_title":
+                pending_title = str(event[1])
+                continue
             if event == "refresh_history":
                 need_refresh = True
             elif event == "start_recording":
@@ -360,6 +461,8 @@ class CodeWhisperApp(rumps.App):
             elif event == "hotkey_permission_warning":
                 need_hotkey_warn = True
 
+        if pending_title is not None:
+            self.title = pending_title
         if need_toggle:
             if self.is_recording:
                 self.stop_recording(self.record_menu_item)
@@ -460,15 +563,9 @@ class CodeWhisperApp(rumps.App):
     def stop_recording(self, sender):
         """停止录音"""
         # 允许重复调用：无论当前状态如何，都尽量把 UI 恢复到“开始录音”
+        # 避免跨线程强行 abort/stop PortAudio（在 macOS 上偶发不稳定/崩溃）；
+        # callback 录音模式下，设置标志位后录音线程会很快自行退出并关闭 stream。
         self.is_recording = False
-        if self.stream:
-            try:
-                self.stream.abort()
-            except Exception:
-                try:
-                    self.stream.stop()
-                except Exception:
-                    pass
         sender.title = "开始录音"
 
     def _start_hold_to_record_hotkey(self) -> None:
